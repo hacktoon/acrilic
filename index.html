@@ -7,38 +7,30 @@
 	<title>Map editor | Hacktoon.com</title>
 </head>
 
-<body id="com.hacktoon.editor">
+<body>
     <section id="main-menu">
-        Columns: <input type="text" id="input_tile_cols" value="100"/>
-		Rows: <input type="text" id="input_tile_rows" value="60"/>
-		Tile size: <input type="text" id="input_tilesize" value="40"/>
-		<button id="bt_create_map">Create map</button>
-		<button id="bt_output">Output</button>
+    	<ul id="file-menu">
+    		<li><button class="menu-btn" id="btn-file-new" title="New map">New</button></li>
+    		<li><button class="menu-btn" id="btn-file-import" title="Import map">Import</button></li>
+    		<li><button class="menu-btn" id="btn-file-export" title="Export map">Export</button></li>
+    	</ul>
+
+    	<ul id="tools-menu">
+    		<li><button class="menu-btn" id="btn-tool-pen" title="Pen">Pen</button></li>
+    		<li><button class="menu-btn" id="btn-tool-fill" title="Fill">Fill</button></li>
+    		<li><button class="menu-btn" id="btn-tool-eraser" title="Eraser">Eraser</button></li>
+    	</ul>
+
+    	<ul id="layers-menu">
+    		<li><button class="menu-btn" id="btn-layer-bg" title="BG Layer">BG</button></li>
+    		<li><button class="menu-btn" id="btn-layer-fg" title="FG Layer">FG</button></li>
+    		<li><button class="menu-btn" id="btn-layer-event" title="Event Layer">EVT</button></li>
+    	</ul>
     </section>
 
-	<section id="editor_panel">
-		<div id="menu_panel">
-			<button id="btn_tool_pen" title="Pen">
-				<img src="img/pen.png" alt="Pen"/>
-			</button>
-			<button id="btn_tool_eraser">
-				<img src="img/delete.png" alt="Eraser"/>
-			</button>
-			<button id="btn_tool_level1">
-				1
-			</button>
-			<button id="btn_tool_level2">
-				2
-			</button>
-			<button id="btn_tool_levelevent">
-				e
-			</button>
-		</div>
-		<div id="map_panel"></div>
-	</section>
-
-	<section id="widget-panel">
-		<div class="widget" id="tileset_panel"></div>
+	<section id="editor-panel">
+		<div id="tileset-panel"></div>
+		<div id="map-panel"></div>
 	</section>
 
 	<script src="lib/jquery.js"></script>

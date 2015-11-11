@@ -1,7 +1,7 @@
 // opera a paleta de tiles
-ac.tileset = (function(){
+AC.tileset = (function(){
 	
-	var _gfx = ac.gfx; //alias
+	var _gfx = AC.gfx; //alias
 	
 	return {
 		//element bound to object
@@ -14,24 +14,22 @@ ac.tileset = (function(){
 		sourceImage: undefined,
 		
 		selectMenuTile: function(tile_elem, x, y){
-			ac.tileCodeSelected.code = tile_elem.data("tilecode");
-			ac.tileCodeSelected.x = x;
-			ac.tileCodeSelected.y = y;
+			AC.tileCodeSelected.code = tile_elem.data("tilecode");
+			AC.tileCodeSelected.x = x;
+			AC.tileCodeSelected.y = y;
 			
 			// remove o outline do tile selecionado anteriormente
 			if(this.menuTileSelected)
 				this.menuTileSelected.removeClass("menu-tile-selected");
 			tile_elem.addClass("menu-tile-selected");
 			this.menuTileSelected = tile_elem;
-			ac.log("Selected tilecode " + ac.tileCodeSelected.code +
-			" at position ("+x+", "+y+")");
 		},
 		
 		// creates a canvas with a tile and put on the palette
 		createMenuTile: function(image, tilecode, x, y)
 		{
 			var self = this;
-			var t = ac.tileSize;
+			var t = AC.tileSize;
 			var ctx = _gfx.createCanvas(t, t);
 			var menutile = $(ctx.canvas).addClass("menu-tile")
 				.data("tilecode", tilecode)
@@ -48,12 +46,12 @@ ac.tileset = (function(){
 		// populate the tileset menu according to image/dimensions
 		buildTileset: function(image, width, height)
 		{
-			var t = ac.tileSize;
+			var t = AC.tileSize;
 			var cols = width / t;
 			var rows = height / t;
 			for (var i = 0; i < rows; i++) {
 				for (var j = 0; j < cols; j++) {
-					var tilecode = ac.tileCode[i][j];
+					var tilecode = AC.tileCode[i][j];
 					this.createMenuTile(image, tilecode, j, i);
 				}
 			}

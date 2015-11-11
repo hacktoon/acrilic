@@ -1,9 +1,12 @@
 //Acrilic on Canvas Gamified Site Editor
-var ac = (function(){
+
+window.log = console.log.bind(console);
+
+var AC = (function(){
+	"use strict";
 	
-	var DEBUG = true;
-	
-	var _selected_tile, 
+	var DEBUG = true,
+		_selected_tile,
 		_selected_code;
 
     return {
@@ -24,11 +27,6 @@ var ac = (function(){
 		tileCode: [
 			[1, 2, 3]
 		],
-		
-		log: function(msg){
-			if (DEBUG)
-				console.log(msg);
-		},
 		
 		build: function(){
 			var json = JSON.stringify(this.tileMap);

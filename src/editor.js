@@ -1,5 +1,5 @@
 
-ac.editor = (function(){
+AC.editor = (function(){
 
     var _editArea,
 		_layers = [],
@@ -15,7 +15,7 @@ ac.editor = (function(){
 		toolPen: {
 			action: function(){
 				// position in the edit area
-				ac.editor.setTile();
+				AC.editor.setTile();
 			}
 		},
 		
@@ -24,12 +24,12 @@ ac.editor = (function(){
 			//position in the tileset image
 			var dx = _cursor.x,
 				dy = _cursor.y,
-				sx = ac.tileCodeSelected.x,
-				sy = ac.tileCodeSelected.y,
-				t = ac.tileSize,
-				img = ac.tileset.sourceImage;
-			if (ac.tileMap[dy][dx] != ac.tileCodeSelected.code){
-				ac.tileMap[dy][dx] = ac.tileCodeSelected.code;
+				sx = AC.tileCodeSelected.x,
+				sy = AC.tileCodeSelected.y,
+				t = AC.tileSize,
+				img = AC.tileset.sourceImage;
+			if (AC.tileMap[dy][dx] != AC.tileCodeSelected.code){
+				AC.tileMap[dy][dx] = AC.tileCodeSelected.code;
 				_layers[_currentLayer].drawImage(img, sx*t, sy*t, t, t, dx*t, dy*t, t, t);
 			}
 		},
@@ -37,7 +37,7 @@ ac.editor = (function(){
 		addLayer: function(width, height)
 		{
 			//criando canvas
-			var layer = ac.gfx.createCanvas(width, height);
+			var layer = AC.gfx.createCanvas(width, height);
 			_editArea.append(layer.canvas);
 			_layers.push(layer);
 		},
@@ -50,10 +50,10 @@ ac.editor = (function(){
         init: function(elem_id)
         {
 			var self = this;
-			var width = ac.mapWidth;
-			var height = ac.mapHeight;
+			var width = AC.mapWidth;
+			var height = AC.mapHeight;
 			this.$el = $(elem_id);
-			var tilesize = ac.tileSize;
+			var tilesize = AC.tileSize;
 			
 			_editArea = $("<div/>")
 				.attr("id", "edit_area")

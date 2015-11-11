@@ -16,81 +16,67 @@ p { margin: 15px 0; }
 p img { padding: 0; }
 
 body {
-	background: #222;
     font: normal 13px Arial, Sans-Serif;
-	color: #FFF;
 }
 
 #main-menu {
-    padding: 10px 0 0 10px;
-    height: 30px;
+    height: 40px;
 	text-align: left;
+	background: #222;
+}
+#main-menu ul {
+	float: left;
+	margin-top: 5px;
+	border-right: 1px solid #AAA;
+	padding: 0 5px;
 }
 
 #main-menu ul li {
-	padding: 5px 8px;
-	cursor: pointer;
 	float: left;
-    border-radius: 3px;
 }
 
-#main-menu ul li:hover {
-	background: #444;
+#main-menu .menu-btn {
+	background: transparent;
+	border: none;
+	color: #FFF;
+	cursor: pointer;
+	padding: 5px 10px;
+	height: 30px;
+	font-weight: bold;
 }
-
-#main-menu ul ul {
-	display: none;
+#main-menu .menu-btn:hover {
+	text-decoration: underline;
 }
 
 /* main window with open files in tabs --------------------------- */
-#editor_panel {
-	background: #444;
-	border: 1px solid #666;
+#editor-panel {
 	position: absolute;
     top: 40px;
-    right: 5px;
-    left: 390px;
-    bottom: 5px;
+    right: 0;
+    left: 0;
+    bottom: 0;
 }
 
-#menu_panel {
-	height: 40px;
-	border-bottom: 2px solid #333;
-	padding: 2px;
-}
-
-#menu_panel button {
-	background: transparent;
-	border: none;
-	cursor: pointer;
-	height: 35px;
-	width: 35px;
-	border-radius: 4px;
-}
-
-#menu_panel button:hover,
-#menu_panel button.active {
-	background: #555;
-}
-
-#map_panel {
-	background: #EEE;
+#tileset-panel {
 	position: absolute;
-    top: 42px;
+	background: #555;
+    top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 10;
+    width: 320px;
     overflow: auto;
 }
 
-#edit_area {
-	background: url("img/sea.gif") repeat top left;
+#map-panel {
+	background: url("img/screen_bg.png");
 	position: absolute;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	right: 0;
+    top: 0;
+    left: 320px;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    overflow: auto;
 }
 
 #selection_cursor {
@@ -100,29 +86,6 @@ body {
 }
 
 /* lateral menu with widgets ---------------------------  */
-#widget-panel {
-    position: absolute;
-    top: 40px;
-	left: 5px;
-    bottom: 5px;
-	width: 380px;
-	z-index: 10;
-}
-
-.widget {
-	background: #444;
-	border: 1px solid #666;
-	width: 350px;
-	padding: 5px;
-	margin: 0 0 10px 10px;
-	text-align: left;
-}
-
-#tileset_panel {
-	background: #555;
-    height: 200px;
-}
-
 .menu-tile {
 	float: left;
 	cursor: pointer;

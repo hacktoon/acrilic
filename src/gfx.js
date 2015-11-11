@@ -1,6 +1,6 @@
 // graphics functions
 
-ac.gfx = (function(){
+AC.gfx = (function(){
 	
 	return {
 		ctx: undefined,

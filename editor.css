@@ -19,6 +19,11 @@ p { margin: 15px 0; }
 
 p img { padding: 0; }
 
+button {
+	cursor: pointer;
+	outline: none;
+}
+
 input {
 	border: 1px solid #CCC;
 	padding: 5px;
@@ -57,11 +62,9 @@ input {
 	background: transparent;
 	border: none;
 	color: #FFF;
-	cursor: pointer;
 	padding: 5px 10px;
 	height: 30px;
 	font-weight: bold;
-	outline: none;
 }
 #main-menu .menu-btn:hover {
 	text-decoration: underline;
@@ -110,7 +113,7 @@ input {
 }
 
 .menu-tile-selected {
-	outline: solid 2px white;
+	outline: solid 2px #FFF;
 }
 
 
@@ -160,15 +163,29 @@ input {
 	position: absolute;
 	right: 10px;
 	top: 10px;
-	cursor: pointer;
 	display: block;
 	width: 20px;
 	height: 20px;
-	outline: none;
 }
 #dialog-titlebar .svg-icon { fill: #FFF; }
 
 #dialog-content {
 	padding: 20px;
 	text-align: left;
+}
+
+#dialog-button-panel {
+	background: #444;
+	padding: 10px;
+	text-align: right;
+}
+
+#dialog-button-panel button {
+	border: 1px solid #555;
+	background: #333;
+	border-radius: 3px;
+	padding: 5px 10px;
+	color: #FFF;
+	font-size: 1.2em;
+	margin-left: 10px;
 }

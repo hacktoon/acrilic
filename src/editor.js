@@ -48,23 +48,49 @@ AC.editor = (function(){
 				_currentLayer = level;
 		},
 
-		openDialog: function(title, content, action){
-			var dialog = $('#dialog-overlay');
-			dialog.find('#dialog-content').html(content);
+		buildDialogButtons: function(dialog, buttonSet){
+			var output = '';
+			for (var i=0; i<buttonSet.length; i++){
+				var btn = buttonSet[i],
+					id = 'btn-' + btn.title.replace(/\s+/g, '-').toLowerCase();
+				output += '<button id="'+id+'">'+btn.title+'</button>';
+				dialog.on('click', '#'+id, btn.action);
+			}
+			return output;
+		},
+
+		closeDialog: function(){
+			$('#dialog-overlay').remove();
+		},
+
+		openDialog: function(title, content, buttonSet){
+			var self = this;
+			var dialog = $($('#tpl-dialog-overlay').html()),
+				dialogContent = dialog.find('#dialog-content'),
+				dialogButtonSet = dialog.find('#dialog-button-panel');
+
 			dialog.find('.btn-close').on('click', function(){
-				dialog.hide();
-				dialog.find('#dialog-content').html('');
+				self.closeDialog();
 			});
 			dialog.find('#dialog-titlebar .title').html(title);
-			dialog.show();
-			//action();
+			dialogContent.html(content);
+			dialogButtonSet.html(this.buildDialogButtons(dialog, buttonSet));
+			dialog.appendTo('body').show();
 		},
 
 		initMenu: function(){
 			var self = this;
 			$('#btn-file-new').on('click', function(){
-				var content = $('#dialog-file-new').html();
-				self.openDialog('New map', content);
+				var content = $($('#tpl-dialog-file-new').html());
+				var buttonSet = [
+					{title: 'OK', action: function(){
+						alert('OK');
+					}},
+					{title: 'Cancel', action: function(){
+						self.closeDialog();
+					}}
+				];
+				self.openDialog('New map', content, buttonSet);
 			});
 		},
 		

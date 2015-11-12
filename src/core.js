@@ -46,7 +46,7 @@ var AC = (function(){
 			for (var i = 0; i < this.tileRows; i++) {
 				this.tileMap.push([]);
 				for (var j = 0; j < this.tileCols; j++) {
-					this.tileMap[i].push(0);
+					this.tileMap[i].push({id: 0});
 				}
 			}
 		}

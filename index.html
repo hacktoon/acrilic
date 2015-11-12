@@ -33,8 +33,37 @@
 		<div id="map-panel"></div>
 	</section>
 
+	<div id="dialog-overlay">
+		<div id="dialog-container">
+			<div id="dialog-titlebar">
+				<p class="title">Dialog</p>
+				<button class="btn-close">
+					<svg width="20" height="20">
+						<path class="svg-icon" d="M 15.714285,4.6325691e-8 10.000001,5.7142846 4.2857164,4.6325691e-8 0,4.2857165 5.7142845,10.000001 0,15.714286 4.2857164,20.000002 10.000001,14.285717 15.714285,20.000002 20.000002,15.714286 14.285717,10.000001 20.000002,4.2857165 15.714285,4.6325691e-8 Z"/>
+					</svg>
+				</button>
+			</div>
+			<div id="dialog-content"></div>
+			<div id="dialog-button-panel"></div>
+		</div>
+	</div>
+
+	<div class="dialog-template" id="dialog-file-new">
+		<form action="" id="form-file-new">
+			<div class="form-row">
+				<label for="field-file-new-name">Name</label><input type="text" id="field-file-new-name" />
+			</div>
+			<div class="form-row">
+				<label for="field-file-width-name">Width (tiles)</label><input type="number" id="field-file-width-name" />
+			</div>
+			<div class="form-row">
+				<label for="field-file-height-name">Height (tiles)</label><input type="number" id="field-file-height-name" />
+			</div>
+		</form>
+	</div>
+
 	<script src="lib/jquery.js"></script>
 	<script src="lib/json.js"></script>
-	<script src="dist/Acrilic.min.js"></script>
+	<script src="dist/Acrilic.js"></script>
 </body>
 </html>

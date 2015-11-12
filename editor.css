@@ -2,6 +2,10 @@
 /* Begin Structure */
 
 * { margin: 0; padding: 0; }
+
+body {
+    font: normal 13px Arial, Sans-Serif;
+}
 hr { clear:both; }
 ul, li { list-style: none; }
 
@@ -15,9 +19,23 @@ p { margin: 15px 0; }
 
 p img { padding: 0; }
 
-body {
-    font: normal 13px Arial, Sans-Serif;
+input {
+	border: 1px solid #CCC;
+	padding: 5px;
+	border-radius: 3px;
 }
+
+.form-row {
+	padding: 5px 0;
+}
+
+.form-row label {
+	color: #FFF;
+	font-weight: bold;
+	font-size: 1.1em;
+	margin-right: 10px;
+}
+
 
 #main-menu {
     height: 40px;
@@ -43,6 +61,7 @@ body {
 	padding: 5px 10px;
 	height: 30px;
 	font-weight: bold;
+	outline: none;
 }
 #main-menu .menu-btn:hover {
 	text-decoration: underline;
@@ -65,7 +84,7 @@ body {
     right: 0;
     bottom: 0;
     width: 320px;
-    overflow: auto;
+    overflow-y: scroll;
 }
 
 #map-panel {
@@ -76,7 +95,6 @@ body {
     right: 0;
     bottom: 0;
     z-index: 1;
-    overflow: auto;
 }
 
 #selection_cursor {
@@ -93,4 +111,64 @@ body {
 
 .menu-tile-selected {
 	outline: solid 2px white;
+}
+
+
+/* DIALOG ---------------------------  */
+#dialog-overlay {
+	background-color: rgba(0,0,0, 0.5);
+	bottom: 0;
+	display: none;
+	position: fixed;
+	top: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 100;
+}
+
+#dialog-container {
+	background: #555;
+	border-radius: 3px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+	min-width: 400px;
+	min-height: 200px;
+	margin-top: 10%;
+	display: inline-block;
+	z-index: 101;
+	overflow: hidden;
+}
+
+#dialog-titlebar {
+	position: relative;
+	background: #222;
+	text-align: left;
+}
+
+#dialog-titlebar .title {
+	color: #FFF;
+	font-size: 1.3em;
+	font-weight: bold;
+	line-height: 40px;
+	padding-left: 1em;
+	margin: 0;
+}
+
+#dialog-titlebar .btn-close {
+	border: 0;
+	background: transparent;
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	cursor: pointer;
+	display: block;
+	width: 20px;
+	height: 20px;
+	outline: none;
+}
+#dialog-titlebar .svg-icon { fill: #FFF; }
+
+#dialog-content {
+	padding: 20px;
+	text-align: left;
 }

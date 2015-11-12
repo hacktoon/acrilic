@@ -1,5 +1,6 @@
 
 AC.editor = (function(){
+	"use strict";
 
     var _editArea,
 		_layers = [],
@@ -45,6 +46,26 @@ AC.editor = (function(){
 		setCurrentLayer: function(level){
 			if(_layers[level])
 				_currentLayer = level;
+		},
+
+		openDialog: function(title, content, action){
+			var dialog = $('#dialog-overlay');
+			dialog.find('#dialog-content').html(content);
+			dialog.find('.btn-close').on('click', function(){
+				dialog.hide();
+				dialog.find('#dialog-content').html('');
+			});
+			dialog.find('#dialog-titlebar .title').html(title);
+			dialog.show();
+			//action();
+		},
+
+		initMenu: function(){
+			var self = this;
+			$('#btn-file-new').on('click', function(){
+				var content = $('#dialog-file-new').html();
+				self.openDialog('New map', content);
+			});
 		},
 		
         init: function(elem_id)
@@ -106,6 +127,8 @@ AC.editor = (function(){
 			});
 			
 			_toolSelected = self.toolPen;
+
+			this.initMenu();
         }
     };
 

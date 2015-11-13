@@ -78,20 +78,84 @@ AC.editor = (function(){
 			dialog.appendTo('body').show();
 		},
 
+		createDialogHandler: function(options){
+			var self = this,
+				opt = options || {},
+				templateString = $(opt.templateSelector).html();
+			$(opt.btnSelector).on('click', function(){
+				self.openDialog(opt.title, $(templateString), opt.buttonSet);
+			});
+		},
+
+		createSwitchModeHandler: function(generalSelector, options){
+			var toggleClass = 'active',
+				optionList = $(generalSelector);
+			
+			optionList.on('click', function(e){
+				optionList.removeClass(toggleClass);
+				var target = $(this),
+					id = '#' + target.attr('id'),
+					value = options[id];
+				target.addClass(toggleClass);
+			});
+		},
+
 		initMenu: function(){
 			var self = this;
-			$('#btn-file-new').on('click', function(){
-				var content = $($('#tpl-dialog-file-new').html());
-				var buttonSet = [
+
+			this.createDialogHandler({
+				title: 'New map',
+				btnSelector: '#btn-file-new',
+				templateSelector: '#tpl-dialog-file-new',
+				buttonSet: [
 					{title: 'OK', action: function(){
 						alert('OK');
 					}},
 					{title: 'Cancel', action: function(){
 						self.closeDialog();
 					}}
-				];
-				self.openDialog('New map', content, buttonSet);
+				]
 			});
+
+			this.createDialogHandler({
+				title: 'Import',
+				btnSelector: '#btn-file-import',
+				templateSelector: '#tpl-dialog-file-import',
+				buttonSet: [
+					{title: 'Import', action: function(){
+						$('#field-file-import-output').val();
+					}},
+					{title: 'Cancel', action: function(){
+						self.closeDialog();
+					}}
+				]
+			});
+
+			this.createDialogHandler({
+				title: 'Export',
+				btnSelector: '#btn-file-export',
+				templateSelector: '#tpl-dialog-file-export',
+				buttonSet: [
+					{title: 'Close', action: function(){
+						self.closeDialog();
+					}}
+				]
+			});
+
+			this.createSwitchModeHandler('.btn-tool', {
+				'#btn-tool-pen': 'pen',
+				'#btn-tool-fill': 'fill',
+				'#btn-tool-eraser': 'eraser'
+			});
+
+			this.createSwitchModeHandler('.btn-layer', {
+				'#btn-layer-bg': 'bg',
+				'#btn-layer-fg': 'fg',
+				'#btn-layer-event': 'event'
+			});
+
+			$('#btn-tool-pen, #btn-layer-bg').trigger('click');
+
 		},
 		
         init: function(elem_id)

@@ -10,21 +10,21 @@
 <body>
     <section id="main-menu">
     	<ul id="file-menu">
-    		<li><button class="menu-btn" id="btn-file-new" title="New map">New</button></li>
-    		<li><button class="menu-btn" id="btn-file-import" title="Import map">Import</button></li>
-    		<li><button class="menu-btn" id="btn-file-export" title="Export map">Export</button></li>
+    		<li><button class="btn-menu btn-file" id="btn-file-new" title="New map">New</button></li>
+    		<li><button class="btn-menu btn-file" id="btn-file-import" title="Import map">Import</button></li>
+    		<li><button class="btn-menu btn-file" id="btn-file-export" title="Export map">Export</button></li>
     	</ul>
 
     	<ul id="tools-menu">
-    		<li><button class="menu-btn" id="btn-tool-pen" title="Pen">Pen</button></li>
-    		<li><button class="menu-btn" id="btn-tool-fill" title="Fill">Fill</button></li>
-    		<li><button class="menu-btn" id="btn-tool-eraser" title="Eraser">Eraser</button></li>
+    		<li><button class="btn-menu btn-tool" id="btn-tool-pen" title="Pen">Pen</button></li>
+    		<li><button class="btn-menu btn-tool" id="btn-tool-fill" title="Fill">Fill</button></li>
+    		<li><button class="btn-menu btn-tool" id="btn-tool-eraser" title="Eraser">Eraser</button></li>
     	</ul>
 
     	<ul id="layers-menu">
-    		<li><button class="menu-btn" id="btn-layer-bg" title="BG Layer">BG</button></li>
-    		<li><button class="menu-btn" id="btn-layer-fg" title="FG Layer">FG</button></li>
-    		<li><button class="menu-btn" id="btn-layer-event" title="Event Layer">EVT</button></li>
+    		<li><button class="btn-menu btn-layer" id="btn-layer-bg" title="BG Layer">BG</button></li>
+    		<li><button class="btn-menu btn-layer" id="btn-layer-fg" title="FG Layer">FG</button></li>
+    		<li><button class="btn-menu btn-layer" id="btn-layer-event" title="Event Layer">EVT</button></li>
     	</ul>
     </section>
 
@@ -61,6 +61,18 @@
 			<div class="form-row">
 				<label for="field-file-height-name">Height (tiles)</label><input type="number" id="field-file-height-name" />
 			</div>
+		</form>
+	</script>
+
+	<script id="tpl-dialog-file-import" type="text/template">
+		<form action="" id="form-file-import">
+			<textarea id="field-file-import-output" cols="60" rows="20"></textarea>
+		</form>
+	</script>
+
+	<script id="tpl-dialog-file-export" type="text/template">
+		<form action="" id="form-file-export">
+			<textarea id="field-file-export-output" cols="60" rows="20"></textarea>
 		</form>
 	</script>
 

@@ -42,6 +42,7 @@ input {
 }
 
 
+
 #main-menu {
     height: 40px;
 	text-align: left;
@@ -58,7 +59,7 @@ input {
 	float: left;
 }
 
-#main-menu .menu-btn {
+#main-menu .btn-menu {
 	background: transparent;
 	border: none;
 	color: #FFF;
@@ -66,8 +67,14 @@ input {
 	height: 30px;
 	font-weight: bold;
 }
-#main-menu .menu-btn:hover {
+#main-menu .btn-menu:hover {
 	text-decoration: underline;
+}
+
+#main-menu .btn-menu.active {
+	background: #CCC;
+	border-radius: 3px;
+	color: #222;
 }
 
 /* main window with open files in tabs --------------------------- */

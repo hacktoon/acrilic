@@ -1,20 +1,20 @@
 
 AC.interface = (function(){
 	"use strict";
-	
+
+	var buildDialogButtons = function(dialog, buttonSet){
+		var output = '';
+		for (var i=0; i<buttonSet.length; i++){
+			var btn = buttonSet[i],
+				id = 'btn-' + btn.title.replace(/\s+/g, '-').toLowerCase();
+			output += '<button id="' + id + '">' + btn.title + '</button>';
+			dialog.on('click', '#' + id, btn.action);
+		}
+		return output;
+	};
+
+
 	return {
-
-		buildDialogButtons: function(dialog, buttonSet){
-			var output = '';
-			for (var i=0; i<buttonSet.length; i++){
-				var btn = buttonSet[i],
-					id = 'btn-' + btn.title.replace(/\s+/g, '-').toLowerCase();
-				output += '<button id="' + id + '">' + btn.title + '</button>';
-				dialog.on('click', '#' + id, btn.action);
-			}
-			return output;
-		},
-
 		closeDialog: function(){
 			$('#dialog-overlay').remove();
 		},
@@ -30,7 +30,7 @@ AC.interface = (function(){
 			});
 			dialog.find('#dialog-titlebar .title').html(title);
 			dialogContent.html(content);
-			dialogButtonSet.html(this.buildDialogButtons(dialog, buttonSet));
+			dialogButtonSet.html(buildDialogButtons(dialog, buttonSet));
 			dialog.appendTo('body').show();
 		},
 

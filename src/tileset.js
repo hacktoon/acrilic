@@ -1,7 +1,7 @@
 // opera a paleta de tiles
 AC.tileset = (function(){
 	
-	var _gfx = AC.gfx; //alias
+	var _graphics = AC.graphics; //alias
 	
 	return {
 		//element bound to object
@@ -30,7 +30,7 @@ AC.tileset = (function(){
 		{
 			var self = this;
 			var t = AC.tileSize;
-			var ctx = _gfx.createCanvas(t, t);
+			var ctx = _graphics.createCanvas(t, t);
 			var menutile = $(ctx.canvas).addClass("menu-tile")
 				.data("tilecode", tilecode)
 				.click(function(){
@@ -63,7 +63,7 @@ AC.tileset = (function(){
 		loadTileset: function(src)
 		{
 			var self = this;
-			_gfx.loadImage(src, function(image, width, height){
+			_graphics.loadImage(src, function(image, width, height){
 				self.buildTileset(image, width, height);
 				self.sourceImage = image;
 			});

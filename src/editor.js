@@ -30,7 +30,7 @@ AC.editor = (function(){
 		addLayer: function(width, height)
 		{
 			//criando canvas
-			var layer = AC.gfx.createCanvas(width, height);
+			var layer = AC.graphics.createCanvas(width, height);
 			_editArea.append(layer.canvas);
 			_layers.push(layer);
 		},

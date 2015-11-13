@@ -142,7 +142,6 @@ input {
 	border-radius: 3px;
 	box-shadow: 1px 1px 1px rgba(0,0,0,0.5);
 	min-width: 400px;
-	min-height: 200px;
 	margin-top: 10%;
 	display: inline-block;
 	z-index: 101;
@@ -153,6 +152,7 @@ input {
 	position: relative;
 	background: #222;
 	text-align: left;
+    min-height: 40px;
 }
 
 #dialog-titlebar .title {
@@ -177,8 +177,14 @@ input {
 #dialog-titlebar .svg-icon { fill: #FFF; }
 
 #dialog-content {
-	padding: 20px;
+    font-size: 1.1em;
+    padding: 20px;
 	text-align: left;
+}
+
+#dialog-content p {
+    color: #FFF;
+    margin: 0;
 }
 
 #dialog-button-panel {
@@ -195,4 +201,8 @@ input {
 	color: #FFF;
 	font-size: 1.2em;
 	margin-left: 10px;
+}
+
+#dialog-button-panel button:hover {
+    background: #3A3A3A;
 }

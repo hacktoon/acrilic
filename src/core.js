@@ -1,21 +1,14 @@
 //Acrilic on Canvas Gamified Site Editor
 
-window.log = console.log.bind(console);
-
-var AC = (function(){
+var AC = (function($){
 	"use strict";
 	
-	var DEBUG = true,
-		_selected_tile,
+	var _selected_tile,
 		_selected_code;
 
     return {
+		ESC_KEY: 27,
 		tileSize: 0,
-		mapWidth: 0,
-		mapHeight: 0,
-		tileRows: 0,
-		tileCols: 0,
-		startPoint: [0, 0],
 		
 		// current selected tile on the menu
 		tileCodeSelected: {code: 1, x: 0, y: 0},
@@ -33,14 +26,12 @@ var AC = (function(){
 			$("#json").val(json);
 		},
 
-		init: function(tile_cols, tile_rows, tilesize)
-		{
-			this.tileCols = tile_cols;
-			this.tileRows = tile_rows;
-			this.tileSize = tilesize;
-			//calculate canvas dimensions
-			this.mapWidth = tile_cols * tilesize;
-			this.mapHeight = tile_rows * tilesize;
+		init: function(options){
+			var opt = options || {};
+
+			window.log = console.log.bind(console);
+
+			this.tileSize = opt.tileSize;
 			
 			// init the tile object map
 			for (var i = 0; i < this.tileRows; i++) {
@@ -51,4 +42,4 @@ var AC = (function(){
 			}
 		}
     };
-})();
+})(jQuery);

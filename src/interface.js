@@ -1,5 +1,5 @@
 
-AC.interface = (function(){
+AC.interface = (function($){
 	"use strict";
 
 	var buildDialogButtons = function(dialog, buttonSet){
@@ -41,6 +41,12 @@ AC.interface = (function(){
 			$(opt.btnSelector).on('click', function(){
 				self.openDialog(opt.title, $(templateString), opt.buttonSet);
 			});
+
+			$(document).on('keydown', function(e){
+				if (e.which == AC.ESC_KEY){
+					self.closeDialog();
+				}
+			});
 		},
 
 		createSwitchModeHandler: function(generalSelector, options){
@@ -54,6 +60,17 @@ AC.interface = (function(){
 					value = options[id];
 				target.addClass(toggleClass);
 			});
+		},
+
+		confirm: function(message){
+			this.openDialog('', '<p>' + message + '</p>', [
+				{title: 'OK', action: function(){
+					alert('OK');
+				}},
+				{title: 'Cancel', action: function(){
+					self.closeDialog();
+				}}
+			]);
 		},
 
 		init: function(){
@@ -114,4 +131,4 @@ AC.interface = (function(){
 		}
     };
 
-})();
+})(jQuery);

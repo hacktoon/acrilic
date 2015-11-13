@@ -62,10 +62,18 @@ AC.interface = (function($){
 			});
 		},
 
-		confirm: function(message){
+		createTilePallete: function(panelSelector, tileset){
+			var panel = $(panelSelector),
+				width = tileset.width,
+				height = tileset.height;
+
+			
+		},
+
+		confirm: function(message, action){
 			this.openDialog('', '<p>' + message + '</p>', [
 				{title: 'OK', action: function(){
-					alert('OK');
+					action();
 				}},
 				{title: 'Cancel', action: function(){
 					self.closeDialog();

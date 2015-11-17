@@ -62,12 +62,11 @@ AC.interface = (function($){
 			});
 		},
 
-		createTilePallete: function(panelSelector, tileset){
-			var panel = $(panelSelector),
-				width = tileset.width,
-				height = tileset.height;
-
-			
+		createTilePallete: function(panelSelector, srcImage){
+			var panel = $(panelSelector);
+			AC.graphics.loadImage(srcImage, function(img, width, height){
+				
+			});
 		},
 
 		confirm: function(message, action){
@@ -134,6 +133,8 @@ AC.interface = (function($){
 				'#btn-layer-fg': 'fg',
 				'#btn-layer-event': 'event'
 			});
+
+			this.createTilePallete('#tileset-panel', 'img/ground-layer.png');
 
 			$('#btn-tool-pen, #btn-layer-bg').trigger('click');
 		}

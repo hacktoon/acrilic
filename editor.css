@@ -77,7 +77,6 @@ input {
 	color: #222;
 }
 
-/* main window with open files in tabs --------------------------- */
 #editor-panel {
 	position: absolute;
     top: 40px;
@@ -86,22 +85,32 @@ input {
     bottom: 0;
 }
 
-#tileset-panel {
-	position: absolute;
-	background: #555;
+/* TILESET PALETTE --------------------------- */
+#tileset-panel-wrapper {
+    position: absolute;
+    background: #555;
     top: 0;
     left: 0;
-    right: 0;
     bottom: 0;
-    width: 320px;
     overflow-y: scroll;
+    text-align: center;
+    width: 350px;
 }
 
+#tileset-panel {
+	display: inline-block;
+    margin-top: 5px;
+    background: #888;
+    width: 320px;
+    height: 1024px;
+}
+
+/* MAP ---------------------------  */
 #map-panel {
 	background: url("img/screen_bg.png");
 	position: absolute;
     top: 0;
-    left: 320px;
+    left: 350px;
     right: 0;
     bottom: 0;
     z-index: 1;
@@ -110,7 +119,7 @@ input {
 #selection_cursor {
 	position: absolute;
 	outline: solid 2px red;
-	z-index: 5;
+	z-index: 10;
 }
 
 /* lateral menu with widgets ---------------------------  */

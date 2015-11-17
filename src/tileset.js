@@ -1,7 +1,8 @@
 // opera a paleta de tiles
 AC.tileset = (function(){
 	
-	var _graphics = AC.graphics; //alias
+	var _graphics = AC.graphics,
+		TILESIZE = AC.tileSize;
 	
 	return {
 		//element bound to object
@@ -69,10 +70,11 @@ AC.tileset = (function(){
 			});
 		},
 		
-		init: function(elem_id)
+		init: function(elem_id, srcImage)
 		{
 			this.$el = $(elem_id);
 			this.el = this.$el.get(0);
+			this.loadTileset(srcImage);
 		}
 	};
 })();

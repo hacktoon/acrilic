@@ -62,13 +62,6 @@ AC.interface = (function($){
 			});
 		},
 
-		createTilePallete: function(panelSelector, srcImage){
-			var panel = $(panelSelector);
-			AC.graphics.loadImage(srcImage, function(img, width, height){
-				
-			});
-		},
-
 		confirm: function(message, action){
 			this.openDialog('', '<p>' + message + '</p>', [
 				{title: 'OK', action: function(){
@@ -134,7 +127,7 @@ AC.interface = (function($){
 				'#btn-layer-event': 'event'
 			});
 
-			this.createTilePallete('#tileset-panel', 'img/ground-layer.png');
+			AC.tileset.init('#tileset-panel', 'tilesets/ground-layer.png');
 
 			$('#btn-tool-pen, #btn-layer-bg').trigger('click');
 		}

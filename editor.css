@@ -127,7 +127,7 @@ input {
 }
 
 .menu-tile-selected {
-	border: solid 2px #FFF;
+	border: dotted 3px #FFF;
     box-sizing: border-box;
     width: 64px;
     height: 64px;

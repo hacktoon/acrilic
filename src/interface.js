@@ -129,6 +129,9 @@ AC.interface = (function($){
 
 			AC.tileset.init('#tileset-panel', 'tilesets/ground-layer.png');
 
+			// Tweak map panel position
+			$('#map-panel').css('left', $('#tileset-panel-wrapper').width());
+
 			$('#btn-tool-pen, #btn-layer-bg').trigger('click');
 		}
     };

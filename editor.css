@@ -94,12 +94,10 @@ input {
     bottom: 0;
     overflow-y: scroll;
     text-align: center;
-    width: 350px;
 }
 
 #tileset-panel {
-	display: inline-block;
-    margin-top: 5px;
+	margin: 5px;
     background: #888;
     width: 320px;
     height: 1024px;
@@ -110,10 +108,10 @@ input {
 	background: url("img/screen_bg.png");
 	position: absolute;
     top: 0;
-    left: 350px;
     right: 0;
     bottom: 0;
     z-index: 1;
+    overflow: auto;
 }
 
 #selection_cursor {
@@ -129,7 +127,10 @@ input {
 }
 
 .menu-tile-selected {
-	outline: solid 2px #FFF;
+	border: solid 2px #FFF;
+    box-sizing: border-box;
+    width: 64px;
+    height: 64px;
 }
 
 

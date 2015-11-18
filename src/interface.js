@@ -60,7 +60,7 @@ AC.Interface = (function(){
 			optionList.on('click', function(e){
 				optionList.removeClass(toggleClass);
 				var target = $(this),
-					id = '#' + target.attr('id'),
+					id = target.attr('id'),
 					value = options[id];
 				target.addClass(toggleClass);
 			});
@@ -69,10 +69,34 @@ AC.Interface = (function(){
 
 		createTilesetPalette: function(panelSelector, options){
 			var self = this,
-				palette = $(panelSelector);
+				t = AC.TILESIZE,
+				palette = $(panelSelector),
+				currentSelected,
+				selectedClass = "menu-tile-selected";
 
 			this.Graphics.loadImage(options.srcImage, function(image, width, height){
-				self.Tileset.buildTileset(image, width, height);
+				var cols = Math.floor(width / t),
+					rows = Math.floor(height / t);
+
+				for (var i = 0; i < rows; i++) {
+					for (var j = 0; j < cols; j++) {
+						var tile = self.Graphics.createCanvas(t, t);
+						tile.draw(image, j*t, i*t);
+						tile.elem.addClass("menu-tile").data("tilecode", 0);
+						palette.append(tile.elem);
+					}
+				}
+
+				palette.on('click', '.menu-tile', function(){
+					var target = $(this);
+					
+					if(currentSelected)
+						currentSelected.removeClass(selectedClass);
+					target.addClass(selectedClass);
+					currentSelected = target;
+				})
+				.find('.menu-tile:first')
+				.trigger('click');
 			});
 		},
 
@@ -89,7 +113,6 @@ AC.Interface = (function(){
 
 		build: function(modules){
 			var self = this;
-			this.Tileset = modules.tileset;
 			this.Graphics = modules.graphics;
 
 			this.createDialogHandler({
@@ -136,15 +159,15 @@ AC.Interface = (function(){
 			});
 
 			this.createSwitchModeHandler('.btn-tool', {
-				'#btn-tool-pen': 'pen',
-				'#btn-tool-fill': 'fill',
-				'#btn-tool-eraser': 'eraser'
+				'btn-tool-pen': 'pen',
+				'btn-tool-fill': 'fill',
+				'btn-tool-eraser': 'eraser'
 			});
 
 			this.createSwitchModeHandler('.btn-layer', {
-				'#btn-layer-bg': 'bg',
-				'#btn-layer-fg': 'fg',
-				'#btn-layer-event': 'event'
+				'btn-layer-bg': 'bg',
+				'btn-layer-fg': 'fg',
+				'btn-layer-event': 'event'
 			});
 
 			this.createTilesetPalette('#tileset-panel', {

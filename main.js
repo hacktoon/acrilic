@@ -6,7 +6,6 @@
 	AC.init();
 
 	AC.Interface.build({
-		'tileset': AC.Tileset,
 		'graphics': AC.Graphics
 	});
 

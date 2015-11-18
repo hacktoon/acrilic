@@ -87,19 +87,16 @@ input {
 
 /* TILESET PALETTE --------------------------- */
 #tileset-panel-wrapper {
+    background: #888;
     position: absolute;
-    background: #555;
     top: 0;
     left: 0;
     bottom: 0;
     overflow-y: scroll;
-    text-align: center;
 }
 
 #tileset-panel {
-	margin: 5px;
-    background: #888;
-    width: 320px;
+	width: 320px;
     height: 1024px;
 }
 

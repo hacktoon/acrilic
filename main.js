@@ -1,10 +1,13 @@
 (function() {
 	"use strict";
+
+	window.log = console.log.bind(console);
 	
-	/*AC.init(tile_cols, tile_rows, tilesize);
-	AC.tileset.init("#tileset_panel");
-	AC.tileset.loadTileset('tilesets/ground-layer.png');*/
-    AC.init({tileSize: 64});
-	AC.interface.init();
-	
+	AC.init();
+
+	AC.Interface.build({
+		'tileset': AC.Tileset,
+		'graphics': AC.Graphics
+	});
+
 })();

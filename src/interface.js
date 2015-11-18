@@ -1,5 +1,5 @@
 
-AC.interface = (function($){
+AC.Interface = (function(){
 	"use strict";
 
 	var buildDialogButtons = function(dialog, buttonSet){
@@ -38,8 +38,12 @@ AC.interface = (function($){
 			var self = this,
 				opt = options || {},
 				templateString = $(opt.templateSelector).html();
+
 			$(opt.btnSelector).on('click', function(){
 				self.openDialog(opt.title, $(templateString), opt.buttonSet);
+				if (opt.initialize && typeof opt.initialize === 'function'){
+					opt.initialize();
+				}
 			});
 
 			$(document).on('keydown', function(e){
@@ -60,6 +64,16 @@ AC.interface = (function($){
 					value = options[id];
 				target.addClass(toggleClass);
 			});
+			optionList.first().trigger('click');
+		},
+
+		createTilesetPalette: function(panelSelector, options){
+			var self = this,
+				palette = $(panelSelector);
+
+			this.Graphics.loadImage(options.srcImage, function(image, width, height){
+				self.Tileset.buildTileset(image, width, height);
+			});
 		},
 
 		confirm: function(message, action){
@@ -73,8 +87,10 @@ AC.interface = (function($){
 			]);
 		},
 
-		init: function(){
+		build: function(modules){
 			var self = this;
+			this.Tileset = modules.tileset;
+			this.Graphics = modules.graphics;
 
 			this.createDialogHandler({
 				title: 'New map',
@@ -112,7 +128,11 @@ AC.interface = (function($){
 					{title: 'Close', action: function(){
 						self.closeDialog();
 					}}
-				]
+				],
+				initialize: function(){
+					var json = JSON.stringify({a: 2});
+					$("#field-file-export-output").val(json);
+				},
 			});
 
 			this.createSwitchModeHandler('.btn-tool', {
@@ -127,13 +147,13 @@ AC.interface = (function($){
 				'#btn-layer-event': 'event'
 			});
 
-			AC.tileset.init('#tileset-panel', 'tilesets/ground-layer.png');
+			this.createTilesetPalette('#tileset-panel', {
+				srcImage: 'tilesets/ground-layer.png',
+			});
 
 			// Tweak map panel position
 			$('#map-panel').css('left', $('#tileset-panel-wrapper').width());
-
-			$('#btn-tool-pen, #btn-layer-bg').trigger('click');
 		}
     };
 
-})(jQuery);
+})();

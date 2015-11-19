@@ -100,6 +100,19 @@ input {
     height: 1024px;
 }
 
+.menu-tile {
+    float: left;
+    cursor: pointer;
+}
+
+.menu-tile-selected {
+    border: dotted 3px #FFF;
+    box-sizing: border-box;
+    width: 64px;
+    height: 64px;
+}
+
+
 /* MAP ---------------------------  */
 #map-panel {
 	background: url("img/screen_bg.png");
@@ -119,21 +132,9 @@ input {
 
 .selection-cursor {
 	position: absolute;
-	outline: solid 2px red;
-	z-index: 10;
-}
-
-/* lateral menu with widgets ---------------------------  */
-.menu-tile {
-	float: left;
-	cursor: pointer;
-}
-
-.menu-tile-selected {
-	border: dotted 3px #FFF;
+	border: dotted 2px #333;
     box-sizing: border-box;
-    width: 64px;
-    height: 64px;
+	z-index: 10;
 }
 
 

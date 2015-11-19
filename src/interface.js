@@ -2,37 +2,7 @@
 AC.Interface = (function(){
 	"use strict";
 
-	var buildDialogButtons = function(dialog, buttonSet){
-		var output = '';
-		for (var i=0; i<buttonSet.length; i++){
-			var btn = buttonSet[i],
-				id = 'btn-' + btn.title.replace(/\s+/g, '-').toLowerCase();
-			output += '<button id="' + id + '">' + btn.title + '</button>';
-			dialog.on('click', '#' + id, btn.action);
-		}
-		return output;
-	};
-
-
 	return {
-		closeDialog: function(){
-			$('#dialog-overlay').remove();
-		},
-
-		openDialog: function(title, content, buttonSet){
-			var self = this;
-			var dialog = $($('#tpl-dialog-overlay').html()),
-				dialogContent = dialog.find('#dialog-content'),
-				dialogButtonSet = dialog.find('#dialog-button-panel');
-
-			dialog.find('.btn-close').on('click', function(){
-				self.closeDialog();
-			});
-			dialog.find('#dialog-titlebar .title').html(title);
-			dialogContent.html(content);
-			dialogButtonSet.html(buildDialogButtons(dialog, buttonSet));
-			dialog.appendTo('body').show();
-		},
 
 		createDialogHandler: function(options){
 			var self = this,
@@ -40,7 +10,7 @@ AC.Interface = (function(){
 				templateString = $(opt.templateSelector).html();
 
 			$(opt.btnSelector).on('click', function(){
-				self.openDialog(opt.title, $(templateString), opt.buttonSet);
+				self.Dialog.open(opt.title, $(templateString), opt.buttonSet);
 				if (opt.initialize && typeof opt.initialize === 'function'){
 					opt.initialize();
 				}
@@ -48,7 +18,7 @@ AC.Interface = (function(){
 
 			$(document).on('keydown', function(e){
 				if (e.which == AC.ESC_KEY){
-					self.closeDialog();
+					self.Dialog.close();
 				}
 			});
 		},
@@ -100,20 +70,10 @@ AC.Interface = (function(){
 			});
 		},
 
-		confirm: function(message, action){
-			this.openDialog('', '<p>' + message + '</p>', [
-				{title: 'OK', action: function(){
-					action();
-				}},
-				{title: 'Cancel', action: function(){
-					self.closeDialog();
-				}}
-			]);
-		},
-
 		build: function(modules){
 			var self = this;
 			this.Graphics = modules.graphics;
+			this.Dialog = modules.dialog;
 
 			this.createDialogHandler({
 				title: 'New map',
@@ -124,7 +84,7 @@ AC.Interface = (function(){
 						alert('OK');
 					}},
 					{title: 'Cancel', action: function(){
-						self.closeDialog();
+						self.Dialog.close();
 					}}
 				]
 			});
@@ -138,7 +98,7 @@ AC.Interface = (function(){
 						$('#field-file-import-output').val();
 					}},
 					{title: 'Cancel', action: function(){
-						self.closeDialog();
+						self.Dialog.close();
 					}}
 				]
 			});
@@ -149,7 +109,7 @@ AC.Interface = (function(){
 				templateSelector: '#tpl-dialog-file-export',
 				buttonSet: [
 					{title: 'Close', action: function(){
-						self.closeDialog();
+						self.Dialog.close();
 					}}
 				],
 				initialize: function(){

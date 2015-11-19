@@ -6,7 +6,12 @@
 	AC.init();
 
 	AC.Interface.build({
-		'graphics': AC.Graphics
+		'graphics': AC.Graphics,
+		'dialog': AC.Dialog
 	});
+
+	/*AC.Editor.init({
+		'maps': AC.Maps
+	});*/
 
 })();

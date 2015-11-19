@@ -110,8 +110,14 @@ input {
     z-index: 1;
     overflow: auto;
 }
+#map-panel .map {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
 
-#selection_cursor {
+.selection-cursor {
 	position: absolute;
 	outline: solid 2px red;
 	z-index: 10;

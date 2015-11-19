@@ -70,6 +70,55 @@ AC.Interface = (function(){
 			});
 		},
 
+		createMapEditor: function(mapSelector){
+			var self = this,
+				editor = $(mapSelector),
+				t = AC.TILESIZE;
+
+			var cursorData = {x: 0, y: 0, dragging: false};
+
+			//cursor de seleção
+			var selectCursor = $("<div/>")
+				.addClass("selection-cursor")
+				.css({"width": t, "height": t});
+			editor.append(selectCursor);
+
+            //update the selection cursor
+            editor.on('mousemove', function(e){
+				//deslocamento em relacao à tela
+				var x_offset = editor.offset().left,
+					y_offset = editor.offset().top,
+					x_scroll = editor.scrollLeft() + $(document).scrollLeft(),
+					y_scroll = editor.scrollTop() + $(document).scrollTop();
+				//posição relativa do mouse
+				var x = e.clientX - x_offset + x_scroll,
+					y = e.clientY - y_offset + y_scroll;
+
+				x = (x < 0) ? 0 : x;
+				y = (y < 0) ? 0 : y;
+				cursorData.x = parseInt(x / t);
+				cursorData.y = parseInt(y / t);
+
+				selectCursor.css("left", cursorData.x * t);
+				selectCursor.css("top", cursorData.y * t);
+				// Allows painting while dragging
+				if(cursorData.dragging){
+					self.setTile();
+				}
+			});
+			
+			// when clicked, gets the current selected tile and paints
+			editor.on('mousedown', function(e){
+				e.preventDefault();
+				//_toolSelected.action();
+				cursorData.dragging = true;
+			});
+			
+			$(document).on('mouseup', function(){
+				cursorData.dragging = false;
+			});
+		},
+
 		build: function(modules){
 			var self = this;
 			this.Graphics = modules.graphics;
@@ -133,6 +182,8 @@ AC.Interface = (function(){
 			this.createTilesetPalette('#tileset-panel', {
 				srcImage: 'tilesets/ground-layer.png',
 			});
+
+			this.createMapEditor('#map-panel');
 
 			// Tweak map panel position
 			$('#map-panel').css('left', $('#tileset-panel-wrapper').width());

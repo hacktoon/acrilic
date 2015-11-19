@@ -43,17 +43,7 @@ AC.editor = (function(){
         init: function(elem_id)
         {
 			var self = this;
-			var width = AC.mapWidth;
-			var height = AC.mapHeight;
-			this.$el = $(elem_id);
-			var tilesize = AC.tileSize;
 			
-			_editArea = $("<div/>")
-				.attr("id", "edit_area")
-				.css("width", width)
-				.css("height", height);
-			this.$el.append(_editArea);
-			// add a initial layer 
 			this.addLayer(width, height);
 			
             //cursor de seleção

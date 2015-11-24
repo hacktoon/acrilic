@@ -124,69 +124,10 @@ AC.Interface = (function(){
 			this.Graphics = modules.graphics;
 			this.Dialog = modules.dialog;
 
-			this.createDialogHandler({
-				title: 'New map',
-				btnSelector: '#btn-file-new',
-				templateSelector: '#tpl-dialog-file-new',
-				buttonSet: [
-					{title: 'OK', action: function(){
-						alert('OK');
-					}},
-					{title: 'Cancel', action: function(){
-						self.Dialog.close();
-					}}
-				]
-			});
-
-			this.createDialogHandler({
-				title: 'Import',
-				btnSelector: '#btn-file-import',
-				templateSelector: '#tpl-dialog-file-import',
-				buttonSet: [
-					{title: 'Import', action: function(){
-						$('#field-file-import-output').val();
-					}},
-					{title: 'Cancel', action: function(){
-						self.Dialog.close();
-					}}
-				]
-			});
-
-			this.createDialogHandler({
-				title: 'Export',
-				btnSelector: '#btn-file-export',
-				templateSelector: '#tpl-dialog-file-export',
-				buttonSet: [
-					{title: 'Close', action: function(){
-						self.Dialog.close();
-					}}
-				],
-				initialize: function(){
-					var json = JSON.stringify({a: 2});
-					$("#field-file-export-output").val(json);
-				},
-			});
-
-			this.createSwitchModeHandler('.btn-tool', {
-				'btn-tool-pen': 'pen',
-				'btn-tool-fill': 'fill',
-				'btn-tool-eraser': 'eraser'
-			});
-
-			this.createSwitchModeHandler('.btn-layer', {
-				'btn-layer-bg': 'bg',
-				'btn-layer-fg': 'fg',
-				'btn-layer-event': 'event'
-			});
-
-			this.createTilesetPalette('#tileset-panel', {
-				srcImage: 'tilesets/ground-layer.png',
-			});
-
-			this.createMapEditor('#map-panel');
-
 			// Tweak map panel position
 			$('#map-panel').css('left', $('#tileset-panel-wrapper').width());
+
+			return this;
 		}
     };
 

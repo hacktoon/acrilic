@@ -14,7 +14,7 @@ AC.Graphics = (function(){
 	return {
 		loadImage: function(src, callback){
 			//load the tileset image
-			var image = new Image();  // Create new img element
+			var image = new Image();
 			image.onload = function(){
 				callback(image, image.width, image.height);
 			};

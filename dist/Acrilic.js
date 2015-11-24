@@ -3,6 +3,8 @@
 var AC = (function(){
 	"use strict";
 
+	window.log = console.log.bind(console);
+
     return {
 		ESC_KEY: 27,
 		TILESIZE: 64,
@@ -70,40 +72,22 @@ AC.Dialog = (function(){
 
 })();
 ;
-AC.editor = (function(){
+AC.Editor = (function(){
 	"use strict";
 
-    var _layers = [],
-		_currentLayer = 0,
-		_tools = [],
-		_toolSelected;
+	var _maps = [],
+		_currentMap,
+		_tools = [];
 	
 	return {
+		currentTool: '',
 		
-		setTile: function(){
-			//position in the tileset image
-			var dx = _cursor.x,
-				dy = _cursor.y,
-				sx = AC.tileCodeSelected.x,
-				sy = AC.tileCodeSelected.y,
-				t = AC.tileSize,
-				img = AC.tileset.sourceImage;
-			if (AC.tileMap[dy][dx] != AC.tileCodeSelected.code){
-				AC.tileMap[dy][dx] = AC.tileCodeSelected.code;
-				_layers[_currentLayer].drawImage(img, sx*t, sy*t, t, t, dx*t, dy*t, t, t);
-			}
-		},
-		
-        init: function(elem_id)
-        {
+		setMap: function(map){
 			var self = this;
-			
-			this.addLayer(width, height);
-			
-            
-			
-        }
-    };
+			_maps.push(map);
+			_currentMap = map;
+		}
+	};
 
 })();
 ;// graphics functions
@@ -122,7 +106,7 @@ AC.Graphics = (function(){
 	return {
 		loadImage: function(src, callback){
 			//load the tileset image
-			var image = new Image();  // Create new img element
+			var image = new Image();
 			image.onload = function(){
 				callback(image, image.width, image.height);
 			};
@@ -268,95 +252,52 @@ AC.Interface = (function(){
 			this.Graphics = modules.graphics;
 			this.Dialog = modules.dialog;
 
-			this.createDialogHandler({
-				title: 'New map',
-				btnSelector: '#btn-file-new',
-				templateSelector: '#tpl-dialog-file-new',
-				buttonSet: [
-					{title: 'OK', action: function(){
-						alert('OK');
-					}},
-					{title: 'Cancel', action: function(){
-						self.Dialog.close();
-					}}
-				]
-			});
-
-			this.createDialogHandler({
-				title: 'Import',
-				btnSelector: '#btn-file-import',
-				templateSelector: '#tpl-dialog-file-import',
-				buttonSet: [
-					{title: 'Import', action: function(){
-						$('#field-file-import-output').val();
-					}},
-					{title: 'Cancel', action: function(){
-						self.Dialog.close();
-					}}
-				]
-			});
-
-			this.createDialogHandler({
-				title: 'Export',
-				btnSelector: '#btn-file-export',
-				templateSelector: '#tpl-dialog-file-export',
-				buttonSet: [
-					{title: 'Close', action: function(){
-						self.Dialog.close();
-					}}
-				],
-				initialize: function(){
-					var json = JSON.stringify({a: 2});
-					$("#field-file-export-output").val(json);
-				},
-			});
-
-			this.createSwitchModeHandler('.btn-tool', {
-				'btn-tool-pen': 'pen',
-				'btn-tool-fill': 'fill',
-				'btn-tool-eraser': 'eraser'
-			});
-
-			this.createSwitchModeHandler('.btn-layer', {
-				'btn-layer-bg': 'bg',
-				'btn-layer-fg': 'fg',
-				'btn-layer-event': 'event'
-			});
-
-			this.createTilesetPalette('#tileset-panel', {
-				srcImage: 'tilesets/ground-layer.png',
-			});
-
-			this.createMapEditor('#map-panel');
-
 			// Tweak map panel position
 			$('#map-panel').css('left', $('#tileset-panel-wrapper').width());
+
+			return this;
 		}
     };
 
 })();
 ;
-AC.Maps = (function(){
+AC.Map = (function(){
 
-    
+    var mapObject = {
+        name: '',
+        grid: [],
+
+        setTile: function(){
+            //position in the tileset image
+            /*var dx = _cursor.x,
+                dy = _cursor.y,
+                sx = AC.tileCodeSelected.x,
+                sy = AC.tileCodeSelected.y,
+                t = AC.tileSize,
+                img = AC.tileset.sourceImage;
+            if (AC.tileMap[dy][dx] != AC.tileCodeSelected.code){
+                AC.tileMap[dy][dx] = AC.tileCodeSelected.code;
+                _layers[_currentLayer].drawImage(img, sx*t, sy*t, t, t, dx*t, dy*t, t, t);
+            }*/
+        }
+    };
     
     return {
-        create: function(cols, rows){
-            var tileMap = [];
+        create: function(name, cols, rows){
+            var map = $.extend(true, {}, mapObject);
+            map.name = name;
             for (var i = 0; i < rows; i++) {
-                tileMap.push([]);
+                map.grid.push([]);
                 for (var j = 0; j < cols; j++) {
-                    tileMap[i].push({id: 0});
+                    map.grid[i].push({id: 0});
                 }
             }
-
+            return map;
         }
     };
 })();
 ;(function() {
 	"use strict";
-
-	window.log = console.log.bind(console);
 	
 	AC.init();
 
@@ -365,8 +306,75 @@ AC.Maps = (function(){
 		'dialog': AC.Dialog
 	});
 
+	AC.Interface.createDialogHandler({
+		title: 'New map',
+		btnSelector: '#btn-file-new',
+		templateSelector: '#tpl-dialog-file-new',
+		buttonSet: [
+			{title: 'OK', action: function(){
+				var name = $('#field-file-new-name').val(),
+					width = $('#field-file-width-name').val(),
+					height = $('#field-file-height-name').val();
+				log('Map created: "' + name + '" with dimensions (' + width + ' x ' + height + ')');
+				var map = AC.Map.create(name, width, height);
+				AC.Editor.setMap(map);
+				AC.Dialog.close();
+			}},
+			{title: 'Cancel', action: function(){
+				AC.Dialog.close();
+			}}
+		]
+	});
+
+	AC.Interface.createDialogHandler({
+		title: 'Import',
+		btnSelector: '#btn-file-import',
+		templateSelector: '#tpl-dialog-file-import',
+		buttonSet: [
+			{title: 'Import', action: function(){
+				$('#field-file-import-output').val();
+			}},
+			{title: 'Cancel', action: function(){
+				AC.Dialog.close();
+			}}
+		]
+	});
+
+	AC.Interface.createDialogHandler({
+		title: 'Export',
+		btnSelector: '#btn-file-export',
+		templateSelector: '#tpl-dialog-file-export',
+		buttonSet: [
+			{title: 'Close', action: function(){
+				AC.Dialog.close();
+			}}
+		],
+		initialize: function(){
+			var json = JSON.stringify({a: 3});
+			$("#field-file-export-output").val(json);
+		},
+	});
+
+	AC.Interface.createSwitchModeHandler('.btn-tool', {
+		'btn-tool-pen': 'pen',
+		'btn-tool-fill': 'fill',
+		'btn-tool-eraser': 'eraser'
+	});
+
+	AC.Interface.createSwitchModeHandler('.btn-layer', {
+		'btn-layer-bg': 'bg',
+		'btn-layer-fg': 'fg',
+		'btn-layer-event': 'event'
+	});
+
+	AC.Interface.createTilesetPalette('#tileset-panel', {
+		srcImage: 'tilesets/ground-layer.png',
+	});
+
+	AC.Interface.createMapEditor('#map-panel');
+
 	/*AC.Editor.init({
-		'maps': AC.Maps
+		'maps': AC.Map
 	});*/
 
 })();

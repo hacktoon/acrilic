@@ -11,7 +11,7 @@
 	});
 
 	/*AC.Editor.init({
-		'maps': AC.Maps
+		'maps': AC.Map
 	});*/
 
 })();

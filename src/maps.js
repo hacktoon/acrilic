@@ -1,18 +1,19 @@
 
-AC.Maps = (function(){
+AC.Map = (function(){
 
-    
+    var mapObject = {
+        grid: []
+    };
     
     return {
         create: function(cols, rows){
-            var tileMap = [];
+            var map = $.extend(true, {}, mapObject);
             for (var i = 0; i < rows; i++) {
-                tileMap.push([]);
+                map.grid.push([]);
                 for (var j = 0; j < cols; j++) {
-                    tileMap[i].push({id: 0});
+                    map.grid[i].push({id: 0});
                 }
             }
-
         }
     };
 })();

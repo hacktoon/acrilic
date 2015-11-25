@@ -2,7 +2,9 @@
 AC.Dialog = (function(){
     "use strict";
 
-    var buildDialogButtons = function(dialog, buttonSet){
+    var _dialogStack = [];
+
+    var _buildDialogButtons = function(dialog, buttonSet){
         var output = '';
         for (var i=0; i<buttonSet.length; i++){
             var btn = buttonSet[i],
@@ -13,25 +15,31 @@ AC.Dialog = (function(){
         return output;
     };
 
-
     return {
         close: function(){
-            $('#dialog-overlay').remove();
+            var dialog = _dialogStack.pop();
+            dialog.remove();
         },
 
         open: function(title, content, buttonSet){
             var self = this,
                 dialog = $($('#tpl-dialog-overlay').html()),
-                dialogContent = dialog.find('#dialog-content'),
-                dialogButtonSet = dialog.find('#dialog-button-panel');
+                dialogContent = dialog.find('.dialog-content'),
+                dialogButtonSet = dialog.find('.dialog-button-panel');
+
+            if (_dialogStack.length === 0){
+                dialog.addClass('dim');
+            }
 
             dialog.find('.btn-close').on('click', function(){
                 self.close();
             });
-            dialog.find('#dialog-titlebar .title').html(title);
+            dialog.find('.dialog-titlebar .title').html(title);
             dialogContent.html(content);
-            dialogButtonSet.html(buildDialogButtons(dialog, buttonSet));
+            dialogButtonSet.html(_buildDialogButtons(dialog, buttonSet));
             dialog.appendTo('body').show();
+
+            _dialogStack.push(dialog);
         },
 
         confirm: function(message, action){
@@ -39,10 +47,10 @@ AC.Dialog = (function(){
             this.open('', '<p>' + message + '</p>', [
                 {title: 'OK', action: function(){
                     action();
-                    self.closeDialog();
+                    self.close();
                 }},
                 {title: 'Cancel', action: function(){
-                    self.closeDialog();
+                    self.close();
                 }}
             ]);
         },
@@ -51,7 +59,7 @@ AC.Dialog = (function(){
             var self = this;
             this.open('', '<p>' + message + '</p>', [
                 {title: 'OK', action: function(){
-                    self.closeDialog();
+                    self.close();
                 }}
             ]);
         }

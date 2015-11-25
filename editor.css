@@ -139,8 +139,8 @@ input {
 
 
 /* DIALOG ---------------------------  */
-#dialog-overlay {
-	background-color: rgba(0,0,0, 0.5);
+.dialog-overlay {
+	background-color: rgba(0, 0, 0, 0);
 	bottom: 0;
 	display: none;
 	position: fixed;
@@ -150,8 +150,9 @@ input {
     text-align: center;
     z-index: 100;
 }
+.dialog-overlay.dim { background-color: rgba(0, 0, 0, 0.5); }
 
-#dialog-container {
+.dialog-container {
 	background: #555;
 	border-radius: 3px;
 	box-shadow: 1px 1px 1px rgba(0,0,0,0.5);
@@ -162,14 +163,14 @@ input {
 	overflow: hidden;
 }
 
-#dialog-titlebar {
+.dialog-titlebar {
 	position: relative;
 	background: #222;
 	text-align: left;
     min-height: 40px;
 }
 
-#dialog-titlebar .title {
+.dialog-titlebar .title {
 	color: #FFF;
 	font-size: 1.3em;
 	font-weight: bold;
@@ -178,7 +179,7 @@ input {
 	margin: 0;
 }
 
-#dialog-titlebar .btn-close {
+.dialog-titlebar .btn-close {
 	border: 0;
 	background: transparent;
 	position: absolute;
@@ -188,26 +189,26 @@ input {
 	width: 20px;
 	height: 20px;
 }
-#dialog-titlebar .svg-icon { fill: #FFF; }
+.dialog-titlebar .svg-icon { fill: #FFF; }
 
-#dialog-content {
+.dialog-content {
     font-size: 1.1em;
     padding: 20px;
 	text-align: left;
 }
 
-#dialog-content p {
+.dialog-content p {
     color: #FFF;
     margin: 0;
 }
 
-#dialog-button-panel {
+.dialog-button-panel {
 	background: #444;
 	padding: 10px;
 	text-align: right;
 }
 
-#dialog-button-panel button {
+.dialog-button-panel button {
 	border: 1px solid #555;
 	background: #333;
 	border-radius: 3px;
@@ -217,6 +218,6 @@ input {
 	margin-left: 10px;
 }
 
-#dialog-button-panel button:hover {
+.dialog-button-panel button:hover {
     background: #3A3A3A;
 }

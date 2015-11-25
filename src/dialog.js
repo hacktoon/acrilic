@@ -25,21 +25,33 @@ AC.Dialog = (function(){
                 dialogContent = dialog.find('#dialog-content'),
                 dialogButtonSet = dialog.find('#dialog-button-panel');
 
-            dialog.find('.btn-close').on('click', function(){
-                self.close();
-            });
             dialog.find('#dialog-titlebar .title').html(title);
             dialogContent.html(content);
             dialogButtonSet.html(buildDialogButtons(dialog, buttonSet));
-            dialog.appendTo('body').show();
+            dialog.appendTo('body')
+                .find('.btn-close').on('click', function(){
+                    self.close();
+                })
+                .show();
         },
 
         confirm: function(message, action){
+            var self = this;
             this.open('', '<p>' + message + '</p>', [
                 {title: 'OK', action: function(){
                     action();
+                    self.closeDialog();
                 }},
                 {title: 'Cancel', action: function(){
+                    self.closeDialog();
+                }}
+            ]);
+        },
+
+        alert: function(message, action){
+            var self = this;
+            this.open('', '<p>' + message + '</p>', [
+                {title: 'OK', action: function(){
                     self.closeDialog();
                 }}
             ]);

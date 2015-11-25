@@ -2,6 +2,12 @@
 AC.Interface = (function(){
 	"use strict";
 
+	$(document).on('keydown', function(e){
+		if (e.which == AC.ESC_KEY){
+			self.Dialog.close();
+		}
+	});
+
 	return {
 
 		createDialogHandler: function(options){
@@ -13,12 +19,6 @@ AC.Interface = (function(){
 				self.Dialog.open(opt.title, $(templateString), opt.buttonSet);
 				if (opt.initialize && typeof opt.initialize === 'function'){
 					opt.initialize();
-				}
-			});
-
-			$(document).on('keydown', function(e){
-				if (e.which == AC.ESC_KEY){
-					self.Dialog.close();
 				}
 			});
 		},
@@ -70,7 +70,7 @@ AC.Interface = (function(){
 			});
 		},
 
-		createMapEditor: function(mapSelector){
+		createMapEditor: function(mapSelector, action){
 			var self = this,
 				editor = $(mapSelector),
 				t = AC.TILESIZE;

@@ -25,14 +25,13 @@ AC.Dialog = (function(){
                 dialogContent = dialog.find('#dialog-content'),
                 dialogButtonSet = dialog.find('#dialog-button-panel');
 
+            dialog.find('.btn-close').on('click', function(){
+                self.close();
+            });
             dialog.find('#dialog-titlebar .title').html(title);
             dialogContent.html(content);
             dialogButtonSet.html(buildDialogButtons(dialog, buttonSet));
-            dialog.appendTo('body')
-                .find('.btn-close').on('click', function(){
-                    self.close();
-                })
-                .show();
+            dialog.appendTo('body').show();
         },
 
         confirm: function(message, action){

@@ -140,7 +140,7 @@ input {
 
 /* DIALOG ---------------------------  */
 .dialog-overlay {
-	background-color: rgba(0, 0, 0, 0);
+	background-color: rgba(0, 0, 0, 0.5);
 	bottom: 0;
 	display: none;
 	position: fixed;
@@ -150,7 +150,6 @@ input {
     text-align: center;
     z-index: 100;
 }
-.dialog-overlay.dim { background-color: rgba(0, 0, 0, 0.5); }
 
 .dialog-container {
 	background: #555;

@@ -10,8 +10,11 @@ var AC = (function(){
 		TILESIZE: 64,
 
 		init: function(){
-			
-			
+
+			this.Interface.build({
+				'graphics': this.Graphics,
+				'dialog': this.Dialog
+			});
 			// init the tile object map
 			/*for (var i = 0; i < this.tileRows; i++) {
 				this.tileMap.push([]);
@@ -26,44 +29,52 @@ var AC = (function(){
 AC.Dialog = (function(){
     "use strict";
 
-    var _dialogStack = [];
+    var _dialogObject = {
+        elem: undefined,
+        open: function(){
+            this.elem.show();
+        },
+        close: function(){
+            this.elem.hide();
+        },
+    };
 
     var _buildDialogButtons = function(dialog, buttonSet){
         var output = '';
+        var setButtonAction = function(btn, id){
+            dialog.elem.on('click', '#' + id, function(){
+                btn.action(dialog);
+            });
+        };
         for (var i=0; i<buttonSet.length; i++){
             var btn = buttonSet[i],
                 id = 'btn-' + btn.title.replace(/\s+/g, '-').toLowerCase();
             output += '<button id="' + id + '">' + btn.title + '</button>';
-            dialog.on('click', '#' + id, btn.action);
+            setButtonAction(btn, id);
         }
         return output;
     };
 
     return {
-        close: function(){
-            var dialog = _dialogStack.pop();
-            dialog.remove();
-        },
-
-        open: function(title, content, buttonSet){
-            var self = this,
-                dialog = $($('#tpl-dialog-overlay').html()),
-                dialogContent = dialog.find('.dialog-content'),
-                dialogButtonSet = dialog.find('.dialog-button-panel');
-
-            if (_dialogStack.length === 0){
-                dialog.addClass('dim');
-            }
-
-            dialog.find('.btn-close').on('click', function(){
-                self.close();
+        modal: function(title, content, buttonSet){
+            var dialog = $.extend(true, {}, _dialogObject),
+                elem = dialog.elem = $($('#tpl-dialog-overlay').html());
+            elem.find('.btn-close').on('click', function(){
+                dialog.close();
             });
-            dialog.find('.dialog-titlebar .title').html(title);
-            dialogContent.html(content);
-            dialogButtonSet.html(_buildDialogButtons(dialog, buttonSet));
-            dialog.appendTo('body').show();
+            elem.find('.dialog-titlebar .title').html(title);
+            elem.find('.dialog-content').html(content);
+            elem.find('.dialog-button-panel').html(_buildDialogButtons(dialog, buttonSet));
 
-            _dialogStack.push(dialog);
+            $(document).on('keydown', function(e){
+                if (e.which == AC.ESC_KEY){
+                    dialog.close();
+                }
+            });
+
+            $('body').append(elem);
+
+            return dialog;
         },
 
         confirm: function(message, action){
@@ -74,15 +85,6 @@ AC.Dialog = (function(){
                     self.close();
                 }},
                 {title: 'Cancel', action: function(){
-                    self.close();
-                }}
-            ]);
-        },
-
-        alert: function(message, action){
-            var self = this;
-            this.open('', '<p>' + message + '</p>', [
-                {title: 'OK', action: function(){
                     self.close();
                 }}
             ]);
@@ -146,83 +148,21 @@ AC.Graphics = (function(){
 	};
 })();
 ;
-AC.Input = (function(){
-    "use strict";
-
-    var _Dialog;
-
-    var _runValidation = function(condition, errorMsg){
-        if (condition){
-            return {status: true};
-        }
-        return {status: false, msg: errorMsg};
-    };
-
-    var _validators = {
-        type: function(type, input){
-            return _runValidation(typeof input === type, 'Expected a ' + type + ' type.');
-        },
-
-        min: function(minAllowed, input){
-            if (typeof input === 'string'){
-                return _runValidation(input.length >= minAllowed, 'Input length must be greater or equal than ' + minAllowed + ' characters.');
-            }
-            if (typeof input === 'number'){
-                return _runValidation(Number(input) >= minAllowed, 'Input must be greater or equal than ' + minAllowed + '.');
-            }
-            return {status: false, msg: 'Wrong data type!'};
-        },
-
-        max: function(maxAllowed, input){
-            if (typeof input === 'string'){
-                return _runValidation(input.length <= maxAllowed, 'Input length must be less or equal than ' + maxAllowed + ' characters.');
-            }
-            if (typeof input === 'number'){
-                return _runValidation(Number(input) <= maxAllowed, 'Input must be less or equal than ' + maxAllowed + '.');
-            }
-            return {status: false, msg: 'Wrong data type!'};
-        }
-    };
-
-    return {
-        validate: function(fieldSelector, rules){
-            var field = $(fieldSelector),
-                fieldValue = $.trim(field.val());
-            for (var key in rules){
-                var ruleValue = rules[key],
-                    ruleFunc = _validators[key],
-                    result = ruleFunc(ruleValue, fieldValue);
-                _Dialog.alert(result.msg);
-                return result.status;
-            }
-        },
-
-        init: function(modules){
-            _Dialog = modules.dialog;
-        }
-    };
-
-})();
-;
 AC.Interface = (function(){
 	"use strict";
 
-	$(document).on('keydown', function(e){
-		if (e.which == AC.ESC_KEY){
-			self.Dialog.close();
-		}
-	});
+	var _Dialog, _Graphics;
 
 	return {
-
 		createDialogHandler: function(options){
 			var self = this,
 				opt = options || {},
 				templateString = $(opt.templateSelector).html();
 
+			var dialog = _Dialog.modal(opt.title, $(templateString), opt.buttonSet);
 			$(opt.btnSelector).on('click', function(){
-				self.Dialog.open(opt.title, $(templateString), opt.buttonSet);
-				if (opt.initialize && typeof opt.initialize === 'function'){
+				dialog.open();
+				if ($.isFunction(opt.initialize)){
 					opt.initialize();
 				}
 			});
@@ -249,13 +189,13 @@ AC.Interface = (function(){
 				currentSelected,
 				selectedClass = "menu-tile-selected";
 
-			this.Graphics.loadImage(options.srcImage, function(image, width, height){
+			_Graphics.loadImage(options.srcImage, function(image, width, height){
 				var cols = Math.floor(width / t),
 					rows = Math.floor(height / t);
 
 				for (var i = 0; i < rows; i++) {
 					for (var j = 0; j < cols; j++) {
-						var tile = self.Graphics.createCanvas(t, t);
+						var tile = _Graphics.createCanvas(t, t);
 						tile.draw(image, j*t, i*t);
 						tile.elem.addClass("menu-tile").data("tilecode", 0);
 						palette.append(tile.elem);
@@ -326,8 +266,8 @@ AC.Interface = (function(){
 
 		build: function(modules){
 			var self = this;
-			this.Graphics = modules.graphics;
-			this.Dialog = modules.dialog;
+			_Graphics = modules.graphics;
+			_Dialog = modules.dialog;
 
 			// Tweak map panel position
 			$('#map-panel').css('left', $('#tileset-panel-wrapper').width());
@@ -378,28 +318,22 @@ AC.Map = (function(){
 	
 	AC.init();
 
-	AC.Input.init({'dialog': AC.Dialog});
-
-	AC.Interface.build({
-		'graphics': AC.Graphics,
-		'dialog': AC.Dialog
-	});
-
 	AC.Interface.createDialogHandler({
 		title: 'New map',
 		btnSelector: '#btn-file-new',
 		templateSelector: '#tpl-dialog-file-new',
 		buttonSet: [
-			{title: 'OK', action: function(){
-				var name = AC.Input.validate('#field-file-new-name', {'min': 1, 'max': 120, 'type': 'string'}),
-					width = AC.Input.validate('#field-file-new-width', {'min': 1, 'max': 40, 'type': 'number'}),
-					height = AC.Input.validate('#field-file-new-height', {'min': 1, 'max': 40, 'type': 'number'}),
+			{title: 'OK', action: function(dialog){
+				var name = $('#field-file-new-name').val(),
+					width = Number($('#field-file-new-width').val()),
+					height = Number($('#field-file-new-height').val()),
 					map = AC.Map.create(name, width, height);
+					log(name, width, height);
 				AC.Editor.setMap(map);
-				AC.Dialog.close();
+				dialog.close();
 			}},
-			{title: 'Cancel', action: function(){
-				AC.Dialog.close();
+			{title: 'Cancel', action: function(dialog){
+				dialog.close();
 			}}
 		]
 	});
@@ -409,11 +343,11 @@ AC.Map = (function(){
 		btnSelector: '#btn-file-import',
 		templateSelector: '#tpl-dialog-file-import',
 		buttonSet: [
-			{title: 'Import', action: function(){
+			{title: 'Import', action: function(dialog){
 				$('#field-file-import-map').val();
 			}},
-			{title: 'Cancel', action: function(){
-				AC.Dialog.close();
+			{title: 'Cancel', action: function(dialog){
+				dialog.close();
 			}}
 		]
 	});
@@ -423,8 +357,8 @@ AC.Map = (function(){
 		btnSelector: '#btn-file-export',
 		templateSelector: '#tpl-dialog-file-export',
 		buttonSet: [
-			{title: 'Close', action: function(){
-				AC.Dialog.close();
+			{title: 'Close', action: function(dialog){
+				dialog.close();
 			}}
 		],
 		initialize: function(){

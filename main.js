@@ -3,28 +3,22 @@
 	
 	AC.init();
 
-	AC.Input.init({'dialog': AC.Dialog});
-
-	AC.Interface.build({
-		'graphics': AC.Graphics,
-		'dialog': AC.Dialog
-	});
-
 	AC.Interface.createDialogHandler({
 		title: 'New map',
 		btnSelector: '#btn-file-new',
 		templateSelector: '#tpl-dialog-file-new',
 		buttonSet: [
-			{title: 'OK', action: function(){
-				var name = AC.Input.validate('#field-file-new-name', {'min': 1, 'max': 120, 'type': 'string'}),
-					width = AC.Input.validate('#field-file-new-width', {'min': 1, 'max': 40, 'type': 'number'}),
-					height = AC.Input.validate('#field-file-new-height', {'min': 1, 'max': 40, 'type': 'number'}),
+			{title: 'OK', action: function(dialog){
+				var name = $('#field-file-new-name').val(),
+					width = Number($('#field-file-new-width').val()),
+					height = Number($('#field-file-new-height').val()),
 					map = AC.Map.create(name, width, height);
+					log(name, width, height);
 				AC.Editor.setMap(map);
-				AC.Dialog.close();
+				dialog.close();
 			}},
-			{title: 'Cancel', action: function(){
-				AC.Dialog.close();
+			{title: 'Cancel', action: function(dialog){
+				dialog.close();
 			}}
 		]
 	});
@@ -34,11 +28,11 @@
 		btnSelector: '#btn-file-import',
 		templateSelector: '#tpl-dialog-file-import',
 		buttonSet: [
-			{title: 'Import', action: function(){
+			{title: 'Import', action: function(dialog){
 				$('#field-file-import-map').val();
 			}},
-			{title: 'Cancel', action: function(){
-				AC.Dialog.close();
+			{title: 'Cancel', action: function(dialog){
+				dialog.close();
 			}}
 		]
 	});
@@ -48,8 +42,8 @@
 		btnSelector: '#btn-file-export',
 		templateSelector: '#tpl-dialog-file-export',
 		buttonSet: [
-			{title: 'Close', action: function(){
-				AC.Dialog.close();
+			{title: 'Close', action: function(dialog){
+				dialog.close();
 			}}
 		],
 		initialize: function(){

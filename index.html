@@ -55,13 +55,16 @@
 	<script id="tpl-dialog-file-new" type="text/template">
 		<form action="" id="form-file-new">
 			<div class="form-row">
-				<label for="field-file-new-name">Name</label><input type="text" id="field-file-new-name" />
+				<label for="field-file-new-name">Name</label>
+                <input type="text" name="name" id="field-file-new-name" class="field" value="new-map" maxlength="200" required>
 			</div>
 			<div class="form-row">
-				<label for="field-file-new-width">Width (tiles)</label><input type="number" id="field-file-new-width" />
+				<label for="field-file-new-width">Width (tiles)</label>
+                <input type="number" name="width" id="field-file-new-width" class="field" value="10" min="5" max="40" required>
 			</div>
 			<div class="form-row">
-				<label for="field-file-new-height">Height (tiles)</label><input type="number" id="field-file-new-height" />
+				<label for="field-file-new-height">Height (tiles)</label>
+                <input type="number" name="height" id="field-file-new-height" class="field" value="10" min="5" max="40" required>
 			</div>
 		</form>
 	</script>

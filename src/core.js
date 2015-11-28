@@ -10,8 +10,11 @@ var AC = (function(){
 		TILESIZE: 64,
 
 		init: function(){
-			
-			
+
+			this.Interface.build({
+				'graphics': this.Graphics,
+				'dialog': this.Dialog
+			});
 			// init the tile object map
 			/*for (var i = 0; i < this.tileRows; i++) {
 				this.tileMap.push([]);

@@ -2,22 +2,18 @@
 AC.Interface = (function(){
 	"use strict";
 
-	$(document).on('keydown', function(e){
-		if (e.which == AC.ESC_KEY){
-			self.Dialog.close();
-		}
-	});
+	var _Dialog, _Graphics;
 
 	return {
-
 		createDialogHandler: function(options){
 			var self = this,
 				opt = options || {},
 				templateString = $(opt.templateSelector).html();
 
+			var dialog = _Dialog.modal(opt.title, $(templateString), opt.buttonSet);
 			$(opt.btnSelector).on('click', function(){
-				self.Dialog.open(opt.title, $(templateString), opt.buttonSet);
-				if (opt.initialize && typeof opt.initialize === 'function'){
+				dialog.open();
+				if ($.isFunction(opt.initialize)){
 					opt.initialize();
 				}
 			});
@@ -44,13 +40,13 @@ AC.Interface = (function(){
 				currentSelected,
 				selectedClass = "menu-tile-selected";
 
-			this.Graphics.loadImage(options.srcImage, function(image, width, height){
+			_Graphics.loadImage(options.srcImage, function(image, width, height){
 				var cols = Math.floor(width / t),
 					rows = Math.floor(height / t);
 
 				for (var i = 0; i < rows; i++) {
 					for (var j = 0; j < cols; j++) {
-						var tile = self.Graphics.createCanvas(t, t);
+						var tile = _Graphics.createCanvas(t, t);
 						tile.draw(image, j*t, i*t);
 						tile.elem.addClass("menu-tile").data("tilecode", 0);
 						palette.append(tile.elem);
@@ -121,8 +117,8 @@ AC.Interface = (function(){
 
 		build: function(modules){
 			var self = this;
-			this.Graphics = modules.graphics;
-			this.Dialog = modules.dialog;
+			_Graphics = modules.graphics;
+			_Dialog = modules.dialog;
 
 			// Tweak map panel position
 			$('#map-panel').css('left', $('#tileset-panel-wrapper').width());

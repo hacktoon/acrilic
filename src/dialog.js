@@ -2,44 +2,52 @@
 AC.Dialog = (function(){
     "use strict";
 
-    var _dialogStack = [];
+    var _dialogObject = {
+        elem: undefined,
+        open: function(){
+            this.elem.show();
+        },
+        close: function(){
+            this.elem.hide();
+        },
+    };
 
     var _buildDialogButtons = function(dialog, buttonSet){
         var output = '';
+        var setButtonAction = function(btn, id){
+            dialog.elem.on('click', '#' + id, function(){
+                btn.action(dialog);
+            });
+        };
         for (var i=0; i<buttonSet.length; i++){
             var btn = buttonSet[i],
                 id = 'btn-' + btn.title.replace(/\s+/g, '-').toLowerCase();
             output += '<button id="' + id + '">' + btn.title + '</button>';
-            dialog.on('click', '#' + id, btn.action);
+            setButtonAction(btn, id);
         }
         return output;
     };
 
     return {
-        close: function(){
-            var dialog = _dialogStack.pop();
-            dialog.remove();
-        },
-
-        open: function(title, content, buttonSet){
-            var self = this,
-                dialog = $($('#tpl-dialog-overlay').html()),
-                dialogContent = dialog.find('.dialog-content'),
-                dialogButtonSet = dialog.find('.dialog-button-panel');
-
-            if (_dialogStack.length === 0){
-                dialog.addClass('dim');
-            }
-
-            dialog.find('.btn-close').on('click', function(){
-                self.close();
+        modal: function(title, content, buttonSet){
+            var dialog = $.extend(true, {}, _dialogObject),
+                elem = dialog.elem = $($('#tpl-dialog-overlay').html());
+            elem.find('.btn-close').on('click', function(){
+                dialog.close();
             });
-            dialog.find('.dialog-titlebar .title').html(title);
-            dialogContent.html(content);
-            dialogButtonSet.html(_buildDialogButtons(dialog, buttonSet));
-            dialog.appendTo('body').show();
+            elem.find('.dialog-titlebar .title').html(title);
+            elem.find('.dialog-content').html(content);
+            elem.find('.dialog-button-panel').html(_buildDialogButtons(dialog, buttonSet));
 
-            _dialogStack.push(dialog);
+            $(document).on('keydown', function(e){
+                if (e.which == AC.ESC_KEY){
+                    dialog.close();
+                }
+            });
+
+            $('body').append(elem);
+
+            return dialog;
         },
 
         confirm: function(message, action){
@@ -50,15 +58,6 @@ AC.Dialog = (function(){
                     self.close();
                 }},
                 {title: 'Cancel', action: function(){
-                    self.close();
-                }}
-            ]);
-        },
-
-        alert: function(message, action){
-            var self = this;
-            this.open('', '<p>' + message + '</p>', [
-                {title: 'OK', action: function(){
                     self.close();
                 }}
             ]);

@@ -19,7 +19,7 @@ AC.Interface = (function(){
 			});
 		},
 
-		createSwitchModeHandler: function(generalSelector, options){
+		createSwitchModeHandler: function(generalSelector, options, action){
 			var toggleClass = 'active',
 				optionList = $(generalSelector);
 			
@@ -29,6 +29,7 @@ AC.Interface = (function(){
 					id = target.attr('id'),
 					value = options[id];
 				target.addClass(toggleClass);
+				action(value);
 			});
 			optionList.first().trigger('click');
 		},

@@ -107,7 +107,10 @@ AC.Editor = (function(){
 			var self = this;
 			_maps.push(map);
 			_currentMap = map;
-		}
+		},
+
+		setTool: function(){},
+		setLayer: function(){},
 	};
 
 })();
@@ -168,7 +171,7 @@ AC.Interface = (function(){
 			});
 		},
 
-		createSwitchModeHandler: function(generalSelector, options){
+		createSwitchModeHandler: function(generalSelector, options, action){
 			var toggleClass = 'active',
 				optionList = $(generalSelector);
 			
@@ -178,6 +181,7 @@ AC.Interface = (function(){
 					id = target.attr('id'),
 					value = options[id];
 				target.addClass(toggleClass);
+				action(value);
 			});
 			optionList.first().trigger('click');
 		},
@@ -328,7 +332,6 @@ AC.Map = (function(){
 					width = Number($('#field-file-new-width').val()),
 					height = Number($('#field-file-new-height').val()),
 					map = AC.Map.create(name, width, height);
-					log(name, width, height);
 				AC.Editor.setMap(map);
 				dialog.close();
 			}},
@@ -371,22 +374,18 @@ AC.Map = (function(){
 		'btn-tool-pen': 'pen',
 		'btn-tool-fill': 'fill',
 		'btn-tool-eraser': 'eraser'
-	});
+	}, AC.Editor.setTool);
 
 	AC.Interface.createSwitchModeHandler('.btn-layer', {
 		'btn-layer-bg': 'bg',
 		'btn-layer-fg': 'fg',
 		'btn-layer-event': 'event'
-	});
+	}, AC.Editor.setLayer);
 
 	AC.Interface.createTilesetPalette('#tileset-panel', {
 		srcImage: 'tilesets/ground-layer.png',
 	});
 
 	AC.Interface.createMapEditor('#map-panel');
-
-	/*AC.Editor.init({
-		'maps': AC.Map
-	});*/
 
 })();

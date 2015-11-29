@@ -13,7 +13,10 @@ AC.Editor = (function(){
 			var self = this;
 			_maps.push(map);
 			_currentMap = map;
-		}
+		},
+
+		setTool: function(){},
+		setLayer: function(){},
 	};
 
 })();

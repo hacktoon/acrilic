@@ -2,7 +2,7 @@
 
 AC.Graphics = (function(){
 
-	var canvasObject = {
+	var _canvasObject = {
 		draw: function(image, x, y){
 			//image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight
 			var w = this.width,
@@ -22,7 +22,7 @@ AC.Graphics = (function(){
 		},
 		
 		createCanvas: function(width, height){
-			var canvas = $.extend(true, {}, canvasObject),
+			var canvas = $.extend(true, {}, _canvasObject),
 				elem = $("<canvas/>")
 				.attr("width", width)
 				.attr("height", height);

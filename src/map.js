@@ -1,9 +1,11 @@
 
 AC.Map = (function(){
 
-    var mapObject = {
-        name: '',
+    var _Graphics;
+
+    var _mapObject = {
         grid: [],
+        canvas: undefined,
 
         setTile: function(){
             //position in the tileset image
@@ -17,20 +19,32 @@ AC.Map = (function(){
                 AC.tileMap[dy][dx] = AC.tileCodeSelected.code;
                 _layers[_currentLayer].drawImage(img, sx*t, sy*t, t, t, dx*t, dy*t, t, t);
             }*/
+        },
+
+        render: function(grid){
+            // render grid 
         }
     };
     
     return {
-        create: function(name, cols, rows){
-            var map = $.extend(true, {}, mapObject);
-            map.name = name;
+        create: function(cols, rows){
+            var t = AC.TILESIZE;
+            var map = $.extend(true, {}, _mapObject);
+
             for (var i = 0; i < rows; i++) {
                 map.grid.push([]);
                 for (var j = 0; j < cols; j++) {
                     map.grid[i].push({id: 0});
                 }
             }
+            map.canvas = _Graphics.createCanvas(cols * t, rows * t);
             return map;
+        },
+
+        init: function(modules){
+            var self = this;
+            _Graphics = modules.graphics;
+
         }
     };
 })();

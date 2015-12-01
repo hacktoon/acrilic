@@ -1,4 +1,3 @@
-//Acrilic on Canvas Map Editor
 
 var AC = (function(){
 	"use strict";
@@ -11,17 +10,20 @@ var AC = (function(){
 
 		init: function(){
 
-			this.Interface.build({
+			this.Map.init({
+				'graphics': this.Graphics
+			});
+
+			this.Interface.init({
 				'graphics': this.Graphics,
 				'dialog': this.Dialog
 			});
-			// init the tile object map
-			/*for (var i = 0; i < this.tileRows; i++) {
-				this.tileMap.push([]);
-				for (var j = 0; j < this.tileCols; j++) {
-					this.tileMap[i].push({id: 0});
-				}
-			}*/
+
+			this.Editor.init({
+				'interface': this.Interface,
+				'map': this.Map
+			});
+			
 		}
     };
 })();
@@ -96,21 +98,147 @@ AC.Dialog = (function(){
 AC.Editor = (function(){
 	"use strict";
 
-	var _maps = [],
+	var _Interface, _Map;
+
+	var _maps = {},
+		_tools = {},
+		_layers = {},
+		_currentLayer,
 		_currentMap,
-		_tools = [];
+		_currentTool;
 	
 	return {
-		currentTool: '',
-		
-		setMap: function(map){
-			var self = this;
-			_maps.push(map);
-			_currentMap = map;
+
+		openMap: function(name, map){
+			_maps[name] = currentMap = map;
 		},
 
-		setTool: function(){},
-		setLayer: function(){},
+		setTool: function(id){
+			//this.currentTool = _tools[id];
+		},
+
+		setLayer: function(id){
+			_currentLayer = _layers[id];
+		},
+
+		initInterface: function() {
+			var self = this;
+
+			_Interface.createDialogHandler({
+				title: 'New map',
+				btnSelector: '#btn-file-new',
+				templateSelector: '#tpl-dialog-file-new',
+				buttonSet: [
+					{
+						title: 'OK',
+						action: function(dialog){
+							var name = $('#field-file-new-name').val(),
+								width = Number($('#field-file-new-width').val()),
+								height = Number($('#field-file-new-height').val()),
+								map = _Map.create(width, height);
+							dialog.close();
+							self.openMap(name, map);
+						}
+					},
+					{
+						title: 'Cancel',
+						action: function(dialog){
+							dialog.close();
+						}
+					}
+				]
+			});
+
+			_Interface.createDialogHandler({
+				title: 'Import',
+				btnSelector: '#btn-file-import',
+				templateSelector: '#tpl-dialog-file-import',
+				buttonSet: [
+					{
+						title: 'Import',
+						action: function(dialog){
+							$('#field-file-import-map').val();
+						}
+					},
+					{
+						title: 'Cancel',
+						action: function(dialog){
+							dialog.close();
+						}
+					}
+				]
+			});
+
+			_Interface.createDialogHandler({
+				title: 'Export',
+				btnSelector: '#btn-file-export',
+				templateSelector: '#tpl-dialog-file-export',
+				buttonSet: [
+					{
+						title: 'Close',
+						action: function(dialog){
+							dialog.close();
+						}
+					}
+				],
+				initialize: function(){
+					var json = JSON.stringify({a: 3});
+					$("#field-file-export-map").val(json);
+				},
+			});
+
+			_Interface.createSwitchModeHandler('.btn-tool', {
+				'btn-tool-pen': 'pen',
+				'btn-tool-fill': 'fill',
+				'btn-tool-eraser': 'eraser'
+			}, function(value){
+				self.setTool(value);
+			});
+
+			_Interface.createSwitchModeHandler('.btn-layer', {
+				'btn-layer-bg': 'bg',
+				'btn-layer-fg': 'fg',
+				'btn-layer-event': 'event'
+			}, function(value){
+				self.setLayer(value);
+			});
+
+			_Interface.createTilesetPalette('#tileset-panel', {
+				srcImage: 'tilesets/ground-layer.png'
+			});
+
+			_Interface.createMapEditor('#map-panel', {
+				action: function(x, y, options) {
+					var opt = options || {},
+						dragging = opt.dragging;
+					//_currentMap.setTile();
+				}
+			});
+		},
+
+		initTools: function() {
+			_tools = {
+				'pen': function(grid){
+
+				},
+
+				'fill': function(grid) {
+					
+				},
+
+				'eraser': function(grid) {
+					
+				}
+			};
+		},
+
+		init: function(modules){
+			_Map = modules.map;
+			_Interface = modules.interface;
+
+			this.initInterface();
+			this.initTools();
+		}
 	};
 
 })();
@@ -118,7 +246,7 @@ AC.Editor = (function(){
 
 AC.Graphics = (function(){
 
-	var canvasObject = {
+	var _canvasObject = {
 		draw: function(image, x, y){
 			//image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight
 			var w = this.width,
@@ -138,7 +266,7 @@ AC.Graphics = (function(){
 		},
 		
 		createCanvas: function(width, height){
-			var canvas = $.extend(true, {}, canvasObject),
+			var canvas = $.extend(true, {}, _canvasObject),
 				elem = $("<canvas/>")
 				.attr("width", width)
 				.attr("height", height);
@@ -154,7 +282,7 @@ AC.Graphics = (function(){
 AC.Interface = (function(){
 	"use strict";
 
-	var _Dialog, _Graphics;
+	var _Dialog, _Graphics, _Editor;
 
 	return {
 		createDialogHandler: function(options){
@@ -187,13 +315,13 @@ AC.Interface = (function(){
 		},
 
 		createTilesetPalette: function(panelSelector, options){
-			var self = this,
+			var opt = options || {},
 				t = AC.TILESIZE,
 				palette = $(panelSelector),
 				currentSelected,
 				selectedClass = "menu-tile-selected";
 
-			_Graphics.loadImage(options.srcImage, function(image, width, height){
+			_Graphics.loadImage(opt.srcImage, function(image, width, height){
 				var cols = Math.floor(width / t),
 					rows = Math.floor(height / t);
 
@@ -219,64 +347,59 @@ AC.Interface = (function(){
 			});
 		},
 
-		createMapEditor: function(mapSelector, action){
-			var self = this,
-				editor = $(mapSelector),
-				t = AC.TILESIZE;
+		createMapEditor: function(mapSelector, options){
+			var opt = options || {},
+				x = 0, 
+				y = 0, 
+				t = AC.TILESIZE,
+				cursorDragging = false,
+				mapEditor = $(mapSelector),
+				selectCursor = $("<div/>")
+					.addClass("selection-cursor")
+					.css({"width": t, "height": t});
 
-			var cursorData = {x: 0, y: 0, dragging: false};
-
-			//cursor de seleção
-			var selectCursor = $("<div/>")
-				.addClass("selection-cursor")
-				.css({"width": t, "height": t});
-			editor.append(selectCursor);
-
-            //update the selection cursor
-            editor.on('mousemove', function(e){
+			mapEditor.append(selectCursor)
+			.on('mousemove', function(e){
 				//deslocamento em relacao à tela
-				var x_offset = editor.offset().left,
-					y_offset = editor.offset().top,
-					x_scroll = editor.scrollLeft() + $(document).scrollLeft(),
-					y_scroll = editor.scrollTop() + $(document).scrollTop();
+				var x_offset = mapEditor.offset().left,
+					y_offset = mapEditor.offset().top,
+					x_scroll = mapEditor.scrollLeft() + $(document).scrollLeft(),
+					y_scroll = mapEditor.scrollTop() + $(document).scrollTop();
 				//posição relativa do mouse
-				var x = e.clientX - x_offset + x_scroll,
-					y = e.clientY - y_offset + y_scroll;
+				var rx = e.pageX - x_offset + x_scroll,
+					ry = e.pageY - y_offset + y_scroll;
 
-				x = (x < 0) ? 0 : x;
-				y = (y < 0) ? 0 : y;
-				cursorData.x = parseInt(x / t);
-				cursorData.y = parseInt(y / t);
+				rx = (rx < 0) ? 0 : rx;
+				ry = (ry < 0) ? 0 : ry;
+				x = parseInt(rx / t);
+				y = parseInt(ry / t);
 
-				selectCursor.css("left", cursorData.x * t);
-				selectCursor.css("top", cursorData.y * t);
+				selectCursor.css({
+					"left": x * t,
+					"top": y * t
+				});
+				
 				// Allows painting while dragging
-				if(cursorData.dragging){
-					self.setTile();
+				if(cursorDragging){
+					opt.action(x, y, {dragging: true});
 				}
-			});
-			
-			// when clicked, gets the current selected tile and paints
-			editor.on('mousedown', function(e){
+			}).on('mousedown', function(e){
 				e.preventDefault();
-				//_toolSelected.action();
-				cursorData.dragging = true;
+				cursorDragging = true;
+				opt.action(x, y);
 			});
 			
 			$(document).on('mouseup', function(){
-				cursorData.dragging = false;
+				cursorDragging = false;
 			});
+
+			// Hack: Fix map panel position
+			mapEditor.css('left', $('#tileset-panel-wrapper').width());
 		},
 
-		build: function(modules){
-			var self = this;
+		init: function(modules){
 			_Graphics = modules.graphics;
 			_Dialog = modules.dialog;
-
-			// Tweak map panel position
-			$('#map-panel').css('left', $('#tileset-panel-wrapper').width());
-
-			return this;
 		}
     };
 
@@ -284,9 +407,11 @@ AC.Interface = (function(){
 ;
 AC.Map = (function(){
 
-    var mapObject = {
-        name: '',
+    var _Graphics;
+
+    var _mapObject = {
         grid: [],
+        canvas: undefined,
 
         setTile: function(){
             //position in the tileset image
@@ -300,20 +425,32 @@ AC.Map = (function(){
                 AC.tileMap[dy][dx] = AC.tileCodeSelected.code;
                 _layers[_currentLayer].drawImage(img, sx*t, sy*t, t, t, dx*t, dy*t, t, t);
             }*/
+        },
+
+        render: function(grid){
+            // render grid 
         }
     };
     
     return {
-        create: function(name, cols, rows){
-            var map = $.extend(true, {}, mapObject);
-            map.name = name;
+        create: function(cols, rows){
+            var t = AC.TILESIZE;
+            var map = $.extend(true, {}, _mapObject);
+
             for (var i = 0; i < rows; i++) {
                 map.grid.push([]);
                 for (var j = 0; j < cols; j++) {
                     map.grid[i].push({id: 0});
                 }
             }
+            map.canvas = _Graphics.createCanvas(cols * t, rows * t);
             return map;
+        },
+
+        init: function(modules){
+            var self = this;
+            _Graphics = modules.graphics;
+
         }
     };
 })();
@@ -322,70 +459,6 @@ AC.Map = (function(){
 	
 	AC.init();
 
-	AC.Interface.createDialogHandler({
-		title: 'New map',
-		btnSelector: '#btn-file-new',
-		templateSelector: '#tpl-dialog-file-new',
-		buttonSet: [
-			{title: 'OK', action: function(dialog){
-				var name = $('#field-file-new-name').val(),
-					width = Number($('#field-file-new-width').val()),
-					height = Number($('#field-file-new-height').val()),
-					map = AC.Map.create(name, width, height);
-				AC.Editor.setMap(map);
-				dialog.close();
-			}},
-			{title: 'Cancel', action: function(dialog){
-				dialog.close();
-			}}
-		]
-	});
-
-	AC.Interface.createDialogHandler({
-		title: 'Import',
-		btnSelector: '#btn-file-import',
-		templateSelector: '#tpl-dialog-file-import',
-		buttonSet: [
-			{title: 'Import', action: function(dialog){
-				$('#field-file-import-map').val();
-			}},
-			{title: 'Cancel', action: function(dialog){
-				dialog.close();
-			}}
-		]
-	});
-
-	AC.Interface.createDialogHandler({
-		title: 'Export',
-		btnSelector: '#btn-file-export',
-		templateSelector: '#tpl-dialog-file-export',
-		buttonSet: [
-			{title: 'Close', action: function(dialog){
-				dialog.close();
-			}}
-		],
-		initialize: function(){
-			var json = JSON.stringify({a: 3});
-			$("#field-file-export-map").val(json);
-		},
-	});
-
-	AC.Interface.createSwitchModeHandler('.btn-tool', {
-		'btn-tool-pen': 'pen',
-		'btn-tool-fill': 'fill',
-		'btn-tool-eraser': 'eraser'
-	}, AC.Editor.setTool);
-
-	AC.Interface.createSwitchModeHandler('.btn-layer', {
-		'btn-layer-bg': 'bg',
-		'btn-layer-fg': 'fg',
-		'btn-layer-event': 'event'
-	}, AC.Editor.setLayer);
-
-	AC.Interface.createTilesetPalette('#tileset-panel', {
-		srcImage: 'tilesets/ground-layer.png',
-	});
-
-	AC.Interface.createMapEditor('#map-panel');
+	
 
 })();

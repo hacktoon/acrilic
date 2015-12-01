@@ -2,7 +2,7 @@
 AC.Interface = (function(){
 	"use strict";
 
-	var _Dialog, _Graphics;
+	var _Dialog, _Graphics, _Editor;
 
 	return {
 		createDialogHandler: function(options){
@@ -35,13 +35,13 @@ AC.Interface = (function(){
 		},
 
 		createTilesetPalette: function(panelSelector, options){
-			var self = this,
+			var opt = options || {},
 				t = AC.TILESIZE,
 				palette = $(panelSelector),
 				currentSelected,
 				selectedClass = "menu-tile-selected";
 
-			_Graphics.loadImage(options.srcImage, function(image, width, height){
+			_Graphics.loadImage(opt.srcImage, function(image, width, height){
 				var cols = Math.floor(width / t),
 					rows = Math.floor(height / t);
 
@@ -67,64 +67,59 @@ AC.Interface = (function(){
 			});
 		},
 
-		createMapEditor: function(mapSelector, action){
-			var self = this,
-				editor = $(mapSelector),
-				t = AC.TILESIZE;
+		createMapEditor: function(mapSelector, options){
+			var opt = options || {},
+				x = 0, 
+				y = 0, 
+				t = AC.TILESIZE,
+				cursorDragging = false,
+				mapEditor = $(mapSelector),
+				selectCursor = $("<div/>")
+					.addClass("selection-cursor")
+					.css({"width": t, "height": t});
 
-			var cursorData = {x: 0, y: 0, dragging: false};
-
-			//cursor de seleção
-			var selectCursor = $("<div/>")
-				.addClass("selection-cursor")
-				.css({"width": t, "height": t});
-			editor.append(selectCursor);
-
-            //update the selection cursor
-            editor.on('mousemove', function(e){
+			mapEditor.append(selectCursor)
+			.on('mousemove', function(e){
 				//deslocamento em relacao à tela
-				var x_offset = editor.offset().left,
-					y_offset = editor.offset().top,
-					x_scroll = editor.scrollLeft() + $(document).scrollLeft(),
-					y_scroll = editor.scrollTop() + $(document).scrollTop();
+				var x_offset = mapEditor.offset().left,
+					y_offset = mapEditor.offset().top,
+					x_scroll = mapEditor.scrollLeft() + $(document).scrollLeft(),
+					y_scroll = mapEditor.scrollTop() + $(document).scrollTop();
 				//posição relativa do mouse
-				var x = e.clientX - x_offset + x_scroll,
-					y = e.clientY - y_offset + y_scroll;
+				var rx = e.pageX - x_offset + x_scroll,
+					ry = e.pageY - y_offset + y_scroll;
 
-				x = (x < 0) ? 0 : x;
-				y = (y < 0) ? 0 : y;
-				cursorData.x = parseInt(x / t);
-				cursorData.y = parseInt(y / t);
+				rx = (rx < 0) ? 0 : rx;
+				ry = (ry < 0) ? 0 : ry;
+				x = parseInt(rx / t);
+				y = parseInt(ry / t);
 
-				selectCursor.css("left", cursorData.x * t);
-				selectCursor.css("top", cursorData.y * t);
+				selectCursor.css({
+					"left": x * t,
+					"top": y * t
+				});
+				
 				// Allows painting while dragging
-				if(cursorData.dragging){
-					self.setTile();
+				if(cursorDragging){
+					opt.action(x, y, {dragging: true});
 				}
-			});
-			
-			// when clicked, gets the current selected tile and paints
-			editor.on('mousedown', function(e){
+			}).on('mousedown', function(e){
 				e.preventDefault();
-				//_toolSelected.action();
-				cursorData.dragging = true;
+				cursorDragging = true;
+				opt.action(x, y);
 			});
 			
 			$(document).on('mouseup', function(){
-				cursorData.dragging = false;
+				cursorDragging = false;
 			});
+
+			// Hack: Fix map panel position
+			mapEditor.css('left', $('#tileset-panel-wrapper').width());
 		},
 
-		build: function(modules){
-			var self = this;
+		init: function(modules){
 			_Graphics = modules.graphics;
 			_Dialog = modules.dialog;
-
-			// Tweak map panel position
-			$('#map-panel').css('left', $('#tileset-panel-wrapper').width());
-
-			return this;
 		}
     };
 

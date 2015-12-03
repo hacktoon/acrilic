@@ -4,17 +4,20 @@ AC.Editor = (function(){
 
 	var _Interface, _Map;
 
-	var _maps = {},
+	var _mapEditorElem,
+		_maps = {},
 		_tools = {},
 		_layers = {},
 		_currentLayer,
 		_currentMap,
-		_currentTool;
+		_currentTool,
+		_currentPaletteTile;
 	
 	return {
 
 		openMap: function(name, map){
-			_maps[name] = currentMap = map;
+			_mapEditorElem.append(map.elem);
+			_maps[name] = _currentMap = map;
 		},
 
 		setTool: function(id){
@@ -108,14 +111,17 @@ AC.Editor = (function(){
 			});
 
 			_Interface.createTilesetPalette('#tileset-panel', {
-				srcImage: 'tilesets/ground-layer.png'
+				srcImage: 'tilesets/ground-layer.png',
+				action: function(tile) {
+					_currentPaletteTile = tile;
+				}
 			});
 
-			_Interface.createMapEditor('#map-panel', {
+			_mapEditorElem = _Interface.createMapEditor('#map-panel', {
 				action: function(x, y, options) {
 					var opt = options || {},
 						dragging = opt.dragging;
-					//_currentMap.setTile();
+					_currentMap.setTile(_currentPaletteTile, x, y);
 				}
 			});
 		},

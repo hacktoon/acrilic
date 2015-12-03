@@ -100,17 +100,20 @@ AC.Editor = (function(){
 
 	var _Interface, _Map;
 
-	var _maps = {},
+	var _mapEditorElem,
+		_maps = {},
 		_tools = {},
 		_layers = {},
 		_currentLayer,
 		_currentMap,
-		_currentTool;
+		_currentTool,
+		_currentPaletteTile;
 	
 	return {
 
 		openMap: function(name, map){
-			_maps[name] = currentMap = map;
+			_mapEditorElem.append(map.elem);
+			_maps[name] = _currentMap = map;
 		},
 
 		setTool: function(id){
@@ -204,14 +207,17 @@ AC.Editor = (function(){
 			});
 
 			_Interface.createTilesetPalette('#tileset-panel', {
-				srcImage: 'tilesets/ground-layer.png'
+				srcImage: 'tilesets/ground-layer.png',
+				action: function(tile) {
+					_currentPaletteTile = tile;
+				}
 			});
 
-			_Interface.createMapEditor('#map-panel', {
+			_mapEditorElem = _Interface.createMapEditor('#map-panel', {
 				action: function(x, y, options) {
 					var opt = options || {},
 						dragging = opt.dragging;
-					//_currentMap.setTile();
+					_currentMap.setTile(_currentPaletteTile, x, y);
 				}
 			});
 		},
@@ -247,11 +253,11 @@ AC.Editor = (function(){
 AC.Graphics = (function(){
 
 	var _canvasObject = {
-		draw: function(image, x, y){
+		draw: function(image, sx, sy, dx, dy){
 			//image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight
 			var w = this.width,
 				h = this.height;
-			this.ctx.drawImage(image, x, y, w, h, 0, 0, w, h);
+			this.ctx.drawImage(image, sx, sy, w, h, dx, dy, w, h);
 		}
 	};
 	
@@ -319,28 +325,35 @@ AC.Interface = (function(){
 				t = AC.TILESIZE,
 				palette = $(panelSelector),
 				currentSelected,
-				selectedClass = "menu-tile-selected";
+				selectedClass = "menu-tile-selected",
+				tileBoard = [];
 
 			_Graphics.loadImage(opt.srcImage, function(image, width, height){
 				var cols = Math.floor(width / t),
-					rows = Math.floor(height / t);
+					rows = Math.floor(height / t),
+					boardIndex = 0;
 
 				for (var i = 0; i < rows; i++) {
 					for (var j = 0; j < cols; j++) {
 						var tile = _Graphics.createCanvas(t, t);
-						tile.draw(image, j*t, i*t);
-						tile.elem.addClass("menu-tile").data("tilecode", 0);
+						tile.draw(image, j*t, i*t, 0, 0);
+						tileBoard.push(tile);
+						tile.elem.addClass("menu-tile").data("tilecode", boardIndex++);
 						palette.append(tile.elem);
 					}
 				}
 
 				palette.on('click', '.menu-tile', function(){
-					var target = $(this);
+					var target = $(this),
+						tileSelected,
+						tileCode;
 					
 					if(currentSelected)
 						currentSelected.removeClass(selectedClass);
 					target.addClass(selectedClass);
 					currentSelected = target;
+					tileCode = Number(target.data("tilecode"));
+					opt.action(tileBoard[tileCode].elem.get(0));
 				})
 				.find('.menu-tile:first')
 				.trigger('click');
@@ -374,10 +387,7 @@ AC.Interface = (function(){
 				x = parseInt(rx / t);
 				y = parseInt(ry / t);
 
-				selectCursor.css({
-					"left": x * t,
-					"top": y * t
-				});
+				selectCursor.css("transform", "translate(" + (x * t) + "px, " + (y * t) + "px)");
 				
 				// Allows painting while dragging
 				if(cursorDragging){
@@ -395,6 +405,8 @@ AC.Interface = (function(){
 
 			// Hack: Fix map panel position
 			mapEditor.css('left', $('#tileset-panel-wrapper').width());
+
+			return mapEditor;
 		},
 
 		init: function(modules){
@@ -411,20 +423,13 @@ AC.Map = (function(){
 
     var _mapObject = {
         grid: [],
-        canvas: undefined,
+        elem: undefined,
 
-        setTile: function(){
+        setTile: function(image, x, y){
             //position in the tileset image
-            /*var dx = _cursor.x,
-                dy = _cursor.y,
-                sx = AC.tileCodeSelected.x,
-                sy = AC.tileCodeSelected.y,
-                t = AC.tileSize,
-                img = AC.tileset.sourceImage;
-            if (AC.tileMap[dy][dx] != AC.tileCodeSelected.code){
-                AC.tileMap[dy][dx] = AC.tileCodeSelected.code;
-                _layers[_currentLayer].drawImage(img, sx*t, sy*t, t, t, dx*t, dy*t, t, t);
-            }*/
+            var t = AC.TILESIZE;
+            this.grid[y][x] = 1;
+            this.canvas.draw(image, 0, 0, x*t, y*t);
         },
 
         render: function(grid){
@@ -444,6 +449,8 @@ AC.Map = (function(){
                 }
             }
             map.canvas = _Graphics.createCanvas(cols * t, rows * t);
+            map.elem = $('<div/>').addClass('.map');
+            map.elem.append(map.canvas.elem);
             return map;
         },
 

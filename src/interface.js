@@ -39,28 +39,35 @@ AC.Interface = (function(){
 				t = AC.TILESIZE,
 				palette = $(panelSelector),
 				currentSelected,
-				selectedClass = "menu-tile-selected";
+				selectedClass = "menu-tile-selected",
+				tileBoard = [];
 
 			_Graphics.loadImage(opt.srcImage, function(image, width, height){
 				var cols = Math.floor(width / t),
-					rows = Math.floor(height / t);
+					rows = Math.floor(height / t),
+					boardIndex = 0;
 
 				for (var i = 0; i < rows; i++) {
 					for (var j = 0; j < cols; j++) {
 						var tile = _Graphics.createCanvas(t, t);
-						tile.draw(image, j*t, i*t);
-						tile.elem.addClass("menu-tile").data("tilecode", 0);
+						tile.draw(image, j*t, i*t, 0, 0);
+						tileBoard.push(tile);
+						tile.elem.addClass("menu-tile").data("tilecode", boardIndex++);
 						palette.append(tile.elem);
 					}
 				}
 
 				palette.on('click', '.menu-tile', function(){
-					var target = $(this);
+					var target = $(this),
+						tileSelected,
+						tileCode;
 					
 					if(currentSelected)
 						currentSelected.removeClass(selectedClass);
 					target.addClass(selectedClass);
 					currentSelected = target;
+					tileCode = Number(target.data("tilecode"));
+					opt.action(tileBoard[tileCode].elem.get(0));
 				})
 				.find('.menu-tile:first')
 				.trigger('click');
@@ -94,10 +101,7 @@ AC.Interface = (function(){
 				x = parseInt(rx / t);
 				y = parseInt(ry / t);
 
-				selectCursor.css({
-					"left": x * t,
-					"top": y * t
-				});
+				selectCursor.css("transform", "translate(" + (x * t) + "px, " + (y * t) + "px)");
 				
 				// Allows painting while dragging
 				if(cursorDragging){
@@ -115,6 +119,8 @@ AC.Interface = (function(){
 
 			// Hack: Fix map panel position
 			mapEditor.css('left', $('#tileset-panel-wrapper').width());
+
+			return mapEditor;
 		},
 
 		init: function(modules){

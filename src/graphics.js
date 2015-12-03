@@ -3,11 +3,11 @@
 AC.Graphics = (function(){
 
 	var _canvasObject = {
-		draw: function(image, x, y){
+		draw: function(image, sx, sy, dx, dy){
 			//image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight
 			var w = this.width,
 				h = this.height;
-			this.ctx.drawImage(image, x, y, w, h, 0, 0, w, h);
+			this.ctx.drawImage(image, sx, sy, w, h, dx, dy, w, h);
 		}
 	};
 	

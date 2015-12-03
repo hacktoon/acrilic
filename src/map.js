@@ -5,20 +5,13 @@ AC.Map = (function(){
 
     var _mapObject = {
         grid: [],
-        canvas: undefined,
+        elem: undefined,
 
-        setTile: function(){
+        setTile: function(image, x, y){
             //position in the tileset image
-            /*var dx = _cursor.x,
-                dy = _cursor.y,
-                sx = AC.tileCodeSelected.x,
-                sy = AC.tileCodeSelected.y,
-                t = AC.tileSize,
-                img = AC.tileset.sourceImage;
-            if (AC.tileMap[dy][dx] != AC.tileCodeSelected.code){
-                AC.tileMap[dy][dx] = AC.tileCodeSelected.code;
-                _layers[_currentLayer].drawImage(img, sx*t, sy*t, t, t, dx*t, dy*t, t, t);
-            }*/
+            var t = AC.TILESIZE;
+            this.grid[y][x] = 1;
+            this.canvas.draw(image, 0, 0, x*t, y*t);
         },
 
         render: function(grid){
@@ -38,6 +31,8 @@ AC.Map = (function(){
                 }
             }
             map.canvas = _Graphics.createCanvas(cols * t, rows * t);
+            map.elem = $('<div/>').addClass('.map');
+            map.elem.append(map.canvas.elem);
             return map;
         },
 

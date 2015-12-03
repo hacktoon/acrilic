@@ -217,7 +217,9 @@ AC.Editor = (function(){
 				action: function(x, y, options) {
 					var opt = options || {},
 						dragging = opt.dragging;
-					_currentMap.setTile(_currentPaletteTile, x, y);
+					if (_currentMap){
+						_currentMap.setTile(_currentPaletteTile, x, y);
+					}
 				}
 			});
 		},

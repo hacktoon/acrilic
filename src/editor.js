@@ -41,10 +41,12 @@ AC.Editor = (function(){
 						action: function(dialog){
 							var name = $('#field-file-new-name').val(),
 								width = Number($('#field-file-new-width').val()),
-								height = Number($('#field-file-new-height').val()),
-								map = _Map.create(width, height);
+								height = Number($('#field-file-new-height').val());
+							if (_currentMap){
+								return;
+							}
 							dialog.close();
-							self.openMap(name, map);
+							self.openMap(name, _Map.create(width, height));
 						}
 					},
 					{

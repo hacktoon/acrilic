@@ -1,8 +1,7 @@
 (function() {
 	"use strict";
-	
-	AC.init();
 
-	
+	AC.Components.Editor.initInterface();
+    AC.Components.Editor.initTools();
 
 })();

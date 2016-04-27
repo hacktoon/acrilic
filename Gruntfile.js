@@ -8,7 +8,7 @@ module.exports = function(grunt) {
 			},
 			dist: {
 				// the files to concatenate
-				src: ['src/**/*.js', 'main.js'],
+				src: ['src/core.js', 'src/**/*.js', 'main.js'],
 				// the location of the resulting JS file
 				dest: 'dist/<%= pkg.name %>.js'
 			}
@@ -45,15 +45,15 @@ module.exports = function(grunt) {
 			tasks: ['default']
 		}
 	});
-	
+
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	//grunt.loadNpmTasks('grunt-contrib-qunit');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-concat');
-	
+
 	// this would be run by typing "grunt test" on the command line
 	grunt.registerTask('test', ['jshint']);
-	
+
 	grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
 };

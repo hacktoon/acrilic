@@ -8,22 +8,11 @@ var AC = (function(){
 		ESC_KEY: 27,
 		TILESIZE: 64,
 
-		init: function(){
+        Base: {},
+        Components: {},
 
-			this.Map.init({
-				'graphics': this.Graphics
-			});
-
-			this.Interface.init({
-				'graphics': this.Graphics,
-				'dialog': this.Dialog
-			});
-
-			this.Editor.init({
-				'interface': this.Interface,
-				'map': this.Map
-			});
-			
+        import: function(module){
+            
 		}
     };
 })();

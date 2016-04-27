@@ -1,6 +1,6 @@
 // graphics functions
 
-AC.Graphics = (function(){
+AC.Base.Graphics = (function(){
 
 	var _canvasObject = {
 		draw: function(image, sx, sy, dx, dy){

@@ -1,5 +1,5 @@
 
-AC.Dialog = (function(){
+AC.Base.Dialog = (function(){
     "use strict";
 
     var _dialogObject = {

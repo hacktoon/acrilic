@@ -1,8 +1,8 @@
 
-AC.Components.Palette = (function(){
+ac.export("pallette", function(){
     "use strict";
 
-    var _Graphics = AC.Graphics;
+    var graphics = ac.import("graphics");
 
     return {
         init: function(panelSelector, options){
@@ -13,14 +13,14 @@ AC.Components.Palette = (function(){
                 selectedClass = "menu-tile-selected",
                 tileBoard = [];
 
-            _Graphics.loadImage(opt.srcImage, function(image, width, height){
+            graphics.loadImage(opt.srcImage, function(image, width, height){
                 var cols = Math.floor(width / t),
                     rows = Math.floor(height / t),
                     boardIndex = 0;
 
                 for (var i = 0; i < rows; i++) {
                     for (var j = 0; j < cols; j++) {
-                        var tile = _Graphics.createCanvas(t, t);
+                        var tile = graphics.createCanvas(t, t);
                         tile.draw(image, j*t, i*t, 0, 0);
                         tileBoard.push(tile);
                         tile.elem.addClass("menu-tile").data("tilecode", boardIndex++);
@@ -32,7 +32,7 @@ AC.Components.Palette = (function(){
                     var target = $(this),
                         tileSelected,
                         tileCode;
-                    
+
                     if(currentSelected)
                         currentSelected.removeClass(selectedClass);
                     target.addClass(selectedClass);
@@ -45,5 +45,4 @@ AC.Components.Palette = (function(){
             });
         },
     };
-})();
-
+});

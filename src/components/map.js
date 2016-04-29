@@ -1,7 +1,7 @@
 
-AC.Map = (function(){
+ac.export("map", function(){
 
-    var Graphics = AC.import('base/graphics');
+    var graphics = ac.import('graphics');
 
     var _mapObject = {
         grid: [],
@@ -30,7 +30,7 @@ AC.Map = (function(){
                     map.grid[i].push({id: 0});
                 }
             }
-            map.canvas = Graphics.createCanvas(cols * t, rows * t);
+            map.canvas = graphics.createCanvas(cols * t, rows * t);
             map.elem = $('<div/>').addClass('.map');
             map.elem.append(map.canvas.elem);
             return map;
@@ -40,4 +40,4 @@ AC.Map = (function(){
             var self = this;
         }
     };
-})();
+});

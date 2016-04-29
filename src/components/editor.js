@@ -1,5 +1,5 @@
 
-AC.Editor = (function(){
+ac.export("editor", function(){
 	"use strict";
 
 	var _Interface, _Map;
@@ -197,4 +197,4 @@ AC.Editor = (function(){
 		}
 	};
 
-})();
+});

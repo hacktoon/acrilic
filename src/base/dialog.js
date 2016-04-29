@@ -1,5 +1,5 @@
 
-AC.Base.Dialog = (function(){
+ac.export("dialog", function(){
     "use strict";
 
     var _dialogObject = {
@@ -63,5 +63,4 @@ AC.Base.Dialog = (function(){
             ]);
         }
     };
-
-})();
+});

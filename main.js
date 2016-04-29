@@ -1,7 +1,6 @@
 (function() {
 	"use strict";
 
-	AC.Components.Editor.initInterface();
-    AC.Components.Editor.initTools();
+	var editor = ac.import("editor");
 
 })();

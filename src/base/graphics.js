@@ -1,6 +1,6 @@
 // graphics functions
 
-AC.Base.Graphics = (function(){
+ac.export("graphics", function(){
 
 	var _canvasObject = {
 		draw: function(image, sx, sy, dx, dy){
@@ -10,7 +10,7 @@ AC.Base.Graphics = (function(){
 			this.ctx.drawImage(image, sx, sy, w, h, dx, dy, w, h);
 		}
 	};
-	
+
 	return {
 		loadImage: function(src, callback){
 			//load the tileset image
@@ -20,7 +20,7 @@ AC.Base.Graphics = (function(){
 			};
 			image.src = src;
 		},
-		
+
 		createCanvas: function(width, height){
 			var canvas = $.extend(true, {}, _canvasObject),
 				elem = $("<canvas/>")
@@ -33,4 +33,4 @@ AC.Base.Graphics = (function(){
 			return canvas;
 		}
 	};
-})();
+});

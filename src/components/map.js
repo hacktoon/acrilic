@@ -1,5 +1,6 @@
 
 ac.export("map", function(){
+    "use strict";
 
     var graphics = ac.import('graphics');
 

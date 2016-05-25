@@ -4,11 +4,11 @@ module.exports = function(grunt) {
 		concat: {
 			options: {
 				// define a string to put between each file in the concatenated output
-				separator: ';'
+				separator: ' '
 			},
 			dist: {
 				// the files to concatenate
-				src: ['src/core.js', 'src/**/*.js', 'main.js'],
+				src: ['src/acrilic.js', 'src/**/*.js', 'main.js'],
 				// the location of the resulting JS file
 				dest: 'dist/<%= pkg.name %>.js'
 			}

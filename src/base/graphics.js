@@ -1,6 +1,7 @@
 // graphics functions
 
 ac.export("graphics", function(){
+    "use strict";
 
 	var _canvasObject = {
 		draw: function(image, sx, sy, dx, dy){

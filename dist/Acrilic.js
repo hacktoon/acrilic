@@ -1,23 +1,33 @@
 
-var AC = (function(){
+var ac = (function(){
 	"use strict";
 
 	window.log = console.log.bind(console);
 
+    var _modules = {};
+
     return {
 		ESC_KEY: 27,
-		TILESIZE: 64,
 
-        Base: {},
-        Components: {},
+        export: function(name, code){
+            _modules[name] = {
+                code: code,
+                ref: undefined  // ensures execution in runtime only
+            };
+		},
 
-        import: function(module){
-            
+        import: function(name){
+            var mod = _modules[name];
+            if(mod.ref === undefined){
+                mod.ref = mod.code();
+                delete mod.code;
+            }
+            return mod[name].ref;
 		}
     };
 })();
-;
-AC.Base.Dialog = (function(){
+ 
+ac.export("dialog", function(){
     "use strict";
 
     var _dialogObject = {
@@ -81,11 +91,11 @@ AC.Base.Dialog = (function(){
             ]);
         }
     };
+});
+ // graphics functions
 
-})();
-;// graphics functions
-
-AC.Base.Graphics = (function(){
+ac.export("graphics", function(){
+    "use strict";
 
 	var _canvasObject = {
 		draw: function(image, sx, sy, dx, dy){
@@ -95,7 +105,7 @@ AC.Base.Graphics = (function(){
 			this.ctx.drawImage(image, sx, sy, w, h, dx, dy, w, h);
 		}
 	};
-	
+
 	return {
 		loadImage: function(src, callback){
 			//load the tileset image
@@ -105,7 +115,7 @@ AC.Base.Graphics = (function(){
 			};
 			image.src = src;
 		},
-		
+
 		createCanvas: function(width, height){
 			var canvas = $.extend(true, {}, _canvasObject),
 				elem = $("<canvas/>")
@@ -118,9 +128,44 @@ AC.Base.Graphics = (function(){
 			return canvas;
 		}
 	};
-})();
-;;
-AC.Editor = (function(){
+});
+ 
+ac.export("widget", function(){
+    "use strict";
+
+    return {
+        createDialogHandler: function(options){
+            var self = this,
+                opt = options || {},
+                templateString = $(opt.templateSelector).html();
+
+            var dialog = _Dialog.modal(opt.title, $(templateString), opt.buttonSet);
+            $(opt.btnSelector).on('click', function(){
+                dialog.open();
+                if ($.isFunction(opt.initialize)){
+                    opt.initialize();
+                }
+            });
+        },
+
+        createSwitchModeHandler: function(generalSelector, options, action){
+            var toggleClass = 'active',
+                optionList = $(generalSelector);
+
+            optionList.on('click', function(e){
+                optionList.removeClass(toggleClass);
+                var target = $(this),
+                    id = target.attr('id'),
+                    value = options[id];
+                target.addClass(toggleClass);
+                action(value);
+            });
+            optionList.first().trigger('click');
+        }
+    };
+});
+ 
+ac.export("editor", function(){
 	"use strict";
 
 	var _Interface, _Map;
@@ -135,6 +180,56 @@ AC.Editor = (function(){
 		_currentPaletteTile;
 
 	return {
+
+        createMapEditor: function(mapSelector, options){
+            var doc = $(document),
+		        opt = options || {},
+				x = 0,
+				y = 0,
+				t = AC.TILESIZE,
+				cursorDragging = false,
+				mapEditor = $(mapSelector),
+				selectCursor = $("<div/>")
+					.addClass("selection-cursor")
+					.css({"width": t, "height": t});
+
+			mapEditor.append(selectCursor)
+			.on('mousemove', function(e){
+				//deslocamento em relacao à tela
+				var x_offset = mapEditor.offset().left,
+					y_offset = mapEditor.offset().top,
+					x_scroll = mapEditor.scrollLeft() + doc.scrollLeft(),
+					y_scroll = mapEditor.scrollTop() + doc.scrollTop();
+				//posição relativa do mouse
+				var rx = e.pageX - x_offset + x_scroll,
+					ry = e.pageY - y_offset + y_scroll;
+
+				rx = (rx < 0) ? 0 : rx;
+				ry = (ry < 0) ? 0 : ry;
+				x = parseInt(rx / t);
+				y = parseInt(ry / t);
+
+				selectCursor.css("transform", "translate(" + (x * t) + "px, " + (y * t) + "px)");
+
+				// Allows painting while dragging
+				if(cursorDragging){
+					opt.action(x, y, {dragging: true});
+				}
+			}).on('mousedown', function(e){
+				e.preventDefault();
+				cursorDragging = true;
+				opt.action(x, y);
+			});
+
+			doc.on('mouseup', function(){
+				cursorDragging = false;
+			});
+
+			// Hack: Fix map panel position
+			mapEditor.css('left', $('#tileset-panel-wrapper').width());
+
+			return mapEditor;
+		},
 
 		openMap: function(name, map){
 			_mapEditorElem.append(map.elem);
@@ -268,139 +363,12 @@ AC.Editor = (function(){
 		}
 	};
 
-})();
-;
-AC.Interface = (function(){
-	"use strict";
+});
+ 
+ac.export("map", function(){
+    "use strict";
 
-	var _Dialog, _Graphics;
-
-	return {
-		createDialogHandler: function(options){
-			var self = this,
-				opt = options || {},
-				templateString = $(opt.templateSelector).html();
-
-			var dialog = _Dialog.modal(opt.title, $(templateString), opt.buttonSet);
-			$(opt.btnSelector).on('click', function(){
-				dialog.open();
-				if ($.isFunction(opt.initialize)){
-					opt.initialize();
-				}
-			});
-		},
-
-		createSwitchModeHandler: function(generalSelector, options, action){
-			var toggleClass = 'active',
-				optionList = $(generalSelector);
-
-			optionList.on('click', function(e){
-				optionList.removeClass(toggleClass);
-				var target = $(this),
-					id = target.attr('id'),
-					value = options[id];
-				target.addClass(toggleClass);
-				action(value);
-			});
-			optionList.first().trigger('click');
-		},
-
-		createTilesetPalette: function(panelSelector, options){
-			var opt = options || {},
-				t = AC.TILESIZE,
-				palette = $(panelSelector),
-				currentSelected,
-				selectedClass = "menu-tile-selected",
-				tileBoard = [];
-
-			_Graphics.loadImage(opt.srcImage, function(image, width, height){
-				var cols = Math.floor(width / t),
-					rows = Math.floor(height / t),
-					boardIndex = 0;
-
-				for (var i = 0; i < rows; i++) {
-					for (var j = 0; j < cols; j++) {
-						var tile = _Graphics.createCanvas(t, t);
-						tile.draw(image, j*t, i*t, 0, 0);
-						tileBoard.push(tile);
-						tile.elem.addClass("menu-tile").data("tilecode", boardIndex++);
-						palette.append(tile.elem);
-					}
-				}
-
-				palette.on('click', '.menu-tile', function(){
-					var target = $(this),
-						tileSelected,
-						tileCode;
-
-					if(currentSelected)
-						currentSelected.removeClass(selectedClass);
-					target.addClass(selectedClass);
-					currentSelected = target;
-					tileCode = Number(target.data("tilecode"));
-					opt.action(tileBoard[tileCode].elem.get(0));
-				})
-				.find('.menu-tile:first')
-				.trigger('click');
-			});
-		},
-
-		createMapEditor: function(mapSelector, options){
-            var doc = $(document),
-		        opt = options || {},
-				x = 0,
-				y = 0,
-				t = AC.TILESIZE,
-				cursorDragging = false,
-				mapEditor = $(mapSelector),
-				selectCursor = $("<div/>")
-					.addClass("selection-cursor")
-					.css({"width": t, "height": t});
-
-			mapEditor.append(selectCursor)
-			.on('mousemove', function(e){
-				//deslocamento em relacao à tela
-				var x_offset = mapEditor.offset().left,
-					y_offset = mapEditor.offset().top,
-					x_scroll = mapEditor.scrollLeft() + doc.scrollLeft(),
-					y_scroll = mapEditor.scrollTop() + doc.scrollTop();
-				//posição relativa do mouse
-				var rx = e.pageX - x_offset + x_scroll,
-					ry = e.pageY - y_offset + y_scroll;
-
-				rx = (rx < 0) ? 0 : rx;
-				ry = (ry < 0) ? 0 : ry;
-				x = parseInt(rx / t);
-				y = parseInt(ry / t);
-
-				selectCursor.css("transform", "translate(" + (x * t) + "px, " + (y * t) + "px)");
-
-				// Allows painting while dragging
-				if(cursorDragging){
-					opt.action(x, y, {dragging: true});
-				}
-			}).on('mousedown', function(e){
-				e.preventDefault();
-				cursorDragging = true;
-				opt.action(x, y);
-			});
-
-			doc.on('mouseup', function(){
-				cursorDragging = false;
-			});
-
-			// Hack: Fix map panel position
-			mapEditor.css('left', $('#tileset-panel-wrapper').width());
-
-			return mapEditor;
-		}
-    };
-
-})();
-;
-AC.Map = (function(){
-
-    var Graphics = AC.import('base/graphics');
+    var graphics = ac.import('graphics');
 
     var _mapObject = {
         grid: [],
@@ -429,7 +397,7 @@ AC.Map = (function(){
                     map.grid[i].push({id: 0});
                 }
             }
-            map.canvas = Graphics.createCanvas(cols * t, rows * t);
+            map.canvas = graphics.createCanvas(cols * t, rows * t);
             map.elem = $('<div/>').addClass('.map');
             map.elem.append(map.canvas.elem);
             return map;
@@ -439,12 +407,12 @@ AC.Map = (function(){
             var self = this;
         }
     };
-})();
-;
-AC.Components.Palette = (function(){
+});
+ 
+ac.export("pallette", function(){
     "use strict";
 
-    var _Graphics = AC.Graphics;
+    var graphics = ac.import("graphics");
 
     return {
         init: function(panelSelector, options){
@@ -455,14 +423,14 @@ AC.Components.Palette = (function(){
                 selectedClass = "menu-tile-selected",
                 tileBoard = [];
 
-            _Graphics.loadImage(opt.srcImage, function(image, width, height){
+            graphics.loadImage(opt.srcImage, function(image, width, height){
                 var cols = Math.floor(width / t),
                     rows = Math.floor(height / t),
                     boardIndex = 0;
 
                 for (var i = 0; i < rows; i++) {
                     for (var j = 0; j < cols; j++) {
-                        var tile = _Graphics.createCanvas(t, t);
+                        var tile = graphics.createCanvas(t, t);
                         tile.draw(image, j*t, i*t, 0, 0);
                         tileBoard.push(tile);
                         tile.elem.addClass("menu-tile").data("tilecode", boardIndex++);
@@ -474,7 +442,7 @@ AC.Components.Palette = (function(){
                     var target = $(this),
                         tileSelected,
                         tileCode;
-                    
+
                     if(currentSelected)
                         currentSelected.removeClass(selectedClass);
                     target.addClass(selectedClass);
@@ -487,12 +455,10 @@ AC.Components.Palette = (function(){
             });
         },
     };
-})();
-
-;(function() {
+});
+ (function() {
 	"use strict";
 
-	AC.Components.Editor.initInterface();
-    AC.Components.Editor.initTools();
+	var editor = ac.import("editor");
 
 })();

@@ -1,6 +1,7 @@
+
 ac.export("widget", function(){
     "use strict";
-    
+
     return {
         createDialogHandler: function(options){
             var self = this,

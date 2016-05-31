@@ -265,7 +265,31 @@ ac.export("editor", function(){
         map = ac.import("map"),
         pallette = ac.import("pallette");
 
-    var build = function() {
+    var _mapEditorElem;
+
+    var buildPallette = function() {
+		var self = this;
+        pallette.init('#tileset-panel', {
+			srcImage: 'tilesets/ground-layer.png',
+			action: function(tile) {
+				_currentPaletteTile = tile;
+			}
+		});
+    };
+
+    var buildEditor = function(){
+        _mapEditorElem = editor.createMapEditor('#map-panel', {
+            action: function(x, y, options) {
+                var opt = options || {},
+                    dragging = opt.dragging;
+                if (_currentMap){
+                    _currentMap.setTile(_currentPaletteTile, x, y);
+                }
+            }
+        });
+    };
+
+    var buildMenu = function() {
 		var self = this;
 
 		widget.createDialogHandler({
@@ -348,27 +372,16 @@ ac.export("editor", function(){
 		}, function(value){
 			editor.setLayer(value);
 		});
-
-		pallette.init('#tileset-panel', {
-			srcImage: 'tilesets/ground-layer.png',
-			action: function(tile) {
-				_currentPaletteTile = tile;
-			}
-		});
-
-		mapEditorElem = editor.createMapEditor('#map-panel', {
-			action: function(x, y, options) {
-				var opt = options || {},
-					dragging = opt.dragging;
-				if (_currentMap){
-					_currentMap.setTile(_currentPaletteTile, x, y);
-				}
-			}
-		});
 	};
 
+    var init = function init() {
+        buildMenu();
+        buildPallette();
+        buildEditor();
+    };
+
     return {
-        build: build
+        init: init
     };
 });
  
@@ -492,6 +505,6 @@ ac.export("pallette", function(){
 	"use strict";
 
 	var main_interface = ac.import("interface");
-    main_interface.build();
+    main_interface.init();
 
 })();

@@ -2,27 +2,34 @@
 var ac = (function(){
 	"use strict";
 
-	window.log = console.log.bind(console);
-
     var _modules = {};
 
     return {
-		ESC_KEY: 27,
+        ESC_KEY: 27,
 
-        export: function(name, code){
+        log: console.log.bind(console),
+        error: console.error.bind(console),
+
+        export: function(name, function_ref){
             _modules[name] = {
-                code: code,
+                func: function_ref,
                 ref: undefined  // ensures execution in runtime only
             };
 		},
 
         import: function(name){
-            var mod = _modules[name];
-            if(mod.ref === undefined){
-                mod.ref = mod.code();
-                delete mod.code;
+            var mod;
+            if (! _modules.hasOwnProperty(name)){
+                this.error("Module " + name + " doesn't exist.");
+                return;
             }
-            return mod[name].ref;
+            mod = _modules[name];
+            if(mod.ref === undefined){
+                // execute the function and receive an object
+                mod.ref = mod.func();
+                delete mod.func;
+            }
+            return mod.ref;
 		}
     };
 })();
@@ -168,7 +175,8 @@ ac.export("widget", function(){
 ac.export("editor", function(){
 	"use strict";
 
-	var _Interface, _Map;
+	var _Interface = ac.import("widget"),
+        _Map       = ac.import("map");
 
 	var _mapEditorElem,
 		_maps = {},
@@ -242,127 +250,124 @@ ac.export("editor", function(){
 
 		setLayer: function(id){
 			_currentLayer = _layers[id];
-		},
-
-		initInterface: function() {
-			var self = this;
-
-			_Interface.createDialogHandler({
-				title: 'New map',
-				btnSelector: '#btn-file-new',
-				templateSelector: '#tpl-dialog-file-new',
-				buttonSet: [
-					{
-						title: 'OK',
-						action: function(dialog){
-							var name = $('#field-file-new-name').val(),
-								width = Number($('#field-file-new-width').val()),
-								height = Number($('#field-file-new-height').val());
-							if (_currentMap){
-								return;
-							}
-							dialog.close();
-							self.openMap(name, _Map.create(width, height));
-						}
-					},
-					{
-						title: 'Cancel',
-						action: function(dialog){
-							dialog.close();
-						}
-					}
-				]
-			});
-
-			_Interface.createDialogHandler({
-				title: 'Import',
-				btnSelector: '#btn-file-import',
-				templateSelector: '#tpl-dialog-file-import',
-				buttonSet: [
-					{
-						title: 'Import',
-						action: function(dialog){
-							$('#field-file-import-map').val();
-						}
-					},
-					{
-						title: 'Cancel',
-						action: function(dialog){
-							dialog.close();
-						}
-					}
-				]
-			});
-
-			_Interface.createDialogHandler({
-				title: 'Export',
-				btnSelector: '#btn-file-export',
-				templateSelector: '#tpl-dialog-file-export',
-				buttonSet: [
-					{
-						title: 'Close',
-						action: function(dialog){
-							dialog.close();
-						}
-					}
-				],
-				initialize: function(){
-					var json = JSON.stringify({a: 3});
-					$("#field-file-export-map").val(json);
-				},
-			});
-
-			_Interface.createSwitchModeHandler('.btn-tool', {
-				'btn-tool-pen': 'pen',
-				'btn-tool-fill': 'fill',
-				'btn-tool-eraser': 'eraser'
-			}, function(value){
-				self.setTool(value);
-			});
-
-			_Interface.createSwitchModeHandler('.btn-layer', {
-				'btn-layer-bg': 'bg',
-				'btn-layer-fg': 'fg',
-				'btn-layer-event': 'event'
-			}, function(value){
-				self.setLayer(value);
-			});
-
-			_Interface.createTilesetPalette('#tileset-panel', {
-				srcImage: 'tilesets/ground-layer.png',
-				action: function(tile) {
-					_currentPaletteTile = tile;
-				}
-			});
-
-			_mapEditorElem = _Interface.createMapEditor('#map-panel', {
-				action: function(x, y, options) {
-					var opt = options || {},
-						dragging = opt.dragging;
-					if (_currentMap){
-						_currentMap.setTile(_currentPaletteTile, x, y);
-					}
-				}
-			});
-		},
-
-		initTools: function() {
-			_tools = {
-				'pen': function(grid){
-
-				},
-
-				'fill': function(grid) {
-
-				},
-
-				'eraser': function(grid) {
-
-				}
-			};
 		}
 	};
 
+});
+ ac.export("interface", function(){
+
+    var widget = ac.import("widget"),
+        editor = ac.import("editor"),
+        dialog = ac.import("dialog"),
+        tools = ac.import("tools"),
+        map = ac.import("map"),
+        pallette = ac.import("pallette");
+
+    var build = function() {
+		var self = this;
+
+		widget.createDialogHandler({
+			title: 'New map',
+			btnSelector: '#btn-file-new',
+			templateSelector: '#tpl-dialog-file-new',
+			buttonSet: [
+				{
+					title: 'OK',
+					action: function(dialog){
+						var name = $('#field-file-new-name').val(),
+							width = Number($('#field-file-new-width').val()),
+							height = Number($('#field-file-new-height').val());
+						if (_currentMap){
+							return;
+						}
+						dialog.close();
+						self.openMap(name, map.create(width, height));
+					}
+				},
+				{
+					title: 'Cancel',
+					action: function(dialog){
+						dialog.close();
+					}
+				}
+			]
+		});
+
+		widget.createDialogHandler({
+			title: 'Import',
+			btnSelector: '#btn-file-import',
+			templateSelector: '#tpl-dialog-file-import',
+			buttonSet: [
+				{
+					title: 'Import',
+					action: function(dialog){
+						$('#field-file-import-map').val();
+					}
+				},
+				{
+					title: 'Cancel',
+					action: function(dialog){
+						dialog.close();
+					}
+				}
+			]
+		});
+
+		widget.createDialogHandler({
+			title: 'Export',
+			btnSelector: '#btn-file-export',
+			templateSelector: '#tpl-dialog-file-export',
+			buttonSet: [
+				{
+					title: 'Close',
+					action: function(dialog){
+						dialog.close();
+					}
+				}
+			],
+			initialize: function(){
+				var json = JSON.stringify({a: 3});
+				$("#field-file-export-map").val(json);
+			},
+		});
+
+		widget.createSwitchModeHandler('.btn-tool', {
+			'btn-tool-pen': 'pen',
+			'btn-tool-fill': 'fill',
+			'btn-tool-eraser': 'eraser'
+		}, function(value){
+			tools.setTool(value);
+		});
+
+		widget.createSwitchModeHandler('.btn-layer', {
+			'btn-layer-bg': 'bg',
+			'btn-layer-fg': 'fg',
+			'btn-layer-event': 'event'
+		}, function(value){
+			editor.setLayer(value);
+		});
+
+		widget.createTilesetPalette('#tileset-panel', {
+			srcImage: 'tilesets/ground-layer.png',
+			action: function(tile) {
+				_currentPaletteTile = tile;
+			}
+		});
+
+		mapEditorElem = editor.createMapEditor('#map-panel', {
+			action: function(x, y, options) {
+				var opt = options || {},
+					dragging = opt.dragging;
+				if (_currentMap){
+					_currentMap.setTile(_currentPaletteTile, x, y);
+				}
+			}
+		});
+	};
+
+    return {
+        build: build
+    };
 });
  
 ac.export("map", function(){
@@ -456,9 +461,33 @@ ac.export("pallette", function(){
         },
     };
 });
+ ac.export("tools", function(){
+
+    var _tools;
+
+    return {
+        initTools: function() {
+    		_tools = {
+    			pen: function(grid){
+
+    			},
+
+    			fill: function(grid) {
+
+    			},
+
+    			eraser: function(grid) {
+
+    			}
+    		};
+		}
+    };
+});
  (function() {
 	"use strict";
 
-	var editor = ac.import("editor");
+	var program_interface = ac.import("interface");
+
+    program_interface.build();
 
 })();

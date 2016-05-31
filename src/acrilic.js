@@ -2,27 +2,34 @@
 var ac = (function(){
 	"use strict";
 
-	window.log = console.log.bind(console);
-
     var _modules = {};
 
     return {
-		ESC_KEY: 27,
+        ESC_KEY: 27,
 
-        export: function(name, code){
+        log: console.log.bind(console),
+        error: console.error.bind(console),
+
+        export: function(name, function_ref){
             _modules[name] = {
-                code: code,
+                func: function_ref,
                 ref: undefined  // ensures execution in runtime only
             };
 		},
 
         import: function(name){
-            var mod = _modules[name];
-            if(mod.ref === undefined){
-                mod.ref = mod.code();
-                delete mod.code;
+            var mod;
+            if (! _modules.hasOwnProperty(name)){
+                this.error("Module " + name + " doesn't exist.");
+                return;
             }
-            return mod[name].ref;
+            mod = _modules[name];
+            if(mod.ref === undefined){
+                // execute the function and receive an object
+                mod.ref = mod.func();
+                delete mod.func;
+            }
+            return mod.ref;
 		}
     };
 })();

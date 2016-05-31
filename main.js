@@ -1,6 +1,8 @@
 (function() {
 	"use strict";
 
-	var editor = ac.import("editor");
+	var program_interface = ac.import("interface");
+
+    program_interface.build();
 
 })();

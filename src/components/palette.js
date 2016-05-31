@@ -7,7 +7,7 @@ ac.export("pallette", function(){
     return {
         init: function(panelSelector, options){
             var opt = options || {},
-                t = AC.TILESIZE,
+                t = ac.TILESIZE,
                 palette = $(panelSelector),
                 currentSelected,
                 selectedClass = "menu-tile-selected",

@@ -1,8 +1,7 @@
 (function() {
 	"use strict";
 
-	var program_interface = ac.import("interface");
-
-    program_interface.build();
+	var main_interface = ac.import("interface");
+    main_interface.build();
 
 })();

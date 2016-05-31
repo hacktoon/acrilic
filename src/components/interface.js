@@ -91,7 +91,7 @@ ac.export("interface", function(){
 			editor.setLayer(value);
 		});
 
-		widget.createTilesetPalette('#tileset-panel', {
+		pallette.init('#tileset-panel', {
 			srcImage: 'tilesets/ground-layer.png',
 			action: function(tile) {
 				_currentPaletteTile = tile;

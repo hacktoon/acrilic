@@ -10,7 +10,7 @@ ac.export("map", function(){
 
         setTile: function(image, x, y){
             //position in the tileset image
-            var t = AC.TILESIZE;
+            var t = ac.TILESIZE;
             this.grid[y][x] = 1;
             this.canvas.draw(image, 0, 0, x*t, y*t);
         },
@@ -22,7 +22,7 @@ ac.export("map", function(){
 
     return {
         create: function(cols, rows){
-            var t = AC.TILESIZE;
+            var t = ac.TILESIZE;
             var map = $.extend(true, {}, _mapObject);
 
             for (var i = 0; i < rows; i++) {

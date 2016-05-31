@@ -2,15 +2,17 @@
 ac.export("widget", function(){
     "use strict";
 
+    var dialog = ac.import("dialog");
+
     return {
         createDialogHandler: function(options){
             var self = this,
                 opt = options || {},
                 templateString = $(opt.templateSelector).html();
 
-            var dialog = _Dialog.modal(opt.title, $(templateString), opt.buttonSet);
+                var confirm_dialog = dialog.modal(opt.title, $(templateString), opt.buttonSet);
             $(opt.btnSelector).on('click', function(){
-                dialog.open();
+                confirm_dialog.open();
                 if ($.isFunction(opt.initialize)){
                     opt.initialize();
                 }

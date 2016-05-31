@@ -2,7 +2,7 @@
 ac.export("dialog", function(){
     "use strict";
 
-    var _dialogObject = {
+    var dialogObject = {
         elem: undefined,
         open: function(){
             this.elem.show();
@@ -30,7 +30,7 @@ ac.export("dialog", function(){
 
     return {
         modal: function(title, content, buttonSet){
-            var dialog = $.extend(true, {}, _dialogObject),
+            var dialog = $.extend(true, {}, dialogObject),
                 elem = dialog.elem = $($('#tpl-dialog-overlay').html());
             elem.find('.btn-close').on('click', function(){
                 dialog.close();
@@ -40,7 +40,7 @@ ac.export("dialog", function(){
             elem.find('.dialog-button-panel').html(_buildDialogButtons(dialog, buttonSet));
 
             $(document).on('keydown', function(e){
-                if (e.which == AC.ESC_KEY){
+                if (e.which == ac.ESC_KEY){
                     dialog.close();
                 }
             });

@@ -21,7 +21,7 @@ ac.export("editor", function(){
 		        opt = options || {},
 				x = 0,
 				y = 0,
-				t = AC.TILESIZE,
+				t = ac.TILESIZE,
 				cursorDragging = false,
 				mapEditor = $(mapSelector),
 				selectCursor = $("<div/>")

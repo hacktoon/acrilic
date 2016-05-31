@@ -37,7 +37,7 @@ var ac = (function(){
 ac.export("dialog", function(){
     "use strict";
 
-    var _dialogObject = {
+    var dialogObject = {
         elem: undefined,
         open: function(){
             this.elem.show();
@@ -65,7 +65,7 @@ ac.export("dialog", function(){
 
     return {
         modal: function(title, content, buttonSet){
-            var dialog = $.extend(true, {}, _dialogObject),
+            var dialog = $.extend(true, {}, dialogObject),
                 elem = dialog.elem = $($('#tpl-dialog-overlay').html());
             elem.find('.btn-close').on('click', function(){
                 dialog.close();
@@ -75,7 +75,7 @@ ac.export("dialog", function(){
             elem.find('.dialog-button-panel').html(_buildDialogButtons(dialog, buttonSet));
 
             $(document).on('keydown', function(e){
-                if (e.which == AC.ESC_KEY){
+                if (e.which == ac.ESC_KEY){
                     dialog.close();
                 }
             });
@@ -140,15 +140,17 @@ ac.export("graphics", function(){
 ac.export("widget", function(){
     "use strict";
 
+    var dialog = ac.import("dialog");
+
     return {
         createDialogHandler: function(options){
             var self = this,
                 opt = options || {},
                 templateString = $(opt.templateSelector).html();
 
-            var dialog = _Dialog.modal(opt.title, $(templateString), opt.buttonSet);
+                var confirm_dialog = dialog.modal(opt.title, $(templateString), opt.buttonSet);
             $(opt.btnSelector).on('click', function(){
-                dialog.open();
+                confirm_dialog.open();
                 if ($.isFunction(opt.initialize)){
                     opt.initialize();
                 }
@@ -194,7 +196,7 @@ ac.export("editor", function(){
 		        opt = options || {},
 				x = 0,
 				y = 0,
-				t = AC.TILESIZE,
+				t = ac.TILESIZE,
 				cursorDragging = false,
 				mapEditor = $(mapSelector),
 				selectCursor = $("<div/>")
@@ -347,7 +349,7 @@ ac.export("editor", function(){
 			editor.setLayer(value);
 		});
 
-		widget.createTilesetPalette('#tileset-panel', {
+		pallette.init('#tileset-panel', {
 			srcImage: 'tilesets/ground-layer.png',
 			action: function(tile) {
 				_currentPaletteTile = tile;
@@ -381,7 +383,7 @@ ac.export("map", function(){
 
         setTile: function(image, x, y){
             //position in the tileset image
-            var t = AC.TILESIZE;
+            var t = ac.TILESIZE;
             this.grid[y][x] = 1;
             this.canvas.draw(image, 0, 0, x*t, y*t);
         },
@@ -393,7 +395,7 @@ ac.export("map", function(){
 
     return {
         create: function(cols, rows){
-            var t = AC.TILESIZE;
+            var t = ac.TILESIZE;
             var map = $.extend(true, {}, _mapObject);
 
             for (var i = 0; i < rows; i++) {
@@ -422,7 +424,7 @@ ac.export("pallette", function(){
     return {
         init: function(panelSelector, options){
             var opt = options || {},
-                t = AC.TILESIZE,
+                t = ac.TILESIZE,
                 palette = $(panelSelector),
                 currentSelected,
                 selectedClass = "menu-tile-selected",
@@ -466,6 +468,9 @@ ac.export("pallette", function(){
     var _tools;
 
     return {
+        setTool: function(){
+            
+        },
         initTools: function() {
     		_tools = {
     			pen: function(grid){
@@ -486,8 +491,7 @@ ac.export("pallette", function(){
  (function() {
 	"use strict";
 
-	var program_interface = ac.import("interface");
-
-    program_interface.build();
+	var main_interface = ac.import("interface");
+    main_interface.build();
 
 })();

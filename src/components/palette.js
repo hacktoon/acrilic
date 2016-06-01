@@ -1,5 +1,5 @@
 
-ac.export("pallette", function(){
+ac.export("pallette", function(env){
     "use strict";
 
     var graphics = ac.import("graphics");
@@ -7,7 +7,7 @@ ac.export("pallette", function(){
     return {
         init: function(panelSelector, options){
             var opt = options || {},
-                t = ac.TILESIZE,
+                t = env.get("TILESIZE"),
                 palette = $(panelSelector),
                 currentSelected,
                 selectedClass = "menu-tile-selected",

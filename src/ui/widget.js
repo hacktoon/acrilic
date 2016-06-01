@@ -1,5 +1,5 @@
 
-ac.export("widget", function(){
+ac.export("widget", function(env){
     "use strict";
 
     var dialog = ac.import("dialog");

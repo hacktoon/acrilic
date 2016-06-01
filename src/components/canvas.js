@@ -1,5 +1,5 @@
 
-ac.export("editor", function(){
+ac.export("canvas", function(env){
 	"use strict";
 
 	var _Interface = ac.import("widget"),
@@ -21,7 +21,7 @@ ac.export("editor", function(){
 		        opt = options || {},
 				x = 0,
 				y = 0,
-				t = ac.TILESIZE,
+				t = env.get("TILESIZE"),
 				cursorDragging = false,
 				mapEditor = $(mapSelector),
 				selectCursor = $("<div/>")

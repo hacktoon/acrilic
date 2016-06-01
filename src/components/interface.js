@@ -1,7 +1,7 @@
-ac.export("interface", function(){
+ac.export("interface", function(env){
 
     var widget = ac.import("widget"),
-        editor = ac.import("editor"),
+        canvas = ac.import("canvas"),
         dialog = ac.import("dialog"),
         tools = ac.import("tools"),
         map = ac.import("map"),
@@ -20,7 +20,7 @@ ac.export("interface", function(){
     };
 
     var buildEditor = function(){
-        _mapEditorElem = editor.createMapEditor('#map-panel', {
+        _mapEditorElem = canvas.createMapEditor('#map-panel', {
             action: function(x, y, options) {
                 var opt = options || {},
                     dragging = opt.dragging;
@@ -112,7 +112,7 @@ ac.export("interface", function(){
 			'btn-layer-fg': 'fg',
 			'btn-layer-event': 'event'
 		}, function(value){
-			editor.setLayer(value);
+			canvas.setLayer(value);
 		});
 	};
 

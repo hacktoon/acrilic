@@ -2,7 +2,27 @@
 var ac = (function(){
 	"use strict";
 
+    // loaded modules
     var _modules = {};
+
+    // global environment
+    var _env = (function(){
+        var registry = {};
+        return {
+            set: function(key, value){
+                registry[key] = value;
+            },
+            get: function(key){
+                return registry[key];
+            },
+            has: function(key){
+                return registry.hasOwnProperty(key);
+            },
+            del: function(key){
+                delete registry[key];
+            },
+        };
+    })();
 
     return {
         ESC_KEY: 27,
@@ -26,7 +46,7 @@ var ac = (function(){
             mod = _modules[name];
             if(mod.ref === undefined){
                 // execute the function and receive an object
-                mod.ref = mod.func();
+                mod.ref = mod.func(_env);
                 delete mod.func;
             }
             return mod.ref;

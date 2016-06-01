@@ -1,3 +1,3 @@
 build:
-	mkdir dist/
-	cat src/acrilic.js src/**/*.js main.js > dist/Acrilic.js
+	mkdir -p build/
+	cat src/acrilic.js src/**/*.js main.js > build/Acrilic.js

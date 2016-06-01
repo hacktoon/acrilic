@@ -1,5 +1,5 @@
 
-ac.export("map", function(){
+ac.export("map", function(env){
     "use strict";
 
     var graphics = ac.import('graphics');
@@ -10,7 +10,7 @@ ac.export("map", function(){
 
         setTile: function(image, x, y){
             //position in the tileset image
-            var t = ac.TILESIZE;
+            var t = env.get("TILESIZE");
             this.grid[y][x] = 1;
             this.canvas.draw(image, 0, 0, x*t, y*t);
         },
@@ -22,7 +22,7 @@ ac.export("map", function(){
 
     return {
         create: function(cols, rows){
-            var t = ac.TILESIZE;
+            var t = env.get("TILESIZE");
             var map = $.extend(true, {}, _mapObject);
 
             for (var i = 0; i < rows; i++) {
@@ -37,7 +37,7 @@ ac.export("map", function(){
             return map;
         },
 
-        init: function(modules){
+        init: function(){
             var self = this;
         }
     };

@@ -20,7 +20,7 @@ var ac = (function(){
             },
             del: function(key){
                 delete registry[key];
-            },
+            }
         };
     })();
 
@@ -53,75 +53,9 @@ var ac = (function(){
 		}
     };
 })();
- 
-ac.export("dialog", function(){
-    "use strict";
-
-    var dialogObject = {
-        elem: undefined,
-        open: function(){
-            this.elem.show();
-        },
-        close: function(){
-            this.elem.hide();
-        },
-    };
-
-    var _buildDialogButtons = function(dialog, buttonSet){
-        var output = '';
-        var setButtonAction = function(btn, id){
-            dialog.elem.on('click', '#' + id, function(){
-                btn.action(dialog);
-            });
-        };
-        for (var i=0; i<buttonSet.length; i++){
-            var btn = buttonSet[i],
-                id = 'btn-' + btn.title.replace(/\s+/g, '-').toLowerCase();
-            output += '<button id="' + id + '">' + btn.title + '</button>';
-            setButtonAction(btn, id);
-        }
-        return output;
-    };
-
-    return {
-        modal: function(title, content, buttonSet){
-            var dialog = $.extend(true, {}, dialogObject),
-                elem = dialog.elem = $($('#tpl-dialog-overlay').html());
-            elem.find('.btn-close').on('click', function(){
-                dialog.close();
-            });
-            elem.find('.dialog-titlebar .title').html(title);
-            elem.find('.dialog-content').html(content);
-            elem.find('.dialog-button-panel').html(_buildDialogButtons(dialog, buttonSet));
-
-            $(document).on('keydown', function(e){
-                if (e.which == ac.ESC_KEY){
-                    dialog.close();
-                }
-            });
-
-            $('body').append(elem);
-
-            return dialog;
-        },
-
-        confirm: function(message, action){
-            var self = this;
-            this.open('', '<p>' + message + '</p>', [
-                {title: 'OK', action: function(){
-                    action();
-                    self.close();
-                }},
-                {title: 'Cancel', action: function(){
-                    self.close();
-                }}
-            ]);
-        }
-    };
-});
  // graphics functions
 
-ac.export("graphics", function(){
+ac.export("graphics", function(env){
     "use strict";
 
 	var _canvasObject = {
@@ -157,7 +91,7 @@ ac.export("graphics", function(){
 	};
 });
  
-ac.export("map", function(){
+ac.export("map", function(env){
     "use strict";
 
     var graphics = ac.import('graphics');
@@ -168,7 +102,7 @@ ac.export("map", function(){
 
         setTile: function(image, x, y){
             //position in the tileset image
-            var t = ac.TILESIZE;
+            var t = env.get("TILESIZE");
             this.grid[y][x] = 1;
             this.canvas.draw(image, 0, 0, x*t, y*t);
         },
@@ -180,7 +114,7 @@ ac.export("map", function(){
 
     return {
         create: function(cols, rows){
-            var t = ac.TILESIZE;
+            var t = env.get("TILESIZE");
             var map = $.extend(true, {}, _mapObject);
 
             for (var i = 0; i < rows; i++) {
@@ -195,45 +129,8 @@ ac.export("map", function(){
             return map;
         },
 
-        init: function(modules){
+        init: function(){
             var self = this;
-        }
-    };
-});
- 
-ac.export("widget", function(){
-    "use strict";
-
-    var dialog = ac.import("dialog");
-
-    return {
-        createDialogHandler: function(options){
-            var self = this,
-                opt = options || {},
-                templateString = $(opt.templateSelector).html();
-
-                var confirm_dialog = dialog.modal(opt.title, $(templateString), opt.buttonSet);
-            $(opt.btnSelector).on('click', function(){
-                confirm_dialog.open();
-                if ($.isFunction(opt.initialize)){
-                    opt.initialize();
-                }
-            });
-        },
-
-        createSwitchModeHandler: function(generalSelector, options, action){
-            var toggleClass = 'active',
-                optionList = $(generalSelector);
-
-            optionList.on('click', function(e){
-                optionList.removeClass(toggleClass);
-                var target = $(this),
-                    id = target.attr('id'),
-                    value = options[id];
-                target.addClass(toggleClass);
-                action(value);
-            });
-            optionList.first().trigger('click');
         }
     };
 });
@@ -449,6 +346,72 @@ ac.export("editor", function(){
     };
 });
  
+ac.export("dialog", function(env){
+    "use strict";
+
+    var dialogObject = {
+        elem: undefined,
+        open: function(){
+            this.elem.show();
+        },
+        close: function(){
+            this.elem.hide();
+        },
+    };
+
+    var _buildDialogButtons = function(dialog, buttonSet){
+        var output = '';
+        var setButtonAction = function(btn, id){
+            dialog.elem.on('click', '#' + id, function(){
+                btn.action(dialog);
+            });
+        };
+        for (var i=0; i<buttonSet.length; i++){
+            var btn = buttonSet[i],
+                id = 'btn-' + btn.title.replace(/\s+/g, '-').toLowerCase();
+            output += '<button id="' + id + '">' + btn.title + '</button>';
+            setButtonAction(btn, id);
+        }
+        return output;
+    };
+
+    return {
+        modal: function(title, content, buttonSet){
+            var dialog = $.extend(true, {}, dialogObject),
+                elem = dialog.elem = $($('#tpl-dialog-overlay').html());
+            elem.find('.btn-close').on('click', function(){
+                dialog.close();
+            });
+            elem.find('.dialog-titlebar .title').html(title);
+            elem.find('.dialog-content').html(content);
+            elem.find('.dialog-button-panel').html(_buildDialogButtons(dialog, buttonSet));
+
+            $(document).on('keydown', function(e){
+                if (e.which == ac.ESC_KEY){
+                    dialog.close();
+                }
+            });
+
+            $('body').append(elem);
+
+            return dialog;
+        },
+
+        confirm: function(message, action){
+            var self = this;
+            this.open('', '<p>' + message + '</p>', [
+                {title: 'OK', action: function(){
+                    action();
+                    self.close();
+                }},
+                {title: 'Cancel', action: function(){
+                    self.close();
+                }}
+            ]);
+        }
+    };
+});
+ 
 ac.export("pallette", function(){
     "use strict";
 
@@ -519,6 +482,43 @@ ac.export("pallette", function(){
     			}
     		};
 		}
+    };
+});
+ 
+ac.export("widget", function(){
+    "use strict";
+
+    var dialog = ac.import("dialog");
+
+    return {
+        createDialogHandler: function(options){
+            var self = this,
+                opt = options || {},
+                templateString = $(opt.templateSelector).html();
+
+                var confirm_dialog = dialog.modal(opt.title, $(templateString), opt.buttonSet);
+            $(opt.btnSelector).on('click', function(){
+                confirm_dialog.open();
+                if ($.isFunction(opt.initialize)){
+                    opt.initialize();
+                }
+            });
+        },
+
+        createSwitchModeHandler: function(generalSelector, options, action){
+            var toggleClass = 'active',
+                optionList = $(generalSelector);
+
+            optionList.on('click', function(e){
+                optionList.removeClass(toggleClass);
+                var target = $(this),
+                    id = target.attr('id'),
+                    value = options[id];
+                target.addClass(toggleClass);
+                action(value);
+            });
+            optionList.first().trigger('click');
+        }
     };
 });
  (function() {

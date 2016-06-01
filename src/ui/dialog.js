@@ -1,5 +1,5 @@
 
-ac.export("dialog", function(){
+ac.export("dialog", function(env){
     "use strict";
 
     var dialogObject = {

@@ -20,7 +20,7 @@ var ac = (function(){
             },
             del: function(key){
                 delete registry[key];
-            },
+            }
         };
     })();
 

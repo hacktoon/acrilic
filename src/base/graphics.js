@@ -1,6 +1,6 @@
 // graphics functions
 
-ac.export("graphics", function(){
+ac.export("graphics", function(env){
     "use strict";
 
 	var _canvasObject = {

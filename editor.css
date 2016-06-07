@@ -86,18 +86,20 @@ input {
 }
 
 /* TILESET PALETTE --------------------------- */
-#tileset-panel-wrapper {
+#sidebar-panel {
     background: #888;
     position: absolute;
     top: 0;
     left: 0;
     bottom: 0;
-    overflow-y: scroll;
+    width: 320px;
+    overflow: hidden;
 }
 
 #tileset-panel {
+    overflow-y: scroll;
 	width: 320px;
-    height: 1024px;
+    height: 60%;
 }
 
 .menu-tile {
@@ -110,6 +112,12 @@ input {
     box-sizing: border-box;
     width: 64px;
     height: 64px;
+}
+
+#project-panel {
+    background: #FFF;
+    width: 320px;
+    height: 40%;
 }
 
 

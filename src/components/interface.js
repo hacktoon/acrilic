@@ -9,16 +9,6 @@ ac.export("interface", function(env){
 
     var _mapEditorElem;
 
-    var buildPallette = function() {
-		var self = this;
-        pallette.init('#tileset-panel', {
-			srcImage: 'tilesets/ground-layer.png',
-			action: function(tile) {
-				_currentPaletteTile = tile;
-			}
-		});
-    };
-
     var buildEditor = function(){
         _mapEditorElem = canvas.createMapEditor('#map-panel', {
             action: function(x, y, options) {
@@ -117,8 +107,8 @@ ac.export("interface", function(env){
 	};
 
     var init = function init() {
+        pallette.createPallette('#tileset-panel', 'tilesets/ground-layer.png');
         buildMenu();
-        buildPallette();
         buildEditor();
     };
 

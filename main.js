@@ -1,7 +1,8 @@
 (function() {
 	"use strict";
 
-	var main_interface = ac.import("interface");
-    main_interface.init();
+	var $interface = ac.import("interface");
+    $interface.init();
+
 
 })();

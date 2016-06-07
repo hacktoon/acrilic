@@ -30,6 +30,10 @@ var ac = (function(){
         log: console.log.bind(console),
         error: console.error.bind(console),
 
+        clone: function(obj){
+            
+        },
+
         export: function(name, function_ref){
             _modules[name] = {
                 func: function_ref,

@@ -5,7 +5,8 @@ ac.export("interface", function(env){
         dialog = ac.import("dialog"),
         tools = ac.import("tools"),
         map = ac.import("map"),
-        pallette = ac.import("pallette");
+        pallette = ac.import("pallette"),
+        $tileset = ac.import("tileset");
 
     var _mapEditorElem;
 
@@ -107,7 +108,8 @@ ac.export("interface", function(env){
 	};
 
     var init = function init() {
-        pallette.createPallette('#tileset-panel', 'tilesets/ground-layer.png');
+        $tileset.load('tilesets/ground-layer.png', 64);
+        pallette.createPallette('#pallette-panel');
         buildMenu();
         buildEditor();
     };

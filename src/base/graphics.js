@@ -3,6 +3,8 @@
 ac.export("graphics", function(env){
     "use strict";
 
+    var $dom = ac.import("dom");
+
 	var _canvasObject = {
 		draw: function(image, sx, sy, dx, dy){
 			//image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight
@@ -23,7 +25,7 @@ ac.export("graphics", function(env){
 		},
 
 		createCanvas: function(width, height){
-			var canvas = $.extend(true, {}, _canvasObject),
+			var canvas = ac.clone(_canvasObject),
 				elem = $("<canvas/>")
 				.attr("width", width)
 				.attr("height", height);

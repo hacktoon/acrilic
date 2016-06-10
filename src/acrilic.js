@@ -31,7 +31,7 @@ var ac = (function(){
         error: console.error.bind(console),
 
         clone: function(obj){
-            
+            return $.extend(true, {}, obj);
         },
 
         export: function(name, function_ref){

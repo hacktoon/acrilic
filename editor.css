@@ -96,7 +96,7 @@ input {
     overflow: hidden;
 }
 
-#pallette-panel {
+#palette-panel {
     overflow-y: scroll;
 	width: 320px;
     height: 60%;

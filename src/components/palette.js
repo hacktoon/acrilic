@@ -1,39 +1,37 @@
 
-ac.export("pallette", function(env){
+ac.export("palette", function(env){
     "use strict";
 
-    var $tileset = ac.import("tileset");
+    var $tileset = ac.import("tileset"),
+        $dom     = ac.import("dom");
 
-    var createPallette = function(selector, tileset) {
+    var _element,
+        _tiles = {},
+        _tile_class = "tile";
 
-        action = function(tile) {
-            _currentPaletteTile = tile;
+    var _createTileButtons = function(tileset){
+        var ts = env.get("TILESIZE");
+
+        for(var i=0, len=tileset.length; i<len; i++){
+            var tile = tileset[i],
+                div = $dom.create("div", {class: _tile_class});
+            _tiles[tile.id] = tile.image;
+            $dom.append(div, tile.image);
+            $dom.append(_element, div);
         }
 
-        var t = env.get("TILESIZE"),
-            palette = $(panelSelector),
-            currentSelected,
-            selectedClass = "menu-tile-selected",
-            tileBoard = [];
+        // $dom.click(div, _tile_class, function(target){
+        //     ac.log(target);
+        // });
+    };
 
-        palette.on('click', '.menu-tile', function(){
-            var target = $(this),
-                tileSelected,
-                tileCode;
-
-            if(currentSelected)
-                currentSelected.removeClass(selectedClass);
-            target.addClass(selectedClass);
-            currentSelected = target;
-            tileCode = Number(target.data("tilecode"));
-            opt.action(tileBoard[tileCode].elem.get(0));
-        })
-        .find('.menu-tile:first')
-        .trigger('click');
+    var createPalette = function(selector, tileset) {
+        _element = $dom.get(selector);
+        _createTileButtons(tileset);
+        env.set("CURRENT_TILE", "foo");
     };
 
     return {
-        init: init,
-        buildPallette: buildPallette
+        createPalette: createPalette
     };
 });

@@ -108,7 +108,7 @@ ac.export("interface", function(env){
 	};
 
     var init = function init() {
-        var tileset = $tileset.createTileset('tilesets/ground-layer.png', 64);
+        var tileset = $tileset.createTileset("default", 64);
         $palette.createPalette('#palette-panel', tileset);
         buildMenu();
         buildEditor();

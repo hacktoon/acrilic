@@ -1,8 +1,18 @@
 (function() {
 	"use strict";
 
-	var $interface = ac.import("interface");
-    $interface.init();
+    var $loader = ac.import("loader");
+    var $interface = ac.import("interface");
+
+    var assets_map = [
+        {id: "default", src: "tilesets/ground-layer.png", type: "image"}
+    ];
+
+    $loader.load(assets_map, function(){
+        $interface.init();
+    });
+
+
 
 
 })();

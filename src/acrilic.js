@@ -31,7 +31,9 @@ var ac = (function(){
         error: console.error.bind(console),
 
         clone: function(obj){
-            return $.extend(true, {}, obj);
+            var F =new Function(){};
+            F.prototype = obj;
+            return new F();
         },
 
         export: function(name, function_ref){

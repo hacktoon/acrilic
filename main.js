@@ -9,7 +9,6 @@
     ];
 
     $loader.load(assets_map, function(){
-        ac.log("loaded");
         $interface.init();
     });
 

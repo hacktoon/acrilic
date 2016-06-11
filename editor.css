@@ -102,12 +102,12 @@ input {
     height: 60%;
 }
 
-.menu-tile {
+#palette-panel .tile {
     float: left;
     cursor: pointer;
 }
 
-.menu-tile-selected {
+#palette-panel .tile.selected {
     border: dotted 3px #FFF;
     box-sizing: border-box;
     width: 64px;

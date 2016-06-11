@@ -12,11 +12,13 @@ ac.export("dom", function(env){
 
     var create = function(tag, options){
         var elem = $("<"+tag+"/>");
+        if(options["class"]){
+            elem.addClass(options["class"]);
+        }
         return elem;
     };
 
     var action = function(type, target, callback){
-
         target.on(type, function(e){
             callback(e);
         });

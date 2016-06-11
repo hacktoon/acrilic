@@ -2,44 +2,45 @@
 ac.export("loader", function(env){
     "use strict";
 
-    var _items = {},
-        _items_loaded = 0,
-        _total_items,
-        _callback_ref;
+    var items = {},
+        items_loaded = 0,
+        total_items,
+        callback_ref;
 
-    var _update_load_status(){
-        _items_loaded++;
-        if (_items_loaded == _total_items){
-            _callback();
-        }
-    };
-
-    var _loaders = {
+    var loader_functions = {
         image: function(id, src){
             var image = new Image();
 			image.onload = function(){
-				_items[id] = {
-                    image: image,
-                    width: image.width,
-                    height: image.height
-                };
-                _update_load_status;
+				items[id] = image;
+                update_load_status();
 			};
 			image.src = src;
         }
     };
 
-    var load = function(items, callback){
-        _total_items = items.length;
-        _callback_ref = callback;
-
-        for(var i=0; i<_total_items; i++){
-            var item = items[i];
-            _loaders[item.type](item.id, item.src);
+    var update_load_status = function(){
+        items_loaded++;
+        if (items_loaded == total_items){
+            callback_ref();
         }
     };
 
+    var load = function(items, callback){
+        total_items = items.length;
+        callback_ref = callback;
+
+        for(var i=0; i<total_items; i++){
+            var item = items[i];
+            loader_functions[item.type](item.id, item.src);
+        }
+    };
+
+    var get = function(asset_id){
+        return items[asset_id];
+    };
+
     return {
-        load: load
+        load: load,
+        get: get
     };
 });

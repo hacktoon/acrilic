@@ -31,7 +31,7 @@ var ac = (function(){
         error: console.error.bind(console),
 
         clone: function(obj){
-            var F =new Function(){};
+            function F(){};
             F.prototype = obj;
             return new F();
         },

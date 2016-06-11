@@ -5,7 +5,7 @@ ac.export("loader", function(env){
     var _items = {},
         _items_loaded = 0,
         _total_items,
-        _callback;
+        _callback_ref;
 
     var _update_load_status(){
         _items_loaded++;
@@ -18,7 +18,11 @@ ac.export("loader", function(env){
         image: function(id, src){
             var image = new Image();
 			image.onload = function(){
-				_items[id] = {image, image.width, image.height};
+				_items[id] = {
+                    image: image,
+                    width: image.width,
+                    height: image.height
+                };
                 _update_load_status;
 			};
 			image.src = src;
@@ -27,7 +31,7 @@ ac.export("loader", function(env){
 
     var load = function(items, callback){
         _total_items = items.length;
-        _callback = callback;
+        _callback_ref = callback;
 
         for(var i=0; i<_total_items; i++){
             var item = items[i];

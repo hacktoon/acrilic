@@ -14,8 +14,8 @@ ac.export("widget", function(env){
 
         createTileButton: function(options, action){
             var div = $dom.create("div", options);
-            div.addClass("tile");
-            div.attr("id", options.id);
+            $dom.addClass(div, "tile");
+            div.data("id", options.id);
             $dom.append(div, options.content);
             $dom.on("click", div, action);
             return div;
@@ -28,7 +28,7 @@ ac.export("widget", function(env){
 
                 var confirm_$dialog = $dialog.modal(opt.title, $(templateString), opt.buttonSet);
             $(opt.btnSelector).on('click', function(){
-                confirm_$dialog.open();
+                confirm_dialog.open();
                 if ($.isFunction(opt.initialize)){
                     opt.initialize();
                 }

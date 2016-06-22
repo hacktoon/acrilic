@@ -3,31 +3,34 @@ ac.export("palette", function(env){
     "use strict";
 
     var $tileset = ac.import("tileset"),
-        $dom     = ac.import("dom");
+        $widget  = ac.import("widget");
 
-    var element,
-        tiles = {},
-        tile_class = "tile";
+    var tiles = {},
+        element;
 
-    var createTileButtons = function(tileset){
-        var ts = env.get("TILESIZE");
+    var createTileButtons = function(palette_selector, tileset){
+        var buttons = [];
+        var click_action = function(e, target){
+            console.log(target.attr("id"));
+        };
 
         for(var i=0, len=tileset.length; i<len; i++){
-            var tile = tileset[i],
-                div = $dom.create("div", {"class": tile_class});
-            tiles[tile.id] = tile.image;
-            $dom.append(div, tile.image.elem);
-            $dom.append(element, div);
+            var tile = tileset[i];
+            var tile_id = "tile" + tile.id;
+            var tile_widget = $widget.createTileButton({
+                content: tile.image.elem,
+                width: tile.image.width,
+                height: tile.image.height,
+                id: tile_id
+            }, click_action);
+            buttons.push(tile_widget);
+            tiles[tile_id] = tile_widget;
         }
-
-        // $dom.click(div, _tile_class, function(target){
-        //     ac.log(target);
-        // });
+        element = $widget.createContainer(palette_selector, buttons);
     };
 
-    var createPalette = function(selector, tileset) {
-        element = $dom.get(selector);
-        createTileButtons(tileset);
+    var createPalette = function(palette_selector, tileset) {
+        createTileButtons(palette_selector, tileset);
         env.set("CURRENT_TILE", "foo");
     };
 

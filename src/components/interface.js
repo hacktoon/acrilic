@@ -1,7 +1,7 @@
 ac.export("interface", function(env){
 
     var widget = ac.import("widget"),
-        canvas = ac.import("canvas"),
+        canvas = ac.import("board"),
         dialog = ac.import("dialog"),
         tools = ac.import("tools"),
         map = ac.import("map"),

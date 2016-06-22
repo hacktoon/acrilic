@@ -5,7 +5,7 @@ ac.export("tileset", function(env){
     var $loader = ac.import("loader");
     var $graphics = ac.import("graphics");
 
-    var _buildTiles = function(image, ts){
+    var buildTiles = function(image, ts){
         var tiles = [],
             tile_id = 0,
             cols = Math.floor(image.width / ts),
@@ -27,7 +27,7 @@ ac.export("tileset", function(env){
     var createTileset = function(img_path, tilesize){
         var image = $loader.get("default_tileset");
         env.set("TILESIZE", tilesize);
-        return _buildTiles(image, tilesize);
+        return buildTiles(image, tilesize);
     };
 
     return {

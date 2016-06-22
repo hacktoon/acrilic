@@ -1,5 +1,5 @@
 
-ac.export("canvas", function(env){
+ac.export("board", function(env){
 	"use strict";
 
 	var _Interface = ac.import("widget"),

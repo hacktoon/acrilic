@@ -5,27 +5,32 @@ ac.export("tileset", function(env){
     var $loader = ac.import("loader");
     var $graphics = ac.import("graphics");
 
-    var buildTiles = function(image, ts){
+    function Tile(id, canvas, size){
+        (function init(){
+            this.id = id;
+            this.canvas = canvas;
+            this.size = size;
+        }.bind(this))();
+    };
+
+    var buildTiles = function(image, tilesize){
         var tiles = [],
             tile_id = 0,
-            cols = Math.floor(image.width / ts),
-            rows = Math.floor(image.height / ts);
+            cols = Math.floor(image.width / tilesize),
+            rows = Math.floor(image.height / tilesize);
 
         for (var i = 0; i < rows; i++) {
             for (var j = 0; j < cols; j++) {
-                var tile_img = $graphics.createCanvas(ts, ts);
-                tile_img.draw(image, j*ts, i*ts, 0, 0);
-                tiles.push({
-                    id: tile_id++,
-                    image: tile_img
-                });
+                var canvas = $graphics.createCanvas(tilesize, tilesize);
+                canvas.draw(image, j*tilesize, i*tilesize, 0, 0);
+                tiles.push(new Tile(tile_id++, canvas, tilesize));
             }
         }
         return tiles;
     };
 
-    var createTileset = function(img_path, tilesize){
-        var image = $loader.get("default_tileset");
+    var createTileset = function(asset_id, tilesize){
+        var image = $loader.get(asset_id);
         env.set("TILESIZE", tilesize);
         return buildTiles(image, tilesize);
     };

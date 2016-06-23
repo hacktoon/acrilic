@@ -107,7 +107,7 @@ input {
     cursor: pointer;
 }
 
-#palette-panel .tile.selected {
+#palette-panel .tile.active {
     border: dotted 3px #FFF;
     box-sizing: border-box;
     width: 64px;

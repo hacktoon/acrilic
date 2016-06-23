@@ -14,10 +14,12 @@ ac.export("dom", function(env){
         target.addClass(classes);
     };
 
-    var create = function(tag, options){
-        var elem = $("<"+tag+"/>");
-        elem.css(options);
-        return elem;
+    var removeClass = function(target, classes){
+        target.removeClass(classes);
+    };
+
+    var create = function(tag){
+        return $("<"+tag+"/>");
     };
 
     var on = function(type, target, callback){
@@ -28,6 +30,7 @@ ac.export("dom", function(env){
 
     return {
         addClass: addClass,
+        removeClass: removeClass,
         append: append,
         on: on,
         create: create,

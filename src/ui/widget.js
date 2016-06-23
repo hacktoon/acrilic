@@ -5,6 +5,32 @@ ac.export("widget", function(env){
     var $dialog = ac.import("dialog"),
         $dom = ac.import("dom");
 
+    function TileButton(tile){
+        var activeClass = "active";
+
+        (function init(){
+            this.tile = tile;
+            this.elem = tile.canvas.elem;
+        }.bind(this))();
+
+        this.onClick = function(action){
+            $dom.on("click", this.elem, action);
+        };
+
+        this.select = function(){
+            $dom.addClass(this.elem, activeClass);
+        };
+
+        this.unselect = function(){
+            $dom.removeClass(this.elem, activeClass);
+        };
+
+        this.render = function(){
+            $dom.addClass(this.elem, "tile");
+            return this.elem;
+        };
+    };
+
     return {
         createContainer: function(selector, children){
             var target = $dom.get(selector);
@@ -12,13 +38,10 @@ ac.export("widget", function(env){
             return target;
         },
 
-        createTileButton: function(options, action){
-            var div = $dom.create("div", options);
-            $dom.addClass(div, "tile");
-            div.data("id", options.id);
-            $dom.append(div, options.content);
-            $dom.on("click", div, action);
-            return div;
+        createTileButton: function(tile, action){
+            var tile_button = new TileButton(tile);
+            tile_button.onClick(action);
+            return tile_button;
         },
 
         createDialogHandler: function(options){

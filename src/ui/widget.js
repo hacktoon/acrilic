@@ -5,7 +5,7 @@ ac.export("widget", function(env){
     var $dialog = ac.import("dialog"),
         $dom = ac.import("dom");
 
-    function TileButton(tile){
+    function TileWidget(tile){
         var activeClass = "active";
 
         (function init(){
@@ -38,8 +38,8 @@ ac.export("widget", function(env){
             return target;
         },
 
-        createTileButton: function(tile, action){
-            var tile_button = new TileButton(tile);
+        createTileWidget: function(tile, action){
+            var tile_button = new TileWidget(tile);
             tile_button.onClick(action);
             return tile_button;
         },

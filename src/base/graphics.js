@@ -8,7 +8,7 @@ ac.export("graphics", function(env){
         (function init(){
             this.width = width;
             this.height = height;
-            this.elem = $dom.create("canvas", {width: width, height: height});
+            this.elem = $dom.createElement("canvas", {width: width, height: height});
             this.surface = $dom.getCanvasContext(this.elem);
         }.bind(this))();
 
@@ -20,7 +20,7 @@ ac.export("graphics", function(env){
 		};
 
         this.render = function(){
-            return this.elem;
+            return this.elem.ref;
         }
 	};
 

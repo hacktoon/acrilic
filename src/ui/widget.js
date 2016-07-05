@@ -2,8 +2,7 @@
 ac.export("widget", function(env){
     "use strict";
 
-    var $dialog = ac.import("dialog"),
-        $dom = ac.import("dom");
+    var $dom = ac.import("dom");
 
     function TileWidget(tile){
         var activeClass = "active";
@@ -14,28 +13,28 @@ ac.export("widget", function(env){
         }.bind(this))();
 
         this.onClick = function(action){
-            $dom.on("click", this.elem, action);
+            this.elem.on("click", action);
         };
 
         this.select = function(){
-            $dom.addClass(this.elem, activeClass);
+            this.elem.addClass(activeClass);
         };
 
         this.unselect = function(){
-            $dom.removeClass(this.elem, activeClass);
+            this.elem.removeClass(activeClass);
         };
 
         this.render = function(){
-            $dom.addClass(this.elem, "tile");
+            this.elem.addClass("tile");
             return this.elem;
         };
     };
 
     return {
         createContainer: function(selector, children){
-            var target = $dom.get(selector);
+            var target = $dom.getElement(selector);
+            ac.log(children);
             target.append(children);
-            return target;
         },
 
         createTileWidget: function(tile, action){
@@ -45,7 +44,7 @@ ac.export("widget", function(env){
         },
 
         createDialogHandler: function(options){
-            var self = this,
+            /*var self = this,
                 opt = options || {},
                 templateString = $(opt.templateSelector).html();
 
@@ -55,7 +54,7 @@ ac.export("widget", function(env){
                 if ($.isFunction(opt.initialize)){
                     opt.initialize();
                 }
-            });
+            });*/
         },
 
         createSwitchModeHandler: function(generalSelector, options, action){

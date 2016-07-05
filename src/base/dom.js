@@ -2,52 +2,57 @@
 ac.export("dom", function(env){
     "use strict";
 
-    var get = function(selector){
-        return $(selector);
+    function Element(tagName){
+        (function init(){
+            if (tagName){
+                this.ref = $("<"+tagName+"/>");
+            }
+        }.bind(this))();
+
+        this.append = function(child){
+            this.ref.append(child);
+        };
+
+        this.attr = function(props){
+            this.ref.attr(props);
+        };
+
+        this.addClass = function(classes){
+            this.ref.addClass(classes);
+        };
+
+        this.removeClass = function(classes){
+            this.ref.removeClass(classes);
+        };
+
+        this.on = function(type, callback){
+            this.ref.on(type, function(e){
+                callback(e, this.ref);
+            });
+        };
+    };
+
+    var getElement = function(selector){
+        var element = new Element();
+        element.ref = $(selector);
+        return element;
     };
 
     var getCanvasContext = function(canvas){
-        return canvas.get(0).getContext("2d");
+        return canvas.ref.get(0).getContext("2d");
     };
 
-    var append = function(target, child){
-        target.append(child);
-    };
-
-    var attr = function(target, props){
-        target.attr(props);
-    };
-
-    var addClass = function(target, classes){
-        target.addClass(classes);
-    };
-
-    var removeClass = function(target, classes){
-        target.removeClass(classes);
-    };
-
-    var create = function(tag, props){
-        var elem = $("<"+tag+"/>");
+    var createElement = function(tag, props){
+        var elem = new Element(tag);
         if (props){
             elem.attr(props);
         }
         return elem;
     };
 
-    var on = function(type, target, callback){
-        target.on(type, function(e){
-            callback(e, target);
-        });
-    };
-
     return {
-        addClass: addClass,
-        removeClass: removeClass,
+        createElement: createElement,
         getCanvasContext: getCanvasContext,
-        attr: attr,
-        append: append,
-        on: on,
-        create: create,
-        get: get
+        getElement: getElement
     };
 });

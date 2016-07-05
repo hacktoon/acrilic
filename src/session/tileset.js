@@ -5,12 +5,15 @@ ac.export("tileset", function(env){
     var $loader = ac.import("loader");
     var $graphics = ac.import("graphics");
 
-    function Tile(id, graphic, size){
+    function Tile(id, graphic){
         (function init(){
             this.id = id;
             this.graphic = graphic;
-            this.size = size;
         }.bind(this))();
+
+        this.getGraphic = function() {
+            return this.graphic.surface;
+        }
 
         this.render = function() {
             return this.graphic.render();

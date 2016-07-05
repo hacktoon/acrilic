@@ -18,7 +18,6 @@ ac.export("palette", function(env){
 
         tileset.forEach(function(tile, _){
             var tile_bt = $widget.createTileButton(tile, function(){
-                console.log("Selected tile with id=" + tile.id);
                 env.get("CURRENT_TILE").unselect();
                 selectTile(tile.id);
             });

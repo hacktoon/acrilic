@@ -10,7 +10,7 @@ ac.export("widget", function(env){
 
         (function init(){
             this.tile = tile;
-            this.elem = tile.canvas.elem;
+            this.elem = tile.render();
         }.bind(this))();
 
         this.onClick = function(action){

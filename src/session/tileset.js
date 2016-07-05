@@ -5,12 +5,16 @@ ac.export("tileset", function(env){
     var $loader = ac.import("loader");
     var $graphics = ac.import("graphics");
 
-    function Tile(id, canvas, size){
+    function Tile(id, graphic, size){
         (function init(){
             this.id = id;
-            this.canvas = canvas;
+            this.graphic = graphic;
             this.size = size;
         }.bind(this))();
+
+        this.render = function() {
+            return this.graphic.render();
+        }
     };
 
     var buildTiles = function(image, tilesize){
@@ -21,9 +25,9 @@ ac.export("tileset", function(env){
 
         for (var i = 0; i < rows; i++) {
             for (var j = 0; j < cols; j++) {
-                var canvas = $graphics.createCanvas(tilesize, tilesize);
-                canvas.draw(image, j*tilesize, i*tilesize, 0, 0);
-                tiles.push(new Tile(tile_id++, canvas, tilesize));
+                var graphic = $graphics.createGraphic(tilesize, tilesize);
+                graphic.draw(image, j*tilesize, i*tilesize, 0, 0);
+                tiles.push(new Tile(tile_id++, graphic, tilesize));
             }
         }
         return tiles;

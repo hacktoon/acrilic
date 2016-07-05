@@ -1,30 +1,32 @@
-// graphics functions
 
 ac.export("graphics", function(env){
     "use strict";
 
     var $dom = ac.import("dom");
 
-	var _canvasObject = {
-		draw: function(image, sx, sy, dx, dy){
+	function Graphic(width, height){
+        (function init(){
+            this.width = width;
+            this.height = height;
+            this.elem = $dom.create("canvas", {width: width, height: height});
+            this.surface = $dom.getCanvasContext(this.elem);
+        }.bind(this))();
+
+		this.draw = function(image, sx, sy, dx, dy){
 			//image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight
 			var w = this.width,
 				h = this.height;
-			this.ctx.drawImage(image, sx, sy, w, h, dx, dy, w, h);
-		}
+			this.surface.drawImage(image, sx, sy, w, h, dx, dy, w, h);
+		};
+
+        this.render = function(){
+            return this.elem;
+        }
 	};
 
 	return {
-		createCanvas: function(width, height){
-			var canvas = ac.clone(_canvasObject),
-				elem = $("<canvas/>")
-				.attr("width", width)
-				.attr("height", height);
-			canvas.width = width;
-			canvas.height = height;
-			canvas.ctx = elem.get(0).getContext("2d");
-			canvas.elem = elem;
-			return canvas;
+		createGraphic: function(width, height){
+			return new Graphic(width, height);
 		}
 	};
 });

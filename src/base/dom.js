@@ -6,8 +6,16 @@ ac.export("dom", function(env){
         return $(selector);
     };
 
+    var getCanvasContext = function(canvas){
+        return canvas.get(0).getContext("2d");
+    };
+
     var append = function(target, child){
         target.append(child);
+    };
+
+    var attr = function(target, props){
+        target.attr(props);
     };
 
     var addClass = function(target, classes){
@@ -18,8 +26,12 @@ ac.export("dom", function(env){
         target.removeClass(classes);
     };
 
-    var create = function(tag){
-        return $("<"+tag+"/>");
+    var create = function(tag, props){
+        var elem = $("<"+tag+"/>");
+        if (props){
+            elem.attr(props);
+        }
+        return elem;
     };
 
     var on = function(type, target, callback){
@@ -31,6 +43,8 @@ ac.export("dom", function(env){
     return {
         addClass: addClass,
         removeClass: removeClass,
+        getCanvasContext: getCanvasContext,
+        attr: attr,
         append: append,
         on: on,
         create: create,

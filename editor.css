@@ -92,13 +92,13 @@ input {
     top: 0;
     left: 0;
     bottom: 0;
-    width: 320px;
+    width: 271px;
     overflow: hidden;
 }
 
 #palette-panel {
     overflow-y: scroll;
-	width: 320px;
+	width: 271px;
     height: 60%;
 }
 
@@ -126,6 +126,7 @@ input {
 	background: url("img/screen_bg.png");
 	position: absolute;
     top: 0;
+    left: 271px;
     right: 0;
     bottom: 0;
     z-index: 1;

@@ -33,8 +33,11 @@ ac.export("widget", function(env){
     return {
         createContainer: function(selector, children){
             var target = $dom.getElement(selector);
-            ac.log(children);
-            target.append(children);
+            var tile_elements = [];
+            children.forEach(function(tile_widget, _){
+                tile_elements.push(tile_widget.render());
+            });
+            target.append(tile_elements);
         },
 
         createTileWidget: function(tile, action){

@@ -19,7 +19,7 @@ ac.export("palette", function(env){
                 env.get("CURRENT_TILE").unselect();
                 selectTile(tile.id);
             });
-            widgets.push(tile_widget.render());
+            widgets.push(tile_widget);
             tile_widgets[tile.id] = tile_widget;
         });
         return widgets;

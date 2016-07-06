@@ -20,7 +20,7 @@ ac.export("graphics", function(env){
 		};
 
         this.render = function(){
-            return this.elem.ref;
+            return this.elem;
         }
 	};
 

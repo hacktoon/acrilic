@@ -5,41 +5,49 @@ ac.export("dom", function(env){
     function Element(tagName){
         (function init(){
             if (tagName){
-                this.ref = $("<"+tagName+"/>");
+                this.obj = $("<"+tagName+"/>");
             }
         }.bind(this))();
 
         this.append = function(child){
-            this.ref.append(child);
+            var items = child.obj;
+            if (Array.isArray(child)){
+                items = [];
+                child.forEach(function(item, _){
+                    items.push(item.obj);
+                });
+            }
+            this.obj.append(items);
         };
 
         this.attr = function(props){
-            this.ref.attr(props);
+            this.obj.attr(props);
         };
 
         this.addClass = function(classes){
-            this.ref.addClass(classes);
+            this.obj.addClass(classes);
         };
 
         this.removeClass = function(classes){
-            this.ref.removeClass(classes);
+            this.obj.removeClass(classes);
         };
 
         this.on = function(type, callback){
-            this.ref.on(type, function(e){
-                callback(e, this.ref);
+            this.obj.on(type, function(e){
+                callback(e, this);
             });
         };
     };
 
     var getElement = function(selector){
         var element = new Element();
-        element.ref = $(selector);
+        element.obj = $(selector);
         return element;
     };
 
     var getCanvasContext = function(canvas){
-        return canvas.ref.get(0).getContext("2d");
+        ac.log(canvas.obj);
+        return canvas.obj.get(0).getContext("2d");
     };
 
     var createElement = function(tag, props){

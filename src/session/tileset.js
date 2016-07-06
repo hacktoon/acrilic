@@ -2,8 +2,8 @@
 ac.export("tileset", function(env){
     "use strict";
 
-    var $loader = ac.import("loader");
-    var $graphics = ac.import("graphics");
+    var $loader = ac.import("loader"),
+        $graphics = ac.import("graphics");
 
     function Tile(id, graphic){
         (function init(){
@@ -30,7 +30,7 @@ ac.export("tileset", function(env){
             for (var j = 0; j < cols; j++) {
                 var graphic = $graphics.createGraphic(tilesize, tilesize);
                 graphic.draw(image, j*tilesize, i*tilesize, 0, 0);
-                tiles.push(new Tile(tile_id++, graphic, tilesize));
+                tiles.push(new Tile(tile_id++, graphic));
             }
         }
         return tiles;

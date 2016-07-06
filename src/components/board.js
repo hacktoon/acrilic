@@ -2,82 +2,63 @@
 ac.export("board", function(env){
 	"use strict";
 
-	var _Interface = ac.import("widget"),
-        _Map       = ac.import("map");
+	var $dom = ac.import("dom"),
+        $map = ac.import("map");
 
-	var _mapEditorElem,
-		_maps = {},
-		_tools = {},
-		_layers = {},
-		_currentLayer,
-		_currentMap,
-		_currentTool,
-		_currentPaletteTile;
+    var setLayer = function(id){
+        id = 0;
+    };
 
-	return {
+	var createBoard = function(boardSelector){
+        var doc = $dom.getElement(document),
+	        x = 0,
+			y = 0,
+			ts = env.get("TILESIZE"),
+			cursorDragging = false,
+			boardElement = $dom.getElement(boardSelector),
+			selectCursor = $dom.createElement("div");
+		selectCursor.addClass("selection-cursor");
+		selectCursor.style({width: ts, height: ts});
 
-        createMapEditor: function(mapSelector, options){
-            var doc = $(document),
-		        opt = options || {},
-				x = 0,
-				y = 0,
-				t = env.get("TILESIZE"),
-				cursorDragging = false,
-				mapEditor = $(mapSelector),
-				selectCursor = $("<div/>")
-					.addClass("selection-cursor")
-					.css({"width": t, "height": t});
+		boardElement.append(selectCursor);
+		boardElement.on('mousemove', function(e){
+			//deslocamento em relacao à tela
+			var x_offset = boardElement.getPosition("left"),
+				y_offset = boardElement.getPosition("top"),
+				x_scroll = boardElement.getScroll("left") + doc.getScroll("left"),
+				y_scroll = boardElement.getScroll("top") + doc.getScroll("top");
+			//posição relativa do mouse
+			var rx = e.pageX - x_offset + x_scroll,
+				ry = e.pageY - y_offset + y_scroll;
 
-			mapEditor.append(selectCursor)
-			.on('mousemove', function(e){
-				//deslocamento em relacao à tela
-				var x_offset = mapEditor.offset().left,
-					y_offset = mapEditor.offset().top,
-					x_scroll = mapEditor.scrollLeft() + doc.scrollLeft(),
-					y_scroll = mapEditor.scrollTop() + doc.scrollTop();
-				//posição relativa do mouse
-				var rx = e.pageX - x_offset + x_scroll,
-					ry = e.pageY - y_offset + y_scroll;
+			rx = (rx < 0) ? 0 : rx;
+			ry = (ry < 0) ? 0 : ry;
+			x = Math.floor(rx / ts);
+			y = Math.floor(ry / ts);
 
-				rx = (rx < 0) ? 0 : rx;
-				ry = (ry < 0) ? 0 : ry;
-				x = parseInt(rx / t);
-				y = parseInt(ry / t);
+			selectCursor.style({transform: "translate(" + (x * ts) + "px, " + (y * ts) + "px)"});
 
-				selectCursor.css("transform", "translate(" + (x * t) + "px, " + (y * t) + "px)");
+			// Allows painting while dragging
+			if(cursorDragging){
+				//opt.action(x, y, {dragging: true});
+			}
+		});
 
-				// Allows painting while dragging
-				if(cursorDragging){
-					opt.action(x, y, {dragging: true});
-				}
-			}).on('mousedown', function(e){
-				e.preventDefault();
-				cursorDragging = true;
-				opt.action(x, y);
-			});
+        boardElement.on('mousedown', function(e){
+			e.preventDefault();
+			cursorDragging = true;
+			//opt.action(x, y);
+		});
 
-			doc.on('mouseup', function(){
-				cursorDragging = false;
-			});
+		doc.on('mouseup', function(){
+			cursorDragging = false;
+		});
 
-			// Hack: Fix map panel position
-			mapEditor.css('left', $('#tileset-panel-wrapper').width());
-
-			return mapEditor;
-		},
-
-		openMap: function(name, map){
-			_mapEditorElem.append(map.elem);
-			_maps[name] = _currentMap = map;
-		},
-
-		setTool: function(id){
-			//this.currentTool = _tools[id];
-		},
-
-		setLayer: function(id){
-			_currentLayer = _layers[id];
-		}
+		return boardElement;
 	};
 
+    return {
+        createBoard: createBoard,
+        setLayer: setLayer
+    };
 });

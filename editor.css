@@ -122,7 +122,7 @@ input {
 
 
 /* MAP ---------------------------  */
-#map-panel {
+#board-panel {
 	background: url("img/screen_bg.png");
 	position: absolute;
     top: 0;
@@ -132,7 +132,7 @@ input {
     z-index: 1;
     overflow: auto;
 }
-#map-panel .map {
+#board-panel .map {
     position: absolute;
     top: 0;
     left: 0;

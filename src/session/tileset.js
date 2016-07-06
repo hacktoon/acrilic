@@ -12,7 +12,7 @@ ac.export("tileset", function(env){
         }.bind(this))();
 
         this.getGraphic = function() {
-            return this.graphic.surface;
+            return this.graphic.context;
         }
 
         this.render = function() {

@@ -1,31 +1,17 @@
 ac.export("interface", function(env){
 
-    var widget = ac.import("widget"),
-        canvas = ac.import("board"),
-        dialog = ac.import("dialog"),
-        tools = ac.import("tools"),
-        map = ac.import("map"),
+    var $widget = ac.import("widget"),
+        $board = ac.import("board"),
+        $dialog = ac.import("dialog"),
+        $tools = ac.import("tools"),
+        $map = ac.import("map"),
         $palette = ac.import("palette"),
         $tileset = ac.import("tileset");
-
-    var _mapEditorElem;
-
-    var buildEditor = function(){
-        _mapEditorElem = canvas.createMapEditor('#map-panel', {
-            action: function(x, y, options) {
-                var opt = options || {},
-                    dragging = opt.dragging;
-                if (_currentMap){
-                    _currentMap.setTile(_currentPaletteTile, x, y);
-                }
-            }
-        });
-    };
 
     var buildMenu = function() {
 		var self = this;
 
-		widget.createDialogHandler({
+		$widget.createDialogHandler({
 			title: 'New map',
 			btnSelector: '#btn-file-new',
 			templateSelector: '#tpl-dialog-file-new',
@@ -52,7 +38,7 @@ ac.export("interface", function(env){
 			]
 		});
 
-		widget.createDialogHandler({
+		$widget.createDialogHandler({
 			title: 'Import',
 			btnSelector: '#btn-file-import',
 			templateSelector: '#tpl-dialog-file-import',
@@ -72,7 +58,7 @@ ac.export("interface", function(env){
 			]
 		});
 
-		widget.createDialogHandler({
+		$widget.createDialogHandler({
 			title: 'Export',
 			btnSelector: '#btn-file-export',
 			templateSelector: '#tpl-dialog-file-export',
@@ -90,28 +76,28 @@ ac.export("interface", function(env){
 			},
 		});
 
-		widget.createSwitchModeHandler('.btn-tool', {
+		$widget.createSwitchModeHandler('.btn-tool', {
 			'btn-tool-pen': 'pen',
 			'btn-tool-fill': 'fill',
 			'btn-tool-eraser': 'eraser'
 		}, function(value){
-			tools.setTool(value);
+			$tools.setTool(value);
 		});
 
-		widget.createSwitchModeHandler('.btn-layer', {
+		$widget.createSwitchModeHandler('.btn-layer', {
 			'btn-layer-bg': 'bg',
 			'btn-layer-fg': 'fg',
 			'btn-layer-event': 'event'
 		}, function(value){
-			canvas.setLayer(value);
+			$board.setLayer(value);
 		});
 	};
 
     var init = function init() {
         var tileset = $tileset.createTileset("default_tileset", 64);
         $palette.createPalette('#palette-panel', tileset);
+        $board.createBoard("#board-panel");
         buildMenu();
-        buildEditor();
     };
 
     return {

@@ -32,6 +32,31 @@ ac.export("dom", function(env){
             this.obj.removeClass(classes);
         };
 
+        this.style = function(props) {
+            this.obj.css(props);
+        };
+
+        this.getPosition = function(coordinate){
+            var offset = this.obj.offset();
+            coordinate = coordinate.toLowerCase();
+            if (coordinate == "left"){
+                return offset.left;
+            }
+            if (coordinate == "top"){
+                return offset.top;
+            }
+        };
+
+        this.getScroll = function(coordinate){
+            coordinate = coordinate.toLowerCase();
+            if (coordinate == "left"){
+                return this.obj.scrollLeft();
+            }
+            if (coordinate == "top"){
+                return this.obj.scrollTop();
+            }
+        };
+
         this.on = function(type, callback){
             this.obj.on(type, function(e){
                 callback(e, this);
@@ -46,7 +71,6 @@ ac.export("dom", function(env){
     };
 
     var getCanvasContext = function(canvas){
-        ac.log(canvas.obj);
         return canvas.obj.get(0).getContext("2d");
     };
 

@@ -24,6 +24,10 @@ ac.export("widget", function(env){
             this.elem.removeClass(activeClass);
         };
 
+        this.getGraphic = function(){
+            return this.tile.getGraphic();
+        };
+
         this.render = function(){
             this.elem.addClass("tile");
             return this.elem;

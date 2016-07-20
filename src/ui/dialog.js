@@ -10,14 +10,14 @@ ac.export("dialog", function(env){
             this.title = title;
             this.elem = $dom.getFromTemplate('#tpl-dialog-overlay');
             debugger;
-            this.close_button = $dom.getElement('.btn-close', this.elem);
+            this.close_button = $('.btn-close', this.elem);
             this.close_button.on('click', function(){
                 this.close();
             }.bind(this));
-            $dom.getElement('.dialog-titlebar .title', this.elem).html(title);
-            $dom.getElement('.dialog-content', this.elem).html(content);
-            $dom.getElement('body').append(this.elem);
-            $dom.getElement(document).on('keydown', function(e){
+            $('.dialog-titlebar .title', this.elem).html(title);
+            $('.dialog-content', this.elem).html(content);
+            $('body').append(this.elem);
+            $(document).on('keydown', function(e){
                 if (e.which == ac.ESC_KEY){
                     this.close();
                 }
@@ -37,7 +37,7 @@ ac.export("dialog", function(env){
                 output += '<button id="' + id + '">' + btn.title + '</button>';
                 setButtonAction.apply(this, btn, id);
             }
-            $dom.getElement('.dialog-button-panel', this.elem).html(output);
+            $('.dialog-button-panel', this.elem).html(output);
         };
 
         this.open = function(){

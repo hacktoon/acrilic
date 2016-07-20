@@ -15,9 +15,9 @@ ac.export("menu", function(env){
     			buttonSet: [
                     $widget.createButton('OK', function(dialog){
                         ac.log("clicquei no OK");
-                        /*var name = $dom.getElement('#field-file-new-name').val(),
-                            width = Number($dom.getElement('#field-file-new-width').val()),
-                            height = Number($dom.getElement('#field-file-new-height').val());
+                        /*var name = $('#field-file-new-name').val(),
+                            width = Number($('#field-file-new-width').val()),
+                            height = Number($('#field-file-new-height').val());
                         dialog.close();*/
                     }),
     				$widget.createButton('Cancel', function(dialog){

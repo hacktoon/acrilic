@@ -15,7 +15,7 @@
     var init = function(tilesize) {
         var tileset = $tileset.createTileset("default_tileset", tilesize);
         $palette.createPalette('#palette-panel', tileset);
-        $board.createBoard("#board-panel");
+        $board.init("#board-panel");
         $menu.createMenu("#main-menu");
     };
 

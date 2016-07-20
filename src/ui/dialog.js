@@ -2,14 +2,43 @@
 ac.export("dialog", function(env){
     "use strict";
 
-    var $dom = ac.import("dom"),
-        $widget = ac.import("widget");
+    var $dom = ac.import("dom");
 
-    function Dialog(title){
+    function Dialog(title, templateSelector){
         (function init(){
-            this.elem = undefined;
+            var content = $dom.getFromTemplate(templateSelector);
             this.title = title;
+            this.elem = $dom.getFromTemplate('#tpl-dialog-overlay');
+            debugger;
+            this.close_button = $dom.getElement('.btn-close', this.elem);
+            this.close_button.on('click', function(){
+                this.close();
+            }.bind(this));
+            $dom.getElement('.dialog-titlebar .title', this.elem).html(title);
+            $dom.getElement('.dialog-content', this.elem).html(content);
+            $dom.getElement('body').append(this.elem);
+            $dom.getElement(document).on('keydown', function(e){
+                if (e.which == ac.ESC_KEY){
+                    this.close();
+                }
+            }.bind(this));
         }.bind(this))();
+
+        this.setButtons = function(buttonSet){
+            var output = '';
+            var setButtonAction = function(btn, id){
+                this.elem.on('click', '#' + id, function(){
+                    btn.action(this);
+                }.bind(this));
+            };
+            for (var i=0; i<buttonSet.length; i++){
+                var btn = buttonSet[i],
+                    id = 'btn-' + btn.title.replace(/\s+/g, '-').toLowerCase();
+                output += '<button id="' + id + '">' + btn.title + '</button>';
+                setButtonAction.apply(this, btn, id);
+            }
+            $dom.getElement('.dialog-button-panel', this.elem).html(output);
+        };
 
         this.open = function(){
             this.elem.show();
@@ -20,46 +49,16 @@ ac.export("dialog", function(env){
         };
     };
 
-    var buildDialogButtons = function(dialog, buttonSet){
-        var output = '';
-        var setButtonAction = function(btn, id){
-            dialog.elem.on('click', '#' + id, function(){
-                btn.action(dialog);
-            });
-        };
-        for (var i=0; i<buttonSet.length; i++){
-            var btn = buttonSet[i],
-                id = 'btn-' + btn.title.replace(/\s+/g, '-').toLowerCase();
-            output += '<button id="' + id + '">' + btn.title + '</button>';
-            setButtonAction(btn, id);
-        }
-        return output;
-    };
-/*
-    var openModalDialog = function(title, content, buttonSet){
-        var dialog = new Dialog(title);
-        dialog.elem = $($('#tpl-dialog-overlay').html());
-        elem.find('.btn-close').on('click', function(){
-            dialog.close();
-        });
-        elem.find('.dialog-titlebar .title').html(title);
-        elem.find('.dialog-content').html(content);
-        elem.find('.dialog-button-panel').html(buildDialogButtons(dialog, buttonSet));
-
-        $(document).on('keydown', function(e){
-            if (e.which == ac.ESC_KEY){
-                dialog.close();
-            }
-        });
-
-        $('body').append(elem);
-
+    var createFormDialog = function(title, options){
+        var opt = options || {};
+        var dialog = new Dialog(title, opt.templateSelector);
+        dialog.setButtons(opt.buttonSet);
+        dialog.open();
         return dialog;
     };
 
-
-    confirm: function(message, action){
-        var self = this;
+    var createConfirmDialog = function(message, action){
+        /*var self = this;
         this.open('', '<p>' + message + '</p>', [
             {title: 'OK', action: function(){
                 action();
@@ -68,10 +67,11 @@ ac.export("dialog", function(env){
             {title: 'Cancel', action: function(){
                 self.close();
             }}
-        ]);
-    }
+        ]);*/
+    };
 
     return {
-        openModalDialog: openModalDialog
-    };*/
+        createConfirmDialog: createConfirmDialog,
+        createFormDialog: createFormDialog
+    };
 });

@@ -24,8 +24,38 @@ ac.export("dom", function(env){
             this.obj.attr(props);
         };
 
+        this.html = function(elem){
+            if (! elem){
+                return this.obj.html();
+            }
+            if (typeof elem === "string") {
+                this.obj.html(elem);
+                return;
+            }
+            this.obj.html(elem.obj);
+        };
+
+        this.val = function(val){
+            if (! val){
+                return this.obj.val();
+            }
+            this.obj.val(val);
+        };
+
+        this.show = function(){
+            this.obj.show();
+        };
+
+        this.hide = function(){
+            this.obj.hide();
+        };
+
         this.addClass = function(classes){
             this.obj.addClass(classes);
+        };
+
+        this.delete = function(){
+            this.obj.remove();
         };
 
         this.removeClass = function(classes){
@@ -57,16 +87,30 @@ ac.export("dom", function(env){
             }
         };
 
-        this.on = function(type, callback){
-            this.obj.on(type, function(e){
+        this.on = function(type, delegate, callback){
+            if ($.isFunction(delegate)){
+                callback = delegate;
+                delegate = undefined;
+            }
+            this.obj.on(type, delegate, function(e){
                 callback(e, this);
             });
         };
     };
 
-    var getElement = function(selector){
+    var getElement = function(selector, context){
         var element = new Element();
-        element.obj = $(selector);
+        if (context){
+            element.obj = $(context.obj, selector);
+        } else {
+            element.obj = $(selector);
+        }
+        return element;
+    };
+
+    var getFromTemplate = function(selector){
+        var element = new Element();
+        element.obj = $($(selector).html());
         return element;
     };
 
@@ -84,6 +128,7 @@ ac.export("dom", function(env){
 
     return {
         createElement: createElement,
+        getFromTemplate: getFromTemplate,
         getCanvasContext: getCanvasContext,
         getElement: getElement
     };

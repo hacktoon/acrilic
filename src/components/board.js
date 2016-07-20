@@ -12,7 +12,8 @@ ac.export("board", function(env){
 
 	var createBoard = function(boardSelector){
         $widget.createBoard(boardSelector, function(x, y){
-            ac.log(x, y);
+            var image = env.get("CURRENT_TILE").getGraphic();
+            ac.log(x, y, image);
         });
 	};
 

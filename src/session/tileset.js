@@ -5,20 +5,31 @@ ac.export("tileset", function(env){
     var $loader = ac.import("loader"),
         $canvas = ac.import("canvas");
 
+    var activeTileClass = 'active',
+        tileClass = 'tile';
+
     function Tile(id, canvas){
         (function init(){
             this.id = id;
             this.canvas = canvas;
-            this.canvas.elem.addClass('tile');
+            this.canvas.elem.addClass(tileClass);
         }.bind(this))();
-
-        this.getCanvasContext = function() {
-            return this.canvas.elem.context;
-        }
 
         this.getElement = function() {
             return this.canvas.elem;
         }
+
+        this.getCanvasContext = function() {
+            return this.getElement().context;
+        }
+
+        this.select = function(){
+            this.getElement().addClass(activeTileClass);
+        };
+
+        this.unselect = function(){
+            this.getElement().removeClass(activeTileClass);
+        };
     };
 
     var buildTiles = function(image, tilesize){

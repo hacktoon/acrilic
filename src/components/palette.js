@@ -5,12 +5,11 @@ ac.export("palette", function(env){
     var $tileset = ac.import("tileset");
 
     var tiles = {},
-        activeClass = "active",
         elem = $('#palette-panel');
 
     var selectTile = function(id){
         env.set("CURRENT_TILE", tiles[id]);
-        tiles[id].getElement().addClass(activeClass);
+        tiles[id].select();
     };
 
     var createTileButtons = function(tileset){
@@ -18,7 +17,7 @@ ac.export("palette", function(env){
         tileset.forEach(function(tile, _){
             var tile_elem = tile.getElement();
             tile_elem.on('click', function(){
-                env.get("CURRENT_TILE").getElement().removeClass(activeClass);
+                env.get("CURRENT_TILE").unselect();
                 selectTile(tile.id);
             });
             tiles[tile.id] = tile;

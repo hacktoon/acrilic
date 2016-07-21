@@ -3,20 +3,21 @@ ac.export("tileset", function(env){
     "use strict";
 
     var $loader = ac.import("loader"),
-        $graphics = ac.import("graphics");
+        $canvas = ac.import("canvas");
 
-    function Tile(id, graphic){
+    function Tile(id, canvas){
         (function init(){
             this.id = id;
-            this.graphic = graphic;
+            this.canvas = canvas;
+            this.canvas.elem.addClass('tile');
         }.bind(this))();
 
-        this.getGraphic = function() {
-            return this.graphic.context;
+        this.getCanvasContext = function() {
+            return this.canvas.elem.context;
         }
 
-        this.render = function() {
-            return this.graphic.render();
+        this.getElement = function() {
+            return this.canvas.elem;
         }
     };
 
@@ -28,9 +29,9 @@ ac.export("tileset", function(env){
 
         for (var i = 0; i < rows; i++) {
             for (var j = 0; j < cols; j++) {
-                var graphic = $graphics.createGraphic(tilesize, tilesize);
-                graphic.draw(image, j*tilesize, i*tilesize, 0, 0);
-                tiles.push(new Tile(tile_id++, graphic));
+                var canvas = $canvas.createCanvas(tilesize, tilesize);
+                canvas.draw(image, j*tilesize, i*tilesize, 0, 0);
+                tiles.push(new Tile(tile_id++, canvas));
             }
         }
         return tiles;

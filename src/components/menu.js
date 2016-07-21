@@ -4,21 +4,19 @@ ac.export("menu", function(env){
 
     var $dialog = ac.import("dialog"),
         $tools = ac.import("tools"),
-        $board = ac.import("board"),
-        $widget = ac.import("widget");
+        $board = ac.import("board");
 
     var createMenu = function() {
 
-        $widget.setButton('#btn-file-new', function(){
+        $('#btn-file-new').on('click', function(){
             $dialog.createFormDialog("New map", {
     			templateSelector: '#tpl-dialog-file-new',
     			buttonSet: [
                     $widget.createButton('OK', function(dialog){
                         ac.log("clicquei no OK");
-                        /*var name = $('#field-file-new-name').val(),
+                        var name = $('#field-file-new-name').val(),
                             width = Number($('#field-file-new-width').val()),
                             height = Number($('#field-file-new-height').val());
-                        dialog.close();*/
                     }),
     				$widget.createButton('Cancel', function(dialog){
                         ac.log("cliquei no cancel");

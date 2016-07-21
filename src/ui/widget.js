@@ -2,9 +2,7 @@
 ac.export("widget", function(env){
     "use strict";
 
-    var $dom = ac.import("dom"),
-        $graphics = ac.import("graphics"),
-        $dialog = ac.import("dialog");
+    var $dialog = ac.import("dialog");
 
     function TileWidget(tile){
         var activeClass = "active";

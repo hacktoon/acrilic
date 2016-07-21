@@ -2,7 +2,6 @@
 	"use strict";
 
     var $loader = ac.import("loader"),
-        $widget = ac.import("widget"),
         $board = ac.import("board"),
         $menu = ac.import("menu"),
         $palette = ac.import("palette"),
@@ -14,9 +13,9 @@
 
     var init = function(tilesize) {
         var tileset = $tileset.createTileset("default_tileset", tilesize);
-        $palette.createPalette('#palette-panel', tileset);
-        $board.init("#board-panel");
-        $menu.createMenu("#main-menu");
+        $palette.createPalette(tileset);
+        //$board.init("#board-panel");
+        //$menu.createMenu("#main-menu");
     };
 
     $loader.load(assets_map, function(){

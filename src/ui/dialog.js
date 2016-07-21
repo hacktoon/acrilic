@@ -2,13 +2,11 @@
 ac.export("dialog", function(env){
     "use strict";
 
-    var $dom = ac.import("dom");
-
     function Dialog(title, templateSelector){
         (function init(){
-            var content = $dom.getFromTemplate(templateSelector);
+            var content = $(templateSelector);
             this.title = title;
-            this.elem = $dom.getFromTemplate('#tpl-dialog-overlay');
+            this.elem = $('#tpl-dialog-overlay');
             debugger;
             this.close_button = $('.btn-close', this.elem);
             this.close_button.on('click', function(){

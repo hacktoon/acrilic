@@ -10,43 +10,23 @@ ac.export("menu", function(env){
 
     var createMenu = function() {
 
-        $('#btn-file-new').on('click', $dialog.openNewMapDialog);
+        $('#btn-file-new').on('click', function(){
+            $dialog.openNewMapDialog(function(name, horz_tiles, vert_tiles){
+                ac.log(name, horz_tiles, vert_tiles);
+            });
+        });
 
-		/*$widget.createDialogHandler('Import', {
-			btnSelector: '#btn-file-import',
-			templateSelector: '#tpl-dialog-file-import',
-			buttonSet: [
-				{
-					title: 'Import',
-					action: function(dialog){
-						$('#field-file-import-map').val();
-					}
-				},
-				{
-					title: 'Cancel',
-					action: function(dialog){
-						dialog.close();
-					}
-				}
-			]
-		});
+        $('#btn-file-import').on('click', function(){
+            $dialog.openImportDialog(function(content){
+                ac.log(content);
+            });
+        });
 
-		$widget.createDialogHandler('Export', {
-			btnSelector: '#btn-file-export',
-			templateSelector: '#tpl-dialog-file-export',
-			buttonSet: [
-				{
-					title: 'Close',
-					action: function(dialog){
-						dialog.close();
-					}
-				}
-			],
-			initialize: function(){
-				var json = JSON.stringify({a: 3});
-				$("#field-file-export-map").val(json);
-			},
-		});*/
+        $('#btn-file-export').on('click', function(){
+            ac.log("do something");
+            var content = JSON.stringify({a: 3});
+            $dialog.openExportDialog(content);
+        });
 
 		/*$widget.createSwitchModeHandler('.btn-tool', {
 			'btn-tool-pen': 'pen',

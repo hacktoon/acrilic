@@ -33,27 +33,29 @@
             <div id="palette-panel"></div>
             <div id="project-panel"></div>
         </sidebar>
-		<div id="board-panel"></div>
+		<div id="board-panel">
+            <div id="evt-layer" class="layer"></div>
+            <div id="fg-layer" class="layer"></div>
+            <div id="bg-layer" class="layer"></div>
+        </div>
 	</section>
 
-	<script id="tpl-dialog-overlay" type="text/template">
-		<div class="dialog-overlay">
-			<div class="dialog-container">
-				<div class="dialog-titlebar">
-					<p class="title">Dialog</p>
-					<button class="btn-close">
-						<svg width="20" height="20">
-							<path class="svg-icon" d="M 15.714285,4.6325691e-8 10.000001,5.7142846 4.2857164,4.6325691e-8 0,4.2857165 5.7142845,10.000001 0,15.714286 4.2857164,20.000002 10.000001,14.285717 15.714285,20.000002 20.000002,15.714286 14.285717,10.000001 20.000002,4.2857165 15.714285,4.6325691e-8 Z"/>
-						</svg>
-					</button>
-				</div>
-				<div class="dialog-content"></div>
-				<div class="dialog-button-panel"></div>
-			</div>
-		</div>
-	</script>
+    <div id="dialog-overlay">
+        <div class="dialog-container">
+            <div class="dialog-titlebar">
+                <p class="title">Dialog</p>
+                <button class="btn-close">
+                    <svg width="20" height="20">
+                        <path class="svg-icon" d="M 15.714285,4.6325691e-8 10.000001,5.7142846 4.2857164,4.6325691e-8 0,4.2857165 5.7142845,10.000001 0,15.714286 4.2857164,20.000002 10.000001,14.285717 15.714285,20.000002 20.000002,15.714286 14.285717,10.000001 20.000002,4.2857165 15.714285,4.6325691e-8 Z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="dialog-content"></div>
+            <div class="dialog-button-panel"></div>
+        </div>
+    </div>
 
-	<script id="tpl-dialog-file-new" type="text/template">
+	<script id="tpl-dialog-file-new" class="template" type="text/template">
 		<form action="" id="form-file-new">
 			<div class="form-row">
 				<label for="field-file-new-name">Name</label>
@@ -70,13 +72,13 @@
 		</form>
 	</script>
 
-	<script id="tpl-dialog-file-import" type="text/template">
+	<script id="tpl-dialog-file-import" class="template" type="text/template">
 		<form action="" id="form-file-import">
 			<textarea id="field-file-import-map" cols="60" rows="20"></textarea>
 		</form>
 	</script>
 
-	<script id="tpl-dialog-file-export" type="text/template">
+	<script id="tpl-dialog-file-export" class="template" type="text/template">
 		<form action="" id="form-file-export">
 			<textarea id="field-file-export-map" cols="60" rows="20"></textarea>
 		</form>

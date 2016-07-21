@@ -6,25 +6,11 @@ ac.export("menu", function(env){
         $tools = ac.import("tools"),
         $board = ac.import("board");
 
+    var elem = $("#main-menu");
+
     var createMenu = function() {
 
-        $('#btn-file-new').on('click', function(){
-            $dialog.createFormDialog("New map", {
-    			templateSelector: '#tpl-dialog-file-new',
-    			buttonSet: [
-                    $widget.createButton('OK', function(dialog){
-                        ac.log("clicquei no OK");
-                        var name = $('#field-file-new-name').val(),
-                            width = Number($('#field-file-new-width').val()),
-                            height = Number($('#field-file-new-height').val());
-                    }),
-    				$widget.createButton('Cancel', function(dialog){
-                        ac.log("cliquei no cancel");
-    					//dialog.close();
-    				})
-    			]
-    		});
-        });
+        $('#btn-file-new').on('click', $dialog.openNewMapDialog);
 
 		/*$widget.createDialogHandler('Import', {
 			btnSelector: '#btn-file-import',
@@ -62,7 +48,7 @@ ac.export("menu", function(env){
 			},
 		});*/
 
-		$widget.createSwitchModeHandler('.btn-tool', {
+		/*$widget.createSwitchModeHandler('.btn-tool', {
 			'btn-tool-pen': 'pen',
 			'btn-tool-fill': 'fill',
 			'btn-tool-eraser': 'eraser'
@@ -76,10 +62,11 @@ ac.export("menu", function(env){
 			'btn-layer-event': 'event'
 		}, function(value){
 			$board.setLayer(value);
-		});
+		});*/
 	};
 
     return {
+        elem: elem,
         createMenu: createMenu
     };
 });

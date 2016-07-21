@@ -2,57 +2,57 @@
 ac.export("dialog", function(env){
     "use strict";
 
-    function Dialog(title, templateSelector){
-        (function init(){
-            var content = $(templateSelector);
-            this.title = title;
-            this.elem = $('#tpl-dialog-overlay');
-            debugger;
-            this.close_button = $('.btn-close', this.elem);
-            this.close_button.on('click', function(){
-                this.close();
-            }.bind(this));
-            $('.dialog-titlebar .title', this.elem).html(title);
-            $('.dialog-content', this.elem).html(content);
-            $('body').append(this.elem);
+    var dialog = {
+        elem: (function(){
+            var elem = $('#dialog-overlay');
+            elem.find('.btn-close').on('click', function(){
+                dialog.close();
+            });
+
             $(document).on('keydown', function(e){
                 if (e.which == ac.ESC_KEY){
-                    this.close();
+                    dialog.close();
                 }
-            }.bind(this));
-        }.bind(this))();
+            });
+            return elem;
+        })(),
 
-        this.setButtons = function(buttonSet){
-            var output = '';
-            var setButtonAction = function(btn, id){
-                this.elem.on('click', '#' + id, function(){
-                    btn.action(this);
-                }.bind(this));
-            };
-            for (var i=0; i<buttonSet.length; i++){
-                var btn = buttonSet[i],
-                    id = 'btn-' + btn.title.replace(/\s+/g, '-').toLowerCase();
-                output += '<button id="' + id + '">' + btn.title + '</button>';
-                setButtonAction.apply(this, btn, id);
-            }
-            $('.dialog-button-panel', this.elem).html(output);
-        };
+        addButton: function(title, action){
+            var id = 'btn-' + title.replace(/\s+/g, '-').toLowerCase();
+            var btn = $('<button/>').attr('id', '#' + id).on('click', function(){
+                action();
+            }).html(title);
+            this.elem.find('.dialog-button-panel').append(btn);
+        },
 
-        this.open = function(){
+        open: function(){
             this.elem.show();
-        };
+        },
 
-        this.close = function(){
-            this.elem.hide();
-        };
+        close: function(){
+            var children = '.dialog-content, .dialog-button-panel';
+            this.elem.hide().find(children).html('');
+        },
+
+        init: function(title, templateSelector) {
+            var content = $(templateSelector).html();
+            this.elem.find('.dialog-titlebar .title').html(title);
+            this.elem.find('.dialog-content').html(content);
+        }
     };
 
-    var createFormDialog = function(title, options){
-        var opt = options || {};
-        var dialog = new Dialog(title, opt.templateSelector);
-        dialog.setButtons(opt.buttonSet);
+    var openNewMapDialog = function(){
+        dialog.init("New map", '#tpl-dialog-file-new');
+        dialog.addButton('OK', function(){
+            var name = $('#field-file-new-name').val(),
+                width = Number($('#field-file-new-width').val()),
+                height = Number($('#field-file-new-height').val());
+            dialog.close();
+        });
+        dialog.addButton('Cancel', function(){
+            dialog.close();
+        });
         dialog.open();
-        return dialog;
     };
 
     var createConfirmDialog = function(message, action){
@@ -68,8 +68,8 @@ ac.export("dialog", function(env){
         ]);*/
     };
 
+
     return {
-        createConfirmDialog: createConfirmDialog,
-        createFormDialog: createFormDialog
+        openNewMapDialog: openNewMapDialog
     };
 });

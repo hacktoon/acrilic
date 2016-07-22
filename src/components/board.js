@@ -2,70 +2,99 @@
 ac.export("board", function(env){
 	"use strict";
 
-	var $map = ac.import("map");
+	var $map = ac.import("map"),
+        $canvas = ac.import("canvas");
 
-    var element;
+    var container = $("#board-panel"),
+        layer_canvas = {fg: '', bg: '', evt: ''},
+        cursor_class = "selection-cursor";
 
     var setLayer = function(id){
         id = 0;
     };
 
-    var build = function(){
-        var doc = $(document),
+    var createCursor = function(size) {
+        var cursor = $("<div/>")
+            .addClass(cursor_class)
+            .css({width: size, height: size});
+        return cursor;
+    };
+
+    var getRelativeMousePosition = function(event, tilesize) {
+        //deslocamento em relacao à tela
+        var doc = $(document);
+        var x_offset = container.offset().left,
+            y_offset = container.offset().top,
+            x_scroll = container.scrollLeft() + doc.scrollLeft(),
+            y_scroll = container.scrollTop() + doc.scrollTop();
+        //posição relativa do mouse
+        var rx = event.pageX - x_offset + x_scroll,
+            ry = event.pageY - y_offset + y_scroll;
+
+        rx = (rx < 0) ? 0 : rx;
+        ry = (ry < 0) ? 0 : ry;
+        return {x: Math.floor(rx / tilesize), y: Math.floor(ry / tilesize)};
+    };
+
+    var registerEvents = function(board, action){
+        var tilesize = env.get("TILESIZE"),
+            selectCursor = board.find("."+cursor_class),
             x = 0,
             y = 0,
-            ts = env.get("TILESIZE"),
-            cursorDragging = false,
-            boardElement = $(selector),
-            selectCursor = $("<div/>");
+            mouseDown = false;
 
-        selectCursor.addClass("selection-cursor");
-        selectCursor.style({width: ts, height: ts});
+        board.on('mousemove', function(event){
+            var pos = getRelativeMousePosition(event, tilesize);
+            x = pos.x;
+            y = pos.y;
 
-        boardElement.append(selectCursor);
-        boardElement.on('mousemove', function(e){
-            //deslocamento em relacao à tela
-            var x_offset = boardElement.getPosition("left"),
-                y_offset = boardElement.getPosition("top"),
-                x_scroll = boardElement.getScroll("left") + doc.getScroll("left"),
-                y_scroll = boardElement.getScroll("top") + doc.getScroll("top");
-            //posição relativa do mouse
-            var rx = e.pageX - x_offset + x_scroll,
-                ry = e.pageY - y_offset + y_scroll;
-
-            rx = (rx < 0) ? 0 : rx;
-            ry = (ry < 0) ? 0 : ry;
-            x = Math.floor(rx / ts);
-            y = Math.floor(ry / ts);
-
-            selectCursor.style({transform: "translate(" + (x * ts) + "px, " + (y * ts) + "px)"});
+            selectCursor.css({
+                transform: "translate(" + (x * tilesize) + "px, " + (y * tilesize) + "px)"
+            });
 
             // Allows painting while dragging
-            if(cursorDragging){
-                action(x, y, {dragging: true});
+            if(mouseDown){
+                action(x, y);
             }
         });
 
-        boardElement.on('mousedown', function(e){
+        board.on('mousedown', function(e){
             e.preventDefault();
-            cursorDragging = true;
+            mouseDown = true;
             action(x, y);
         });
 
-        doc.on('mouseup', function(){
-            cursorDragging = false;
+        $(document).on('mouseup', function(){
+            mouseDown = false;
         });
     };
 
-	var init = function(boardSelector){
-        element = $(boardSelector);
-        var image = env.get("CURRENT_TILE");
-        ac.log(x, y, image);
+    var createElements = function(h_tiles, v_tiles) {
+        var tilesize = env.get("TILESIZE"),
+            board = $('<div/>'),
+            width = tilesize * h_tiles,
+            height = tilesize * v_tiles,
+            evt_layer = $('<canvas/>').attr('id', 'evt_layer').addClass('layer'),
+            fg_layer = $('<canvas/>').attr('id', 'fg_layer').addClass('layer'),
+            bg_layer = $('<canvas/>').attr('id', 'bg_layer').addClass('layer');
+
+
+        evt_layer.width();
+        board.append(createCursor(tilesize));
+        board.append([evt_layer, fg_layer, bg_layer]);
+        board.width(width).height(height);
+        return board;
+    };
+
+	var createBoard = function(map_name, h_tiles, v_tiles){
+        var board = createElements(h_tiles, v_tiles);
+        registerEvents(board, function(x, y) {
+            ac.log(x, y);
+        });
+        container.html(board);
 	};
 
     return {
-        init: init,
-        setLayer: setLayer,
-        element: element
+        createBoard: createBoard
     };
 });

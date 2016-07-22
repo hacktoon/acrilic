@@ -12,7 +12,7 @@ ac.export("menu", function(env){
 
         $('#btn-file-new').on('click', function(){
             $dialog.openNewMapDialog(function(name, horz_tiles, vert_tiles){
-                ac.log(name, horz_tiles, vert_tiles);
+                $board.createBoard(name, horz_tiles, vert_tiles);
             });
         });
 

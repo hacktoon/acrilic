@@ -15,7 +15,6 @@
         var tileset = $tileset.createTileset("default_tileset", tilesize);
         $palette.createPalette(tileset);
         $menu.createMenu();
-        //$board.init("#board-panel");
     };
 
     $loader.load(assets_map, function(){

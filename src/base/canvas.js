@@ -2,7 +2,7 @@
 ac.export("canvas", function(env){
     "use strict";
 
-	function Canvas(width, height){
+	function Canvas(width, height, attr){
         (function init(){
             this.width = width;
             this.height = height;
@@ -14,7 +14,8 @@ ac.export("canvas", function(env){
 			//image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight
 			var w = this.width,
 				h = this.height;
-			this.context.drawImage(image, sx, sy, w, h, dx, dy, w, h);
+            ac.log(image);
+            this.context.drawImage(image, sx, sy, w, h, dx, dy, w, h);
 		};
 	};
 

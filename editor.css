@@ -132,12 +132,22 @@ input {
     z-index: 1;
     overflow: auto;
 }
-#board-panel .map {
+
+#board-panel .board {
+    position: absolute;
+}
+
+#board-panel .layer {
     position: absolute;
     top: 0;
+    bottom: 0;
     left: 0;
-    z-index: 2;
+    right: 0;
 }
+
+#board-panel #evt-layer { z-index: 3; }
+#board-panel #fg-layer { z-index: 3; }
+#board-panel #bg-layer { z-index: 1; }
 
 .selection-cursor {
 	position: absolute;

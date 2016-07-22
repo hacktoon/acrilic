@@ -12,15 +12,15 @@ ac.export("tileset", function(env){
         (function init(){
             this.id = id;
             this.canvas = canvas;
-            this.canvas.elem.addClass(tileClass);
+            canvas.elem.addClass(tileClass);
         }.bind(this))();
 
         this.getElement = function() {
             return this.canvas.elem;
         }
 
-        this.getCanvasContext = function() {
-            return this.getElement().context;
+        this.getCanvasElement = function() {
+            return this.canvas.elem.get(0).getContext('2d');
         }
 
         this.select = function(){

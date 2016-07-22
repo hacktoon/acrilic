@@ -6,7 +6,7 @@ ac.export("board", function(env){
         $canvas = ac.import("canvas");
 
     var container = $("#board-panel"),
-        layer_canvas = {fg: '', bg: '', evt: ''},
+        current_layer = undefined,
         cursor_class = "selection-cursor";
 
     var setLayer = function(id){
@@ -38,17 +38,15 @@ ac.export("board", function(env){
 
     var registerEvents = function(board, action){
         var tilesize = env.get("TILESIZE"),
-            selectCursor = board.find("."+cursor_class),
-            x = 0,
-            y = 0,
-            mouseDown = false;
+            x = 0, y = 0, mouseDown = false;
 
         board.on('mousemove', function(event){
             var pos = getRelativeMousePosition(event, tilesize);
+
             x = pos.x;
             y = pos.y;
 
-            selectCursor.css({
+            board.find("."+cursor_class).css({
                 transform: "translate(" + (x * tilesize) + "px, " + (y * tilesize) + "px)"
             });
 
@@ -69,19 +67,25 @@ ac.export("board", function(env){
         });
     };
 
+    var createLayer = function(board, id, width, height) {
+        var layer = $canvas.createCanvas(width, height);
+        layer.elem.attr('id', id).addClass('layer');
+        board.append(layer);
+        return layer;
+    };
+
     var createElements = function(h_tiles, v_tiles) {
         var tilesize = env.get("TILESIZE"),
-            board = $('<div/>'),
+            board = $('<div/>').addClass('board'),
             width = tilesize * h_tiles,
             height = tilesize * v_tiles,
-            evt_layer = $('<canvas/>').attr('id', 'evt_layer').addClass('layer'),
-            fg_layer = $('<canvas/>').attr('id', 'fg_layer').addClass('layer'),
-            bg_layer = $('<canvas/>').attr('id', 'bg_layer').addClass('layer');
+            evt_layer = createLayer(board, 'evt_layer', width, height),
+            fg_layer = createLayer(board, 'fg_layer', width, height),
+            bg_layer = createLayer(board, 'bg_layer', width, height);
 
+        current_layer = bg_layer;
 
-        evt_layer.width();
         board.append(createCursor(tilesize));
-        board.append([evt_layer, fg_layer, bg_layer]);
         board.width(width).height(height);
         return board;
     };
@@ -89,7 +93,10 @@ ac.export("board", function(env){
 	var createBoard = function(map_name, h_tiles, v_tiles){
         var board = createElements(h_tiles, v_tiles);
         registerEvents(board, function(x, y) {
-            ac.log(x, y);
+            var tile_image = env.get('CURRENT_TILE').getCanvasElement();
+            ac.log(x, y, tile_image);
+            ac.log(tile_image);
+            current_layer.draw(tile_image, 0, 0, x, y);
         });
         container.html(board);
 	};

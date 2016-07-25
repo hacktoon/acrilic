@@ -19,8 +19,8 @@ ac.export("tileset", function(env){
             return this.canvas.elem;
         }
 
-        this.getCanvasElement = function() {
-            return this.canvas.elem.get(0).getContext('2d');
+        this.getCanvas = function() {
+            return this.canvas.elem.get(0);
         }
 
         this.select = function(){

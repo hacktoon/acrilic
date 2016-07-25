@@ -93,9 +93,7 @@ ac.export("board", function(env){
 	var createBoard = function(map_name, h_tiles, v_tiles){
         var board = createElements(h_tiles, v_tiles);
         registerEvents(board, function(x, y) {
-            var tile_image = env.get('CURRENT_TILE').getCanvasElement();
-            ac.log(x, y, tile_image);
-            ac.log(tile_image);
+            var tile_image = env.get('CURRENT_TILE').getCanvas();
             current_layer.draw(tile_image, 0, 0, x, y);
         });
         container.html(board);

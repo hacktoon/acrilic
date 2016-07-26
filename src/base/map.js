@@ -2,43 +2,33 @@
 ac.export("map", function(env){
     "use strict";
 
-    var canvas = ac.import('canvas');
+    var Map = function(name, width, height){
+        (function(){
+            this.grid = [];
+            this.name = name;
 
-    var _mapObject = {
-        grid: [],
-        elem: undefined,
+            for (var y = 0; y < height; y++) {
+                this.grid.push([]);
+                for (var x = 0; x < width; x++) {
+                    this.grid[y][x] = undefined;
+                }
+            }
+        }.bind(this))();
 
-        setTile: function(image, x, y){
-            //position in the tileset image
-            var t = env.get("TILESIZE");
-            this.grid[y][x] = 1;
-            this.canvas.draw(image, 0, 0, x*t, y*t);
-        },
+        this.set = function(x, y, value){
+            this.grid[y][x] = value;
+        };
 
-        render: function(grid){
-            // render grid
-        }
+        this.get = function(x, y){
+            return this.grid[y][x];
+        };
+    };
+
+    var createMap = function(name, w, h){
+        return new Map(name, w, h);
     };
 
     return {
-        create: function(cols, rows){
-            var t = env.get("TILESIZE");
-            var map = $.extend(true, {}, _mapObject);
-
-            for (var i = 0; i < rows; i++) {
-                map.grid.push([]);
-                for (var j = 0; j < cols; j++) {
-                    map.grid[i].push({id: 0});
-                }
-            }
-            map.canvas = canvas.createCanvas(cols * t, rows * t);
-            map.elem = $('<div/>').addClass('.map');
-            map.elem.append(map.canvas.elem);
-            return map;
-        },
-
-        init: function(){
-            var self = this;
-        }
+        createMap: createMap
     };
 });

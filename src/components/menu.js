@@ -4,15 +4,16 @@ ac.export("menu", function(env){
 
     var $dialog = ac.import("dialog"),
         $tools = ac.import("tools"),
+        $map = ac.import("map"),
         $board = ac.import("board");
-
-    var elem = $("#main-menu");
 
     var createMenu = function() {
 
         $('#btn-file-new').on('click', function(){
             $dialog.openNewMapDialog(function(name, horz_tiles, vert_tiles){
-                $board.createBoard(name, horz_tiles, vert_tiles);
+                var map = $map.createMap(name, horz_tiles, vert_tiles);
+                debugger;
+                $board.createBoard(map, horz_tiles, vert_tiles);
             });
         });
 
@@ -23,7 +24,6 @@ ac.export("menu", function(env){
         });
 
         $('#btn-file-export').on('click', function(){
-            ac.log("do something");
             var content = JSON.stringify({a: 3});
             $dialog.openExportDialog(content);
         });
@@ -46,7 +46,6 @@ ac.export("menu", function(env){
 	};
 
     return {
-        elem: elem,
         createMenu: createMenu
     };
 });

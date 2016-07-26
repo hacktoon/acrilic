@@ -7,10 +7,15 @@ ac.export("board", function(env){
 
     var container = $("#board-panel"),
         current_layer = undefined,
+        layers = {
+            bg: undefined,
+            fg: undefined,
+            evt: undefined
+        },
         cursor_class = "selection-cursor";
 
     var setLayer = function(id){
-        id = 0;
+        current_layer = layers[id];
     };
 
     var createCursor = function(size) {
@@ -80,19 +85,19 @@ ac.export("board", function(env){
         var tilesize = env.get("TILESIZE"),
             board = $('<div/>').addClass('board'),
             width = tilesize * h_tiles,
-            height = tilesize * v_tiles,
-            evt_layer = createLayer(board, 'evt_layer', width, height),
-            fg_layer = createLayer(board, 'fg_layer', width, height),
-            bg_layer = createLayer(board, 'bg_layer', width, height);
+            height = tilesize * v_tiles;
+        layers.evt = createLayer(board, 'evt_layer', width, height),
+        layers.fg = createLayer(board, 'fg_layer', width, height),
+        layers.bg = createLayer(board, 'bg_layer', width, height);
 
-        current_layer = bg_layer;
+        current_layer = layers.bg;
 
         board.append(createCursor(tilesize));
         board.width(width).height(height);
         return board;
     };
 
-	var createBoard = function(map_name, h_tiles, v_tiles){
+	var createBoard = function(map, h_tiles, v_tiles){
         var board = createElements(h_tiles, v_tiles);
         registerEvents(board, function(x, y) {
             var tile_image = env.get('CURRENT_TILE').getCanvas();

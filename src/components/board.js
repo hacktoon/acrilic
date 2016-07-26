@@ -25,7 +25,7 @@ ac.export("board", function(env){
             return;
         }
         current_layer.elem.removeClass('active');
-        current_layer = layers[id];
+        current_layer = getCurrentLayer();
         current_layer.elem.addClass('active');
     };
 
@@ -98,9 +98,9 @@ ac.export("board", function(env){
             width = tilesize * h_tiles,
             height = tilesize * v_tiles;
 
-        layers.evt = createLayer(board, 'evt_layer', width, height),
-        layers.fg = createLayer(board, 'fg_layer', width, height),
-        layers.bg = createLayer(board, 'bg_layer', width, height);
+        layers.evt = createLayer(board, 'evt-layer', width, height),
+        layers.fg = createLayer(board, 'fg-layer', width, height),
+        layers.bg = createLayer(board, 'bg-layer', width, height);
 
         activateLayer('bg');
 

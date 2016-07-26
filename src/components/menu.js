@@ -7,6 +7,18 @@ ac.export("menu", function(env){
         $map = ac.import("map"),
         $board = ac.import("board");
 
+    var registerSwitchButton = function(selector, action) {
+        var activeClass = 'active',
+            element = $(selector);
+
+        element.on('click', function(e){
+            var target = $(e.target);
+            element.removeClass(activeClass);
+            target.addClass(activeClass);
+            action(target.data('value'));
+        }).first().trigger('click');
+    };
+
     var createMenu = function() {
 
         $('#btn-file-new').on('click', function(){
@@ -24,25 +36,17 @@ ac.export("menu", function(env){
         });
 
         $('#btn-file-export').on('click', function(){
-            var content = JSON.stringify({a: 3});
-            $dialog.openExportDialog(content);
+            var map = env.get('CURRENT_MAP');
+            $dialog.openExportDialog(map.serialize());
         });
 
-		/*$widget.createSwitchModeHandler('.btn-tool', {
-			'btn-tool-pen': 'pen',
-			'btn-tool-fill': 'fill',
-			'btn-tool-eraser': 'eraser'
-		}, function(value){
-			$tools.setTool(value);
-		});
+        registerSwitchButton('.btn-tool', function(value) {
+            $tools.setTool(value);
+        });
 
-		$widget.createSwitchModeHandler('.btn-layer', {
-			'btn-layer-bg': 'bg',
-			'btn-layer-fg': 'fg',
-			'btn-layer-event': 'event'
-		}, function(value){
-			$board.setLayer(value);
-		});*/
+        registerSwitchButton('.btn-layer', function(value) {
+            $board.activateLayer(value);
+        });
 	};
 
     return {

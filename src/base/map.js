@@ -22,6 +22,10 @@ ac.export("map", function(env){
         this.get = function(x, y){
             return this.grid[y][x];
         };
+
+        this.serialize = function() {
+            JSON.stringify(this.grid);
+        }
     };
 
     var createMap = function(name, w, h){

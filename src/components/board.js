@@ -6,8 +6,7 @@ ac.export("board", function(env){
         $canvas = ac.import("canvas");
 
     var container = $("#board-panel"),
-        current_layer_id = undefined,
-        current_layer = undefined,
+        current_layer_id = 'bg',
         layers = {
             bg: undefined,
             fg: undefined,
@@ -15,9 +14,19 @@ ac.export("board", function(env){
         },
         cursor_class = "selection-cursor";
 
-    var setLayer = function(id){
+    var getCurrentLayer = function() {
+        return layers[current_layer_id];
+    };
+
+    var activateLayer = function(id){
+        var current_layer = getCurrentLayer();
         current_layer_id = id;
+        if (! current_layer){
+            return;
+        }
+        current_layer.elem.removeClass('active');
         current_layer = layers[id];
+        current_layer.elem.addClass('active');
     };
 
     var createCursor = function(size) {
@@ -88,21 +97,20 @@ ac.export("board", function(env){
             board = $('<div/>').addClass('board'),
             width = tilesize * h_tiles,
             height = tilesize * v_tiles;
+
         layers.evt = createLayer(board, 'evt_layer', width, height),
         layers.fg = createLayer(board, 'fg_layer', width, height),
         layers.bg = createLayer(board, 'bg_layer', width, height);
 
-        setLayer('bg');
+        activateLayer('bg');
 
-        board.append(createCursor(tilesize));
-        board.width(width).height(height);
+        board.append(createCursor(tilesize)).width(width).height(height);
         return board;
     };
 
     var updateMap = function(map, x, y, tile_id) {
         var cell = map.get(x, y) || {};
         cell[current_layer_id] = tile_id;
-        ac.log(cell);
         map.set(x, y, cell);
     };
 
@@ -113,13 +121,14 @@ ac.export("board", function(env){
             var tile = env.get('CURRENT_TILE'),
                 tsize = env.get("TILESIZE");
 
-            current_layer.draw(tile.getCanvas(), 0, 0, x * tsize, y * tsize);
+            getCurrentLayer().draw(tile.getCanvas(), 0, 0, x * tsize, y * tsize);
             updateMap(map, x, y, tile.id);
         });
         container.html(board);
 	};
 
     return {
-        createBoard: createBoard
+        createBoard: createBoard,
+        activateLayer: activateLayer
     };
 });

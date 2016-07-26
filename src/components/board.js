@@ -6,6 +6,7 @@ ac.export("board", function(env){
         $canvas = ac.import("canvas");
 
     var container = $("#board-panel"),
+        current_layer_id = undefined,
         current_layer = undefined,
         layers = {
             bg: undefined,
@@ -15,6 +16,7 @@ ac.export("board", function(env){
         cursor_class = "selection-cursor";
 
     var setLayer = function(id){
+        current_layer_id = id;
         current_layer = layers[id];
     };
 
@@ -59,14 +61,14 @@ ac.export("board", function(env){
 
             // Allows painting while dragging
             if(mouseDown){
-                action(x * tilesize, y * tilesize);
+                action(x, y);
             }
         });
 
         board.on('mousedown', function(e){
             e.preventDefault();
             mouseDown = true;
-            action(x * tilesize, y * tilesize);
+            action(x, y);
         });
 
         $(document).on('mouseup', function(){
@@ -90,18 +92,29 @@ ac.export("board", function(env){
         layers.fg = createLayer(board, 'fg_layer', width, height),
         layers.bg = createLayer(board, 'bg_layer', width, height);
 
-        current_layer = layers.bg;
+        setLayer('bg');
 
         board.append(createCursor(tilesize));
         board.width(width).height(height);
         return board;
     };
 
+    var updateMap = function(map, x, y, tile_id) {
+        var cell = map.get(x, y) || {};
+        cell[current_layer_id] = tile_id;
+        ac.log(cell);
+        map.set(x, y, cell);
+    };
+
 	var createBoard = function(map, h_tiles, v_tiles){
         var board = createElements(h_tiles, v_tiles);
+
         registerEvents(board, function(x, y) {
-            var tile_image = env.get('CURRENT_TILE').getCanvas();
-            current_layer.draw(tile_image, 0, 0, x, y);
+            var tile = env.get('CURRENT_TILE'),
+                tsize = env.get("TILESIZE");
+
+            current_layer.draw(tile.getCanvas(), 0, 0, x * tsize, y * tsize);
+            updateMap(map, x, y, tile.id);
         });
         container.html(board);
 	};

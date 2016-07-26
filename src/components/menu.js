@@ -12,8 +12,8 @@ ac.export("menu", function(env){
         $('#btn-file-new').on('click', function(){
             $dialog.openNewMapDialog(function(name, horz_tiles, vert_tiles){
                 var map = $map.createMap(name, horz_tiles, vert_tiles);
-                debugger;
                 $board.createBoard(map, horz_tiles, vert_tiles);
+                env.set('CURRENT_MAP', map);
             });
         });
 

@@ -10,7 +10,7 @@ ac.export("map", function(env){
             for (var y = 0; y < height; y++) {
                 this.grid.push([]);
                 for (var x = 0; x < width; x++) {
-                    this.grid[y][x] = undefined;
+                    this.grid[y][x] = {};
                 }
             }
         }.bind(this))();
@@ -24,8 +24,12 @@ ac.export("map", function(env){
         };
 
         this.serialize = function() {
-            JSON.stringify(this.grid);
-        }
+            var json = {
+                id: this.name.replace(' ', '_').toLowerCase(),
+                grid: this.grid
+            };
+            return JSON.stringify(json);
+        };
     };
 
     var createMap = function(name, w, h){

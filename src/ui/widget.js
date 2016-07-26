@@ -41,7 +41,6 @@ ac.export("widget", function(env){
         var confirm_dialog = $dialog.createConfirmDialog(title, $(templateString));
         var button = $(opt.btnSelector);
         button.on('click', function(){
-            ac.log('f');
             confirm_dialog.open();
             opt.initialize();
         });

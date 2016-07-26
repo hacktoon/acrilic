@@ -14,7 +14,6 @@ ac.export("canvas", function(env){
 			//image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight
 			var w = this.width,
 				h = this.height;
-            ac.log(image);
             this.context.drawImage(image, sx, sy, w, h, dx, dy, w, h);
 		};
 	};

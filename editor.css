@@ -87,7 +87,7 @@ input {
 
 /* TILESET PALETTE --------------------------- */
 #sidebar-panel {
-    background: #888;
+    background: #CCC;
     position: absolute;
     top: 0;
     left: 0;
@@ -105,13 +105,13 @@ input {
 #palette-panel .tile {
     float: left;
     cursor: pointer;
+    box-sizing: border-box;
+    width: 64px;
+    height: 64px;
 }
 
 #palette-panel .tile.active {
     border: dotted 3px #FFF;
-    box-sizing: border-box;
-    width: 64px;
-    height: 64px;
 }
 
 #project-panel {
@@ -123,7 +123,7 @@ input {
 
 /* MAP ---------------------------  */
 #board-panel {
-	background: url("img/screen_bg.png");
+    background: #CCC;
 	position: absolute;
     top: 0;
     left: 271px;
@@ -134,6 +134,7 @@ input {
 }
 
 #board-panel .board {
+    background: url("img/screen_bg.png");
     position: absolute;
 }
 

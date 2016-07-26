@@ -38,7 +38,9 @@ ac.export("board", function(env){
 
     var registerEvents = function(board, action){
         var tilesize = env.get("TILESIZE"),
-            x = 0, y = 0, mouseDown = false;
+            mouseDown = false,
+            x = 0,
+            y = 0;
 
         board.on('mousemove', function(event){
             var pos = getRelativeMousePosition(event, tilesize);
@@ -52,14 +54,14 @@ ac.export("board", function(env){
 
             // Allows painting while dragging
             if(mouseDown){
-                action(x, y);
+                action(x * tilesize, y * tilesize);
             }
         });
 
         board.on('mousedown', function(e){
             e.preventDefault();
             mouseDown = true;
-            action(x, y);
+            action(x * tilesize, y * tilesize);
         });
 
         $(document).on('mouseup', function(){
@@ -70,7 +72,7 @@ ac.export("board", function(env){
     var createLayer = function(board, id, width, height) {
         var layer = $canvas.createCanvas(width, height);
         layer.elem.attr('id', id).addClass('layer');
-        board.append(layer);
+        board.append(layer.elem);
         return layer;
     };
 

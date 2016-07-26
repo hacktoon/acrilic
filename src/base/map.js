@@ -2,15 +2,19 @@
 ac.export("map", function(env){
     "use strict";
 
-    var Map = function(name, width, height){
+    var Map = function(name, width, height, grid){
         (function(){
-            this.grid = [];
+            this.grid = grid || [];
             this.name = name;
+            this.width = width;
+            this.height = height;
 
-            for (var y = 0; y < height; y++) {
-                this.grid.push([]);
-                for (var x = 0; x < width; x++) {
-                    this.grid[y][x] = {};
+            if (! grid){
+                for (var y = 0; y < height; y++) {
+                    this.grid.push([]);
+                    for (var x = 0; x < width; x++) {
+                        this.grid[y][x] = {};
+                    }
                 }
             }
         }.bind(this))();
@@ -23,12 +27,13 @@ ac.export("map", function(env){
             return this.grid[y][x];
         };
 
-        this.serialize = function() {
-            var json = {
-                id: this.name.replace(' ', '_').toLowerCase(),
+        this.getData = function() {
+            return {
+                name: this.name,
+                width: this.width,
+                height: this.height,
                 grid: this.grid
             };
-            return JSON.stringify(json);
         };
     };
 
@@ -36,7 +41,12 @@ ac.export("map", function(env){
         return new Map(name, w, h);
     };
 
+    var loadMap = function(obj){
+        return new Map(obj.name, obj.width, obj.height, obj.grid);
+    };
+
     return {
-        createMap: createMap
+        createMap: createMap,
+        loadMap: loadMap
     };
 });

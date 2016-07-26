@@ -3,7 +3,8 @@ ac.export("board", function(env){
 	"use strict";
 
 	var $map = ac.import("map"),
-        $canvas = ac.import("canvas");
+        $canvas = ac.import("canvas"),
+        $palette = ac.import("palette");
 
     var container = $("#board-panel"),
         current_layer_id = 'bg',
@@ -16,6 +17,10 @@ ac.export("board", function(env){
 
     var getCurrentLayer = function() {
         return layers[current_layer_id];
+    };
+
+    var getLayer = function(id) {
+        return layers[id];
     };
 
     var activateLayer = function(id){
@@ -114,6 +119,19 @@ ac.export("board", function(env){
         map.set(x, y, cell);
     };
 
+    var renderMap = function(map) {
+        var tsize = env.get("TILESIZE");
+        for (var y = 0; y < map.height; y++) {
+            for (var x = 0; x < map.width; x++) {
+                var cell = map.get(x, y);
+                for (var key in cell){
+                    var tile = $palette.getTile(cell[key]);
+                    getLayer(key).draw(tile.getCanvas(), 0, 0, y * tsize, x * tsize);
+                }
+            }
+        }
+    };
+
 	var createBoard = function(map, h_tiles, v_tiles){
         var board = createElements(h_tiles, v_tiles);
 
@@ -129,6 +147,7 @@ ac.export("board", function(env){
 
     return {
         createBoard: createBoard,
+        renderMap: renderMap,
         activateLayer: activateLayer
     };
 });

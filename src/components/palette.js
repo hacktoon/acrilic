@@ -12,6 +12,10 @@ ac.export("palette", function(env){
         tiles[id].select();
     };
 
+    var getTile = function(id) {
+        return tiles[id];
+    };
+
     var createTileButtons = function(tileset){
         var tile_elements = [];
         tileset.forEach(function(tile, _){
@@ -32,7 +36,7 @@ ac.export("palette", function(env){
     };
 
     return {
-        elem: elem,
+        getTile: getTile,
         createPalette: createPalette
     };
 });

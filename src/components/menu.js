@@ -31,13 +31,18 @@ ac.export("menu", function(env){
 
         $('#btn-file-import').on('click', function(){
             $dialog.openImportDialog(function(content){
-                ac.log(content);
+                var obj = JSON.parse(content);
+                var map = $map.loadMap(obj);
+                $board.createBoard(map, obj.width, obj.height);
+                $board.renderMap(map);
+                env.set('CURRENT_MAP', map);
             });
         });
 
         $('#btn-file-export').on('click', function(){
             var map = env.get('CURRENT_MAP');
-            $dialog.openExportDialog(map.serialize());
+            var json = JSON.stringify(map.getData());
+            $dialog.openExportDialog(json);
         });
 
         registerSwitchButton('.btn-tool', function(value) {

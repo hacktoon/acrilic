@@ -25,8 +25,11 @@ ac.export("dialog", function(env){
             this.elem.find('.dialog-button-panel').append(btn);
         },
 
-        open: function(){
+        open: function(hook){
             this.elem.show();
+            if(hook) {
+                hook();
+            }
         },
 
         close: function(){
@@ -34,10 +37,13 @@ ac.export("dialog", function(env){
             this.elem.hide().find(children).html('');
         },
 
-        init: function(title, templateSelector) {
+        init: function(title, templateSelector, hook) {
             var content = $(templateSelector).html();
             this.elem.find('.dialog-titlebar .title').html(title);
             this.elem.find('.dialog-content').html(content);
+            if(hook) {
+                hook();
+            }
         }
     };
 
@@ -57,16 +63,21 @@ ac.export("dialog", function(env){
     };
 
     var openImportDialog = function(action){
-        dialog.init("Import", '#tpl-dialog-file-import');
+        var field;
+        dialog.init("Import", '#tpl-dialog-file-import', function(){
+            field = $('#field-file-import-map');
+        });
         dialog.addButton('Import', function(){
-            var content = $('#field-file-import-map').val()
-            action(content);
+            action(field.val());
             dialog.close();
         });
         dialog.addButton('Close', function(){
             dialog.close();
         });
-        dialog.open();
+        dialog.open(function(){
+            field.focus();
+            ac.log(field);
+        });
     };
 
     var openExportDialog = function(value){
@@ -74,7 +85,7 @@ ac.export("dialog", function(env){
         dialog.addButton('Close', function(){
             dialog.close();
         });
-        $("#field-file-export-map").val(value);
+        $("#field-file-export-map").focus().val(value);
         dialog.open();
     };
 

@@ -31,7 +31,12 @@ ac.export("menu", function(env){
 
         $('#btn-file-import').on('click', function(){
             $dialog.openImportDialog(function(content){
-                var obj = JSON.parse(content);
+                try {
+                    var obj = JSON.parse(content);
+                } catch (err) {
+                    alert("Not a valid JSON!");
+                    return;
+                }
                 var map = $map.loadMap(obj);
                 $board.createBoard(map, obj.width, obj.height);
                 $board.renderMap(map);
@@ -41,6 +46,9 @@ ac.export("menu", function(env){
 
         $('#btn-file-export').on('click', function(){
             var map = env.get('CURRENT_MAP');
+            if (! map){
+                return;
+            }
             var json = JSON.stringify(map.getData());
             $dialog.openExportDialog(json);
         });

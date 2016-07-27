@@ -8,11 +8,11 @@
         $tileset = ac.import("tileset");
 
     var assets_map = [
-        {id: "default_tileset", src: "tilesets/ground-layer.png", type: "image"}
+        {id: "default", src: "tilesets/default/bg.png", type: "image"}
     ];
 
     var init = function(tilesize) {
-        var tileset = $tileset.createTileset("default_tileset", tilesize);
+        var tileset = $tileset.createTileset("default", tilesize);
         $palette.createPalette(tileset);
         $menu.createMenu();
     };

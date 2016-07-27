@@ -21,13 +21,17 @@ ac.export("menu", function(env){
 
     var createMenu = function() {
 
-        $('#btn-file-new').on('click', function(){
+        /*$('#btn-file-new').on('click', function(){
             $dialog.openNewMapDialog(function(name, horz_tiles, vert_tiles){
                 var map = $map.createMap(name, horz_tiles, vert_tiles);
                 $board.createBoard(map, horz_tiles, vert_tiles);
                 env.set('CURRENT_MAP', map);
             });
-        });
+        }).trigger('click');*/
+        var map = $map.loadMap({"name":"weh","width":9,"height":8,"grid":[[{"bg":0},{"bg":0},{"bg":0},{"bg":0},{"bg":0},{"bg":0},{"bg":1},{"bg":3},{"bg":4}],[{"bg":0},{"bg":0},{"bg":0},{"bg":0},{"bg":0},{"bg":1},{"bg":3},{"bg":3},{"bg":4}],[{"bg":0},{"bg":0},{"bg":0},{"bg":0},{"bg":3},{"bg":3},{"bg":3},{"bg":4},{"bg":4}],[{"bg":0},{"bg":1},{"bg":1},{"bg":3},{"bg":3},{"bg":4},{"bg":4},{"bg":4},{"bg":4}],[{"bg":1},{"bg":3},{"bg":3},{"bg":3},{"bg":4},{"bg":4},{"bg":4},{"bg":2},{"bg":2}],[{"bg":3},{"bg":3},{"bg":4},{"bg":4},{"bg":4},{"bg":2},{"bg":2},{"bg":2},{"bg":7}],[{"bg":4},{"bg":4},{"bg":4},{"bg":4},{"bg":2},{"bg":2},{"bg":2},{"bg":7},{"bg":7}],[{"bg":4},{"bg":4},{"bg":4},{"bg":2},{"bg":2},{"bg":7},{"bg":7},{"bg":7},{"bg":7}]]});
+        $board.createBoard(map, 9, 8);
+        $board.renderMap(map);
+        env.set('CURRENT_MAP', map);
 
         $('#btn-file-import').on('click', function(){
             $dialog.openImportDialog(function(content){

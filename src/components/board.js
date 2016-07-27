@@ -127,7 +127,7 @@ ac.export("board", function(env){
                 var cell = map.get(x, y);
                 for (var key in cell){
                     var tile = $palette.getTile(cell[key]);
-                    getLayer(key).draw(tile.getCanvas(), 0, 0, y * tsize, x * tsize);
+                    getLayer(key).draw(tile.getCanvas(), 0, 0, x * tsize, y * tsize);
                 }
             }
         }

@@ -1,0 +1,2 @@
+#!/bin/bash
+rerun --pattern '{*.css,*.js,*.html,lib/**/*,src/**/*,tilesets/**/*}' make build

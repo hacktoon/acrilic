@@ -7,8 +7,13 @@
         $palette = ac.import("palette"),
         $tileset = ac.import("tileset");
 
+    var build_asset_map = function() {
+        var dict = {};
+        
+    };
+
     var assets_map = [
-        {id: "default", src: "tilesets/default/bg.png", type: "image"}
+        {id: "tileset_default_bg", src: "tilesets/default/bg.png", type: "image"}
     ];
 
     var init = function(tilesize) {

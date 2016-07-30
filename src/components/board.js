@@ -139,6 +139,7 @@ ac.export("board", function(env){
             var tile = env.get('CURRENT_TILE'),
                 tsize = env.get("TILESIZE");
 
+            getCurrentLayer().clear(x * tsize, y * tsize, tsize, tsize);
             getCurrentLayer().draw(tile.getCanvas(), 0, 0, x * tsize, y * tsize);
             updateMap(map, x, y, tile.id);
         });

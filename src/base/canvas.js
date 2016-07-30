@@ -16,6 +16,10 @@ ac.export("canvas", function(env){
 				h = this.height;
             this.context.drawImage(image, sx, sy, w, h, dx, dy, w, h);
 		};
+
+        this.clear = function(x, y, w, h){
+			this.context.clearRect(x, y, w, h);
+		};
 	};
 
 	return {

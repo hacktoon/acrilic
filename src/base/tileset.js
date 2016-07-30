@@ -22,10 +22,9 @@ ac.export("tileset", function(env){
         return tiles;
     };
 
-    var createTileset = function(asset_id, tilesize){
-        var image = $loader.get(asset_id);
-        env.set("TILESIZE", tilesize);
-        return buildTiles(image, tilesize);
+    var createTileset = function(tileset){
+        env.set("TILESIZE", tileset.tilesize);
+        return buildTiles(tileset.image, tileset.tilesize);
     };
 
     return {

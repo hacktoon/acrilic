@@ -7,26 +7,21 @@
         $palette = ac.import("palette"),
         $tileset = ac.import("tileset");
 
-    var build_asset_map = function() {
-        var dict = {};
-        
-    };
-
     var assets_map = [
-        {id: "tileset_default_bg", src: "tilesets/default/bg.png", type: "image"}
+        {
+            id: "default",
+            type: "tileset",
+            tilesize: 64,
+            src: "tilesets/default.png"
+        }
     ];
 
-    var init = function(tilesize) {
-        var tileset = $tileset.createTileset("default", tilesize);
+    var init = function() {
+        var default_tileset = $loader.get_asset("tileset", "default");
+        var tileset = $tileset.createTileset(default_tileset);
         $palette.createPalette(tileset);
         $menu.createMenu();
     };
 
-    $loader.load(assets_map, function(){
-        init(64);
-    });
-
-
-
-
+    $loader.load_assets(assets_map, init);
 })();

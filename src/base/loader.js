@@ -9,16 +9,8 @@ ac.export("loader", function(env){
             tileset: {}
         };
 
-    var register_asset = function(item) {
-        assets[item.type][item.id] = item;
-
-        items_loaded++;
-        if (items_loaded == total_items){
-            ready_callback(assets);
-        }
-    };
-
-    var loader_functions = {
+        
+    var loaders = {
         tileset: function(item){
             var image = new Image();
 			image.onload = function(){
@@ -29,13 +21,22 @@ ac.export("loader", function(env){
         }
     };
 
+    var register_asset = function(item) {
+        assets[item.type][item.id] = item;
+
+        items_loaded++;
+        if (items_loaded == total_items){
+            ready_callback(assets);
+        }
+    };
+
     var load_assets = function(items, callback){
         total_items = items.length;
         ready_callback = callback;
 
         for(var i=0; i<total_items; i++){
             var item = items[i];
-            loader_functions[item.type](item);
+            loaders[item.type](item);
         }
     };
 

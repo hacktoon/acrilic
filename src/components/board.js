@@ -120,7 +120,6 @@ ac.export("board", function(env){
     };
 
     var renderMap = function(map) {
-        ac.log(map);
         var tsize = env.get("TILESIZE");
         for (var y = 0; y < map.height; y++) {
             for (var x = 0; x < map.width; x++) {

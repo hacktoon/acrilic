@@ -18,8 +18,8 @@
 
     var init = function() {
         var default_tileset = $loader.get_asset("tileset", "default");
-        var tileset = $tileset.createTileset(default_tileset);
-        $palette.createPalette(tileset);
+        var tiles = $tileset.createTileset(default_tileset);
+        $palette.createPalette(tiles);
         $menu.createMenu();
     };
 

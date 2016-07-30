@@ -30,6 +30,13 @@ input {
 	border-radius: 3px;
 }
 
+.unselectable {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 .form-row {
 	padding: 5px 0;
 }
@@ -105,14 +112,42 @@ input {
 #palette-panel .tile {
     float: left;
     cursor: pointer;
-    box-sizing: border-box;
     width: 64px;
     height: 64px;
 }
 
-#palette-panel .tile.active {
-    border: dotted 3px #FFF;
+#palette-panel #palette-selector {
+    width: 64px;
+    height: 64px;
+    box-sizing: border-box;
+    cursor: pointer;
+    position: absolute;
+    left: 0;
+    top: 0;
 }
+#palette-panel #palette-selector:after,
+#palette-panel #palette-selector:before {
+    position: absolute;
+    display: block;
+    content: "";
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+}
+#palette-panel #palette-selector:after {
+    border: solid 3px #FFF;
+    left: 2px;
+    top: 2px;
+    bottom: 2px;
+    right: 2px;
+    z-index: 2;
+}
+#palette-panel #palette-selector:before {
+    border: solid 7px #333;
+    z-index: 1;
+}
+
 
 #project-panel {
     background: #FFF;

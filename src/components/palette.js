@@ -56,7 +56,7 @@ ac.export("palette", function(env){
     var registerEvents = function() {
         var tsize = env.get("TILESIZE");
         var dragging = false;
-        var x0 = 0, y0 = 0, x1 = 0, y1 = 0;
+        var x0 = 0, y0 = 0;
 
         container.on("mousedown", function(event){
             var pos = getRelativeMousePosition(event, tsize);
@@ -70,12 +70,10 @@ ac.export("palette", function(env){
             var width, height, pos, rx0, rx1, ry0, ry1;
             if (! dragging){ return; }
             pos = getRelativeMousePosition(event, tsize);
-            x1 = pos.x;
-            y1 = pos.y;
-            rx0 = Math.min(x0, x1);
-            ry0 = Math.min(y0, y1);
-            rx1 = Math.max(x0, x1);
-            ry1 = Math.max(y0, y1);
+            rx0 = Math.min(x0, pos.x);
+            ry0 = Math.min(y0, pos.y);
+            rx1 = Math.max(x0, pos.x);
+            ry1 = Math.max(y0, pos.y);
             width = Math.abs(rx1 - rx0) * tsize + tsize;
             height = Math.abs(ry1 - ry0) * tsize + tsize;
             updateSelector(rx0*tsize, ry0*tsize, width, height);
@@ -85,13 +83,11 @@ ac.export("palette", function(env){
             var width, height, pos, rx0, rx1, ry0, ry1;
             if (! dragging){ return; }
             pos = getRelativeMousePosition(event, tsize);
-            x1 = pos.x;
-            y1 = pos.y;
             dragging = false;
-            rx0 = Math.min(x0, x1);
-            ry0 = Math.min(y0, y1);
-            rx1 = Math.max(x0, x1);
-            ry1 = Math.max(y0, y1);
+            rx0 = Math.min(x0, pos.x);
+            ry0 = Math.min(y0, pos.y);
+            rx1 = Math.max(x0, pos.x);
+            ry1 = Math.max(y0, pos.y);
             width = Math.abs(rx1 - rx0) * tsize + tsize;
             height = Math.abs(ry1 - ry0) * tsize + tsize;
             updateSelector(rx0*tsize, ry0*tsize, width, height);

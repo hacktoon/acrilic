@@ -67,26 +67,34 @@ ac.export("palette", function(env){
         });
 
         $(document).on("mousemove", function(event){
-            var width, height, pos;
+            var width, height, pos, rx0, rx1, ry0, ry1;
             if (! dragging){ return; }
             pos = getRelativeMousePosition(event, tsize);
             x1 = pos.x;
             y1 = pos.y;
-            width = Math.abs(x1 - x0) * tsize + tsize;
-            height = Math.abs(y1 - y0) * tsize + tsize;
-            selector.css({width: width, height: height});
+            rx0 = Math.min(x0, x1);
+            ry0 = Math.min(y0, y1);
+            rx1 = Math.max(x0, x1);
+            ry1 = Math.max(y0, y1);
+            width = Math.abs(rx1 - rx0) * tsize + tsize;
+            height = Math.abs(ry1 - ry0) * tsize + tsize;
+            updateSelector(rx0*tsize, ry0*tsize, width, height);
         });
 
         $(document).on("mouseup", function(event){
-            var width, height, pos;
+            var width, height, pos, rx0, rx1, ry0, ry1;
             if (! dragging){ return; }
             pos = getRelativeMousePosition(event, tsize);
             x1 = pos.x;
             y1 = pos.y;
             dragging = false;
-            width = Math.abs(x1 - x0) * tsize + tsize;
-            height = Math.abs(y1 - y0) * tsize + tsize;
-            updateSelector(x0*tsize, y0*tsize, width, height);
+            rx0 = Math.min(x0, x1);
+            ry0 = Math.min(y0, y1);
+            rx1 = Math.max(x0, x1);
+            ry1 = Math.max(y0, y1);
+            width = Math.abs(rx1 - rx0) * tsize + tsize;
+            height = Math.abs(ry1 - ry0) * tsize + tsize;
+            updateSelector(rx0*tsize, ry0*tsize, width, height);
         });
 
     };

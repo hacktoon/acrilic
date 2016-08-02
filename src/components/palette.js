@@ -3,7 +3,8 @@ ac.export("palette", function(env){
     "use strict";
 
     var tileset = {},
-        container = $('#palette-panel');
+        container = $('#palette-panel'),
+        selector = $("<div/>").attr("id", "palette-selector").appendTo(container);
 
     var selectTile = function(id){
         env.set("CURRENT_TILE", tileset[id]);
@@ -35,21 +36,63 @@ ac.export("palette", function(env){
         var rx = event.pageX - x_offset,
             ry = event.pageY - y_offset + y_scroll;
 
-        rx = (rx < 0) ? 0 : rx;
-        ry = (ry < 0) ? 0 : ry;
-        return {x: Math.floor(rx / tilesize), y: Math.floor(ry / tilesize)};
+        if (rx < 0) { rx = 0; }
+        if (ry < 0) { ry = 0; }
+
+        return {
+            x: Math.floor(rx / tilesize),
+            y: Math.floor(ry / tilesize)
+        };
+    };
+
+    var updateSelector = function(x, y, w, h) {
+        selector.css({
+            width: w,
+            height: h,
+            transform: "translate(" + x + "px, " + y + "px)"
+        });
+    };
+
+    var registerEvents = function() {
+        var tsize = env.get("TILESIZE");
+        var dragging = false;
+        var x0 = 0, y0 = 0, x1 = 0, y1 = 0;
+
+        container.on("mousedown", function(event){
+            var pos = getRelativeMousePosition(event, tsize);
+            x0 = pos.x;
+            y0 = pos.y;
+            dragging = true;
+            updateSelector(x0*tsize, y0*tsize, tsize, tsize);
+        });
+
+        $(document).on("mousemove", function(event){
+            var width, height, pos;
+            if (! dragging){ return; }
+            pos = getRelativeMousePosition(event, tsize);
+            x1 = pos.x;
+            y1 = pos.y;
+            width = Math.abs(x1 - x0) * tsize + tsize;
+            height = Math.abs(y1 - y0) * tsize + tsize;
+            selector.css({width: width, height: height});
+        });
+
+        $(document).on("mouseup", function(event){
+            var width, height, pos;
+            if (! dragging){ return; }
+            pos = getRelativeMousePosition(event, tsize);
+            x1 = pos.x;
+            y1 = pos.y;
+            dragging = false;
+            width = Math.abs(x1 - x0) * tsize + tsize;
+            height = Math.abs(y1 - y0) * tsize + tsize;
+            updateSelector(x0*tsize, y0*tsize, width, height);
+        });
+
     };
 
     var createPalette = function(tiles) {
-        var selector = $("<div/>").attr("id", "palette-selector").appendTo(container);
-        var tilesize = env.get("TILESIZE");
-
-        container.on("click", function(event){
-            var pos = getRelativeMousePosition(event, tilesize);
-            var x = pos.x * tilesize,
-                y = pos.y * tilesize;
-            selector.css("transform", "translate("+x+"px, "+y+"px)");
-        });
+        registerEvents();
         createTileButtons(tiles);
         selectTile(0);
     };

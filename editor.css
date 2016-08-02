@@ -110,11 +110,13 @@ input {
     height: 60%;
 }
 
-#palette-panel .tile {
-    float: left;
-    cursor: pointer;
-    width: 64px;
-    height: 64px;
+#palette-panel .palette-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 5;
 }
 
 #palette-panel #palette-selector {

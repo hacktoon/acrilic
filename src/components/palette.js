@@ -5,13 +5,12 @@ ac.export("palette", function(env){
     var $canvas = ac.import("canvas");
 
     var doc = $(document),
+        container = $('#palette-panel'),
         tileset_matrix = [],
         tileset_map = {},
-        container = $('#palette-panel'),
         palette_columns = 4,
         palette_rows = 8,
-        palette_canvas,
-        palette_selector;
+        palette_canvas;
 
     var getSelection = function() {
         return env.get("CURRENT_SELECTION");
@@ -80,7 +79,7 @@ ac.export("palette", function(env){
         return { x: Math.floor(rx / tsize), y: Math.floor(ry / tsize)};
     };
 
-    var updateSelector = function(event, x0, y0) {
+    var updateSelector = function(event, selector, x0, y0) {
         var tsize = env.get("TILESIZE"), rx0, rx1, ry0, ry1;
         var pos = getRelativeMousePosition(event);
         rx0 = Math.min(x0, pos.x);
@@ -88,7 +87,7 @@ ac.export("palette", function(env){
         rx1 = Math.max(x0, pos.x);
         ry1 = Math.max(y0, pos.y);
         if (rx1 >= palette_columns) { rx1 = palette_columns - 1; }
-        palette_selector.css({
+        selector.css({
             width: (rx1 - rx0 + 1) * tsize,
             height: (ry1 - ry0 + 1) * tsize,
             transform: "translate(" + (rx0 * tsize) + "px, " + (ry0 * tsize) + "px)"
@@ -96,11 +95,16 @@ ac.export("palette", function(env){
         return {x0: rx0, y0: ry0, x1: rx1, y1: ry1};
     };
 
-    var registerEvents = function() {
+    var createSelector = function() {
+        return $("<div/>").attr("id", "palette-selector").appendTo(container);
+    };
+
+    var registerEvents = function(selector) {
         var dragging = false;
         var x0 = 0, y0 = 0;
+        var overlay = $("<div/>").addClass("palette-overlay").appendTo(container);
 
-        palette_canvas.elem.on("mousedown", function(event){
+        overlay.on("mousedown", function(event){
             var pos = getRelativeMousePosition(event);
             x0 = pos.x;
             y0 = pos.y;
@@ -109,21 +113,20 @@ ac.export("palette", function(env){
 
         doc.on("mousemove", function(event){
             if (! dragging){ return; }
-            updateSelector(event, x0, y0);
+            updateSelector(event, selector, x0, y0);
         });
 
         doc.on("mouseup", function(event){
             if (! dragging){ return; }
             dragging = false;
-            setSelection(updateSelector(event, x0, y0));
+            setSelection(updateSelector(event, selector, x0, y0));
         });
-
     };
 
     var createPalette = function(tiles) {
-        palette_selector = $("<div/>").attr("id", "palette-selector").appendTo(container);
+        var selector = createSelector();
         loadTileset(tiles);
-        registerEvents();
+        registerEvents(selector);
         setSelection();
     };
 

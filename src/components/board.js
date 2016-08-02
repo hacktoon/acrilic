@@ -113,10 +113,18 @@ ac.export("board", function(env){
         return board;
     };
 
-    var updateMap = function(map, x, y, tile_id) {
-        var cell = map.get(x, y) || {};
-        cell[current_layer_id] = tile_id;
-        map.set(x, y, cell);
+    var updateMap = function(map, x, y, selection) {
+        var tsize = env.get("TILESIZE"),
+            matrix = selection.matrix;
+        getCurrentLayer().clear(x * tsize, y * tsize, selection.width, selection.height);
+        getCurrentLayer().draw(selection.image, 0, 0, x * tsize, y * tsize);
+        for(var i=0; i<matrix.length; i++){
+            for(var j=0; j<matrix[i].length; j++){
+                var cell = map.get(j+x, i+y) || {};
+                cell[current_layer_id] = matrix[i][j].id;
+                map.set(j+x, i+y, cell);
+            }
+        }
     };
 
     var renderMap = function(map) {
@@ -134,14 +142,8 @@ ac.export("board", function(env){
 
 	var createBoard = function(map, h_tiles, v_tiles){
         var board = createElements(h_tiles, v_tiles);
-
         registerEvents(board, function(x, y) {
-            var tsize = env.get("TILESIZE"),
-                selection = $palette.getSelection();
-
-            getCurrentLayer().clear(x * tsize, y * tsize, selection.width, selection.height);
-            getCurrentLayer().draw(selection.image, 0, 0, x * tsize, y * tsize);
-            //updateMap(map, x, y, tile.id);
+            updateMap(map, x, y, $palette.getSelection());
         });
         container.html(board);
 	};

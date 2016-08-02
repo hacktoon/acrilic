@@ -51,11 +51,18 @@ ac.export("palette", function(env){
         return { x: Math.floor(rx / tilesize), y: Math.floor(ry / tilesize)};
     };
 
-    var updateSelector = function(x, y, w, h) {
+    var updateSelector = function(event, x0, y0) {
+        var tsize = env.get("TILESIZE"), rx0, rx1, ry0, ry1;
+        var pos = getRelativeMousePosition(event, tsize);
+        rx0 = Math.min(x0, pos.x);
+        ry0 = Math.min(y0, pos.y);
+        rx1 = Math.max(x0, pos.x);
+        ry1 = Math.max(y0, pos.y);
+        if (rx1 >= max_width) { rx1 = max_width - 1; }
         selector.css({
-            width: w,
-            height: h,
-            transform: "translate(" + x + "px, " + y + "px)"
+            width: (rx1 - rx0) * tsize + tsize,
+            height: (ry1 - ry0) * tsize + tsize,
+            transform: "translate(" + (rx0 * tsize) + "px, " + (ry0 * tsize) + "px)"
         });
     };
 
@@ -69,36 +76,17 @@ ac.export("palette", function(env){
             x0 = pos.x;
             y0 = pos.y;
             dragging = true;
-            updateSelector(x0*tsize, y0*tsize, tsize, tsize);
         });
 
         doc.on("mousemove", function(event){
-            var width, height, pos, rx0, rx1, ry0, ry1;
             if (! dragging){ return; }
-            pos = getRelativeMousePosition(event, tsize);
-            rx0 = Math.min(x0, pos.x);
-            ry0 = Math.min(y0, pos.y);
-            rx1 = Math.max(x0, pos.x);
-            ry1 = Math.max(y0, pos.y);
-            if (rx1 >= max_width) { rx1 = max_width - 1; }
-            width = Math.abs(rx1 - rx0) * tsize + tsize;
-            height = Math.abs(ry1 - ry0) * tsize + tsize;
-            updateSelector(rx0*tsize, ry0*tsize, width, height);
+            updateSelector(event, x0, y0);
         });
 
         doc.on("mouseup", function(event){
-            var width, height, pos, rx0, rx1, ry0, ry1;
             if (! dragging){ return; }
-            pos = getRelativeMousePosition(event, tsize);
             dragging = false;
-            rx0 = Math.min(x0, pos.x);
-            ry0 = Math.min(y0, pos.y);
-            rx1 = Math.max(x0, pos.x);
-            ry1 = Math.max(y0, pos.y);
-            if (rx1 >= max_width) { rx1 = max_width - 1; }
-            width = Math.abs(rx1 - rx0) * tsize + tsize;
-            height = Math.abs(ry1 - ry0) * tsize + tsize;
-            updateSelector(rx0*tsize, ry0*tsize, width, height);
+            updateSelector(event, x0, y0);
         });
 
     };

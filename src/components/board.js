@@ -136,12 +136,12 @@ ac.export("board", function(env){
         var board = createElements(h_tiles, v_tiles);
 
         registerEvents(board, function(x, y) {
-            var tile = env.get('CURRENT_TILE'),
-                tsize = env.get("TILESIZE");
+            var tsize = env.get("TILESIZE"),
+                selection = $palette.getSelection();
 
-            getCurrentLayer().clear(x * tsize, y * tsize, tsize, tsize);
-            getCurrentLayer().draw(tile.getCanvas(), 0, 0, x * tsize, y * tsize);
-            updateMap(map, x, y, tile.id);
+            getCurrentLayer().clear(x * tsize, y * tsize, selection.width, selection.height);
+            getCurrentLayer().draw(selection.image, 0, 0, x * tsize, y * tsize);
+            //updateMap(map, x, y, tile.id);
         });
         container.html(board);
 	};

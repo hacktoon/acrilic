@@ -5,74 +5,103 @@ ac.export("palette", function(env){
     var $canvas = ac.import("canvas");
 
     var doc = $(document),
-        tileset = {},
+        tileset_matrix = [],
+        tileset_map = {},
         container = $('#palette-panel'),
-        max_width = 4,
-        max_height = 8,
-        selector;
+        palette_columns = 4,
+        palette_rows = 8,
+        palette_canvas,
+        palette_selector;
 
-    var selectTile = function(id){
-        env.set("CURRENT_TILE", tileset[id]);
+    var getSelection = function() {
+        return env.get("CURRENT_SELECTION");
     };
 
     var getTile = function(id) {
-        return tileset[id];
+        return tileset_map[id];
     };
 
-    var fillPalette = function(tiles){
+    var setSelection = function(points) {
+        var pts = points || {x0: 0, y0: 0, x1: 0, y1: 0};
+        var x0 = pts.x0, y0 = pts.y0, x1 = pts.x1, y1 = pts.y1;
         var tsize = env.get("TILESIZE");
-        var tile_canvas = $canvas.createCanvas(tsize*max_width, tsize*max_height);
-        var x = 0, y = 0, i = 1;
-        tile_canvas.elem.attr("id", "tile-canvas");
-        tiles.forEach(function(tile, _){
-            tileset[tile.id] = tile;
-            tile_canvas.draw(tile.getCanvas(), 0, 0, x, y);
-            x += tsize;
-            if (i == max_width){
-                y += tsize;
-                x = 0;
-                i = 0;
+        var image, matrix = [];
+
+        var width = (x1 - x0 + 1) * tsize,
+            height = (y1 - y0 + 1) * tsize;
+
+        image = $canvas.createCanvas(width, height);
+
+        for(var y=y0, i=0; y<=y1; y++, i++){
+            matrix.push([]);
+            for(var x=x0, j=0; x<=x1; x++, j++){
+                var tile = tileset_matrix[y][x];
+                matrix[i].push(tile);
+                image.draw(tile.getCanvas(), 0, 0, j*tsize, i*tsize);
             }
-            i++;
+        }
+        env.set("CURRENT_SELECTION", {
+            image: image.getElement(),
+            matrix: matrix,
+            width: width,
+            height: height
         });
-        container.append(tile_canvas.elem);
     };
 
-    var getRelativeMousePosition = function(event, tilesize) {
-        //deslocamento em relacao à tela
+    var loadTileset = function(tiles){
+        var tsize = env.get("TILESIZE");
+        var tile_count = 0;
+        palette_canvas = $canvas.createCanvas(tsize*palette_columns, tsize*palette_rows);
+        for(var i=0; i<palette_rows; i++){
+            tileset_matrix.push([]);
+            for(var j=0; j<palette_columns; j++){
+                if (tile_count < tiles.length){
+                    var tile = tiles[tile_count++];
+                    tileset_matrix[i].push(tile);
+                    tileset_map[tile.id] = tile;
+                    palette_canvas.draw(tile.getCanvas(), 0, 0, j*tsize, i*tsize);
+                }
+            }
+        }
+        container.append(palette_canvas.elem);
+    };
+
+    var getRelativeMousePosition = function(event) {
+        //calc screen offset
+        var tsize = env.get("TILESIZE")
         var x_offset = container.offset().left,
             y_offset = container.offset().top,
             y_scroll = container.scrollTop() + doc.scrollTop();
-        //posição relativa do mouse
+        //relative position of mouse
         var rx = event.pageX - x_offset,
             ry = event.pageY - y_offset + y_scroll;
         if (rx < 0) { rx = 0; }
         if (ry < 0) { ry = 0; }
-        return { x: Math.floor(rx / tilesize), y: Math.floor(ry / tilesize)};
+        return { x: Math.floor(rx / tsize), y: Math.floor(ry / tsize)};
     };
 
     var updateSelector = function(event, x0, y0) {
         var tsize = env.get("TILESIZE"), rx0, rx1, ry0, ry1;
-        var pos = getRelativeMousePosition(event, tsize);
+        var pos = getRelativeMousePosition(event);
         rx0 = Math.min(x0, pos.x);
         ry0 = Math.min(y0, pos.y);
         rx1 = Math.max(x0, pos.x);
         ry1 = Math.max(y0, pos.y);
-        if (rx1 >= max_width) { rx1 = max_width - 1; }
-        selector.css({
-            width: (rx1 - rx0) * tsize + tsize,
-            height: (ry1 - ry0) * tsize + tsize,
+        if (rx1 >= palette_columns) { rx1 = palette_columns - 1; }
+        palette_selector.css({
+            width: (rx1 - rx0 + 1) * tsize,
+            height: (ry1 - ry0 + 1) * tsize,
             transform: "translate(" + (rx0 * tsize) + "px, " + (ry0 * tsize) + "px)"
         });
+        return {x0: rx0, y0: ry0, x1: rx1, y1: ry1};
     };
 
     var registerEvents = function() {
-        var tsize = env.get("TILESIZE");
         var dragging = false;
         var x0 = 0, y0 = 0;
 
-        container.on("mousedown", function(event){
-            var pos = getRelativeMousePosition(event, tsize);
+        palette_canvas.elem.on("mousedown", function(event){
+            var pos = getRelativeMousePosition(event);
             x0 = pos.x;
             y0 = pos.y;
             dragging = true;
@@ -86,20 +115,21 @@ ac.export("palette", function(env){
         doc.on("mouseup", function(event){
             if (! dragging){ return; }
             dragging = false;
-            updateSelector(event, x0, y0);
+            setSelection(updateSelector(event, x0, y0));
         });
 
     };
 
     var createPalette = function(tiles) {
-        selector = $("<div/>").attr("id", "palette-selector").appendTo(container);
-        fillPalette(tiles);
+        palette_selector = $("<div/>").attr("id", "palette-selector").appendTo(container);
+        loadTileset(tiles);
         registerEvents();
-        selectTile(0);
+        setSelection();
     };
 
     return {
         getTile: getTile,
+        getSelection: getSelection,
         createPalette: createPalette
     };
 });

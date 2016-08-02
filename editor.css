@@ -105,6 +105,7 @@ input {
 
 #palette-panel {
     overflow-y: scroll;
+    position: relative;
 	width: 271px;
     height: 60%;
 }

@@ -19,8 +19,20 @@ ac.export("menu", function(env){
         }).first().trigger('click');
     };
 
-    var createMenu = function() {
+    var initToolsMenu = function() {
+        $tools.initTools();
+        registerSwitchButton('.btn-tool', function(value) {
+            $tools.setTool(value);
+        });
+    };
 
+    var initLayersMenu = function() {
+        registerSwitchButton('.btn-layer', function(value) {
+            $board.activateLayer(value);
+        });
+    };
+
+    var initFileMenu = function() {
         $('#btn-file-new').on('click', function(){
             $dialog.openNewMapDialog(function(name, horz_tiles, vert_tiles){
                 var map = $map.createMap(name, horz_tiles, vert_tiles);
@@ -56,14 +68,12 @@ ac.export("menu", function(env){
             var json = JSON.stringify(map.getData());
             $dialog.openExportDialog(json);
         });
+    };
 
-        registerSwitchButton('.btn-tool', function(value) {
-            $tools.setTool(value);
-        });
-
-        registerSwitchButton('.btn-layer', function(value) {
-            $board.activateLayer(value);
-        });
+    var createMenu = function() {
+        initFileMenu();
+        initToolsMenu();
+        initLayersMenu();
 	};
 
     return {

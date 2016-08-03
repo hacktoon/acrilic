@@ -17,9 +17,9 @@
     ];
 
     var init = function() {
-        var default_tileset = $loader.get_asset("tileset", "default");
-        var tiles = $tileset.createTileset(default_tileset);
-        $palette.createPalette(tiles);
+        var default_tileset_data = $loader.get_asset("tileset", "default");
+        var tileset = $tileset.createTileset(default_tileset_data);
+        $palette.createPalette(tileset);
         $menu.createMenu();
     };
 

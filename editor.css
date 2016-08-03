@@ -94,7 +94,7 @@ input {
 
 /* TILESET PALETTE --------------------------- */
 #sidebar-panel {
-    background: #CCC;
+    background: #E1007E;
     position: absolute;
     top: 0;
     left: 0;
@@ -110,7 +110,7 @@ input {
     height: 60%;
 }
 
-#palette-panel .palette-overlay {
+#palette-panel #palette-overlay {
     position: absolute;
     left: 0;
     top: 0;
@@ -182,7 +182,7 @@ input {
     bottom: 0;
     left: 0;
     right: 0;
-    opacity: .4;
+    opacity: .7;
 }
 #board-panel .layer.active { opacity: 1; }
 

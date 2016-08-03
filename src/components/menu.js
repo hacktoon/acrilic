@@ -21,14 +21,14 @@ ac.export("menu", function(env){
 
     var createMenu = function() {
 
-        /*$('#btn-file-new').on('click', function(){
+        $('#btn-file-new').on('click', function(){
             $dialog.openNewMapDialog(function(name, horz_tiles, vert_tiles){
                 var map = $map.createMap(name, horz_tiles, vert_tiles);
                 $board.createBoard(map, horz_tiles, vert_tiles);
                 env.set('CURRENT_MAP', map);
             });
-        }).trigger('click');*/
-        var map = $map.loadMap({"name":"weh","width":9,"height":8,"grid":[[{"bg":12},{"bg":12},{"bg":12},{"bg":12},{"bg":12},{"bg":12},{"bg":12},{"bg":12},{"bg":12}],[{"bg":4},{"bg":4},{"bg":4},{"bg":4},{"bg":3},{"bg":4},{"bg":4},{"bg":4},{"bg":4}],[{"bg":4},{"bg":4},{"bg":4},{"bg":4},{"bg":3},{"bg":4},{"bg":4},{"bg":4},{"bg":4}],[{"bg":4},{"bg":4},{"bg":4},{"bg":4},{"bg":3},{"bg":4},{"bg":4},{"bg":4},{"bg":4}],[{"bg":4},{"bg":4},{"bg":4},{"bg":4},{"bg":3},{"bg":4},{"bg":4},{"bg":4},{"bg":4}],[{"bg":4},{"bg":4},{"bg":4},{"bg":4},{"bg":3},{"bg":4},{"bg":4},{"bg":4},{"bg":4}],[{"bg":4},{"bg":4},{"bg":4},{"bg":4},{"bg":3},{"bg":4},{"bg":4},{"bg":4},{"bg":4}],[{"bg":12},{"bg":12},{"bg":12},{"bg":12},{"bg":12},{"bg":12},{"bg":12},{"bg":12},{"bg":12}]]});
+        });
+        var map = $map.loadMap({"name":"weh","width":9,"height":8,"grid":[[{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13}],[{"bg":5},{"bg":5},{"bg":5},{"bg":4},{"bg":4},{"bg":4},{"bg":5},{"bg":5},{"bg":5}],[{"bg":5},{"bg":5},{"bg":5},{"bg":4},{"bg":4},{"bg":4},{"bg":5},{"bg":5},{"bg":5}],[{"bg":5},{"bg":5},{"bg":5},{"bg":4},{"bg":4},{"bg":4},{"bg":5},{"bg":5},{"bg":5}],[{"bg":5},{"bg":5},{"bg":5},{"bg":4},{"bg":4},{"bg":4},{"bg":5},{"bg":5},{"bg":5}],[{"bg":5},{"bg":5},{"bg":5},{"bg":4},{"bg":4},{"bg":4},{"bg":5},{"bg":5},{"bg":5}],[{"bg":5},{"bg":5},{"bg":5},{"bg":4},{"bg":4},{"bg":4},{"bg":5},{"bg":5},{"bg":5}],[{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13}]]});
         $board.createBoard(map, 9, 8);
         $board.renderMap(map);
         env.set('CURRENT_MAP', map);

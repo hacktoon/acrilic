@@ -23,16 +23,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.6568542"
-     inkscape:cx="38.091803"
-     inkscape:cy="853.17926"
+     inkscape:zoom="1"
+     inkscape:cx="153.53497"
+     inkscape:cy="815.93171"
      inkscape:document-units="px"
-     inkscape:current-layer="g5643"
+     inkscape:current-layer="layer2"
      showgrid="true"
-     inkscape:window-width="1366"
-     inkscape:window-height="743"
-     inkscape:window-x="126"
-     inkscape:window-y="900"
+     inkscape:window-width="1600"
+     inkscape:window-height="827"
+     inkscape:window-x="0"
+     inkscape:window-y="48"
      inkscape:window-maximized="1"
      inkscape:showpageshadow="false"
      units="px"
@@ -40,7 +40,7 @@
      inkscape:bbox-paths="false"
      inkscape:bbox-nodes="true"
      inkscape:snap-bbox-midpoints="false"
-     inkscape:snap-global="false"
+     inkscape:snap-global="true"
      inkscape:snap-object-midpoints="false"
      inkscape:snap-nodes="false"
      inkscape:snap-others="false"
@@ -84,7 +84,7 @@
        style="image-rendering:optimizeQuality"
        inkscape:label="#bg">
       <g
-         transform="translate(-128,63.999989)"
+         transform="translate(-64,63.999989)"
          id="g6174"
          inkscape:export-xdpi="90"
          inkscape:export-ydpi="90">
@@ -222,7 +222,7 @@
          id="g6222"
          inkscape:export-xdpi="90"
          inkscape:export-ydpi="90"
-         transform="translate(64,-1.0946289e-5)"
+         transform="translate(128,-1.0892578e-5)"
          style="fill:#669900;fill-opacity:1">
         <rect
            inkscape:export-ydpi="90"
@@ -384,7 +384,7 @@
       </g>
       <g
          id="g7204"
-         transform="translate(64,-1.9946289e-5)">
+         transform="translate(-128,63.999981)">
         <g
            style="fill:#fcfcfc;fill-opacity:1"
            id="g7070"
@@ -469,7 +469,7 @@
       </g>
       <g
          id="g7903"
-         transform="translate(-64,-9.9462893e-6)">
+         transform="translate(64,-9.8925782e-6)">
         <rect
            inkscape:export-ydpi="90"
            inkscape:export-xdpi="90"
@@ -738,7 +738,7 @@
            transform="matrix(0,1,-1,0,0,0)" />
       </g>
       <g
-         transform="translate(0,1.0749802e-5)"
+         transform="translate(-128,64.000006)"
          id="g7926">
         <rect
            style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#999999;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;enable-background:accumulate"
@@ -1021,7 +1021,7 @@
          id="g8050"
          inkscape:export-xdpi="90"
          inkscape:export-ydpi="90"
-         transform="translate(128,-1.0946289e-5)"
+         transform="translate(192,-1.0892578e-5)"
          style="fill:#336600;fill-opacity:1">
         <rect
            inkscape:export-ydpi="90"
@@ -1090,7 +1090,7 @@
       </g>
       <g
          style="fill:#fcfcfc;fill-opacity:1"
-         transform="translate(192,-1.0946289e-5)"
+         transform="translate(0,63.99999)"
          inkscape:export-ydpi="90"
          inkscape:export-xdpi="90"
          id="g8054">
@@ -1107,7 +1107,7 @@
       </g>
       <g
          id="g4847"
-         transform="translate(64,-2.1483032e-5)">
+         transform="translate(-192,63.99998)">
         <rect
            style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#f8d878;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;enable-background:accumulate"
            id="rect3014"
@@ -1335,191 +1335,194 @@
       </g>
       <g
          style="fill:#669900;fill-opacity:1"
-         transform="translate(0,63.99999)"
+         transform="translate(128,63.99999)"
          inkscape:export-ydpi="90"
          inkscape:export-xdpi="90"
          id="g5643">
-        <rect
-           y="92.36232"
-           x="0"
-           height="64"
-           width="64"
-           id="rect5645"
-           style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#663333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;enable-background:accumulate"
-           inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
-           inkscape:export-xdpi="90"
-           inkscape:export-ydpi="90" />
-        <rect
-           inkscape:export-ydpi="90"
-           inkscape:export-xdpi="90"
-           inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
-           y="154.36232"
-           x="0"
-           height="2"
-           width="64"
-           id="rect4360"
-           style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate" />
-        <rect
-           style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate"
-           id="rect4444"
-           width="64"
-           height="2"
-           x="0"
-           y="146.36232"
-           inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
-           inkscape:export-xdpi="90"
-           inkscape:export-ydpi="90" />
-        <rect
-           inkscape:export-ydpi="90"
-           inkscape:export-xdpi="90"
-           inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
-           y="138.36232"
-           x="0"
-           height="2"
-           width="64"
-           id="rect4446"
-           style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate" />
-        <rect
-           style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate"
-           id="rect4448"
-           width="64"
-           height="2"
-           x="0"
-           y="130.36232"
-           inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
-           inkscape:export-xdpi="90"
-           inkscape:export-ydpi="90" />
-        <rect
-           inkscape:export-ydpi="90"
-           inkscape:export-xdpi="90"
-           inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
-           y="122.36232"
-           x="0"
-           height="2"
-           width="64"
-           id="rect4450"
-           style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate" />
-        <rect
-           style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate"
-           id="rect4452"
-           width="64"
-           height="2"
-           x="0"
-           y="114.36232"
-           inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
-           inkscape:export-xdpi="90"
-           inkscape:export-ydpi="90" />
-        <rect
-           inkscape:export-ydpi="90"
-           inkscape:export-xdpi="90"
-           inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
-           y="106.36232"
-           x="0"
-           height="2"
-           width="64"
-           id="rect4454"
-           style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate" />
-        <rect
-           style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate"
-           id="rect4456"
-           width="64"
-           height="2"
-           x="0"
-           y="98.36232"
-           inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
-           inkscape:export-xdpi="90"
-           inkscape:export-ydpi="90" />
-        <rect
-           style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate"
-           id="rect4458"
-           width="64"
-           height="2"
-           x="92.36232"
-           y="-2"
-           inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
-           inkscape:export-xdpi="90"
-           inkscape:export-ydpi="90"
-           transform="matrix(0,1,-1,0,0,0)" />
-        <rect
-           inkscape:export-ydpi="90"
-           inkscape:export-xdpi="90"
-           inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
-           y="-10"
-           x="92.36232"
-           height="2"
-           width="64"
-           id="rect4460"
-           style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate"
-           transform="matrix(0,1,-1,0,0,0)" />
-        <rect
-           style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate"
-           id="rect4462"
-           width="64"
-           height="2"
-           x="92.36232"
-           y="-18"
-           inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
-           inkscape:export-xdpi="90"
-           inkscape:export-ydpi="90"
-           transform="matrix(0,1,-1,0,0,0)" />
-        <rect
-           inkscape:export-ydpi="90"
-           inkscape:export-xdpi="90"
-           inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
-           y="-26"
-           x="92.36232"
-           height="2"
-           width="64"
-           id="rect4464"
-           style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate"
-           transform="matrix(0,1,-1,0,0,0)" />
-        <rect
-           style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate"
-           id="rect4466"
-           width="64"
-           height="2"
-           x="92.36232"
-           y="-34"
-           inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
-           inkscape:export-xdpi="90"
-           inkscape:export-ydpi="90"
-           transform="matrix(0,1,-1,0,0,0)" />
-        <rect
-           inkscape:export-ydpi="90"
-           inkscape:export-xdpi="90"
-           inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
-           y="-42"
-           x="92.36232"
-           height="2"
-           width="64"
-           id="rect4468"
-           style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate"
-           transform="matrix(0,1,-1,0,0,0)" />
-        <rect
-           style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate"
-           id="rect4470"
-           width="64"
-           height="2"
-           x="92.36232"
-           y="-50"
-           inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
-           inkscape:export-xdpi="90"
-           inkscape:export-ydpi="90"
-           transform="matrix(0,1,-1,0,0,0)" />
-        <rect
-           inkscape:export-ydpi="90"
-           inkscape:export-xdpi="90"
-           inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
-           y="-58"
-           x="92.36232"
-           height="2"
-           width="64"
-           id="rect4472"
-           style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate"
-           transform="matrix(0,1,-1,0,0,0)" />
+        <g
+           id="g4345">
+          <rect
+             inkscape:export-ydpi="90"
+             inkscape:export-xdpi="90"
+             inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
+             style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#663333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;enable-background:accumulate"
+             id="rect5645"
+             width="64"
+             height="64"
+             x="0"
+             y="92.36232" />
+          <rect
+             style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate"
+             id="rect4360"
+             width="64"
+             height="2"
+             x="0"
+             y="154.36232"
+             inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
+             inkscape:export-xdpi="90"
+             inkscape:export-ydpi="90" />
+          <rect
+             inkscape:export-ydpi="90"
+             inkscape:export-xdpi="90"
+             inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
+             y="146.36232"
+             x="0"
+             height="2"
+             width="64"
+             id="rect4444"
+             style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate" />
+          <rect
+             style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate"
+             id="rect4446"
+             width="64"
+             height="2"
+             x="0"
+             y="138.36232"
+             inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
+             inkscape:export-xdpi="90"
+             inkscape:export-ydpi="90" />
+          <rect
+             inkscape:export-ydpi="90"
+             inkscape:export-xdpi="90"
+             inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
+             y="130.36232"
+             x="0"
+             height="2"
+             width="64"
+             id="rect4448"
+             style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate" />
+          <rect
+             style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate"
+             id="rect4450"
+             width="64"
+             height="2"
+             x="0"
+             y="122.36232"
+             inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
+             inkscape:export-xdpi="90"
+             inkscape:export-ydpi="90" />
+          <rect
+             inkscape:export-ydpi="90"
+             inkscape:export-xdpi="90"
+             inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
+             y="114.36232"
+             x="0"
+             height="2"
+             width="64"
+             id="rect4452"
+             style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate" />
+          <rect
+             style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate"
+             id="rect4454"
+             width="64"
+             height="2"
+             x="0"
+             y="106.36232"
+             inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
+             inkscape:export-xdpi="90"
+             inkscape:export-ydpi="90" />
+          <rect
+             inkscape:export-ydpi="90"
+             inkscape:export-xdpi="90"
+             inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
+             y="98.36232"
+             x="0"
+             height="2"
+             width="64"
+             id="rect4456"
+             style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate" />
+          <rect
+             transform="matrix(0,1,-1,0,0,0)"
+             inkscape:export-ydpi="90"
+             inkscape:export-xdpi="90"
+             inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
+             y="-2"
+             x="92.36232"
+             height="2"
+             width="64"
+             id="rect4458"
+             style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate" />
+          <rect
+             transform="matrix(0,1,-1,0,0,0)"
+             style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate"
+             id="rect4460"
+             width="64"
+             height="2"
+             x="92.36232"
+             y="-10"
+             inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
+             inkscape:export-xdpi="90"
+             inkscape:export-ydpi="90" />
+          <rect
+             transform="matrix(0,1,-1,0,0,0)"
+             inkscape:export-ydpi="90"
+             inkscape:export-xdpi="90"
+             inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
+             y="-18"
+             x="92.36232"
+             height="2"
+             width="64"
+             id="rect4462"
+             style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate" />
+          <rect
+             transform="matrix(0,1,-1,0,0,0)"
+             style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate"
+             id="rect4464"
+             width="64"
+             height="2"
+             x="92.36232"
+             y="-26"
+             inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
+             inkscape:export-xdpi="90"
+             inkscape:export-ydpi="90" />
+          <rect
+             transform="matrix(0,1,-1,0,0,0)"
+             inkscape:export-ydpi="90"
+             inkscape:export-xdpi="90"
+             inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
+             y="-34"
+             x="92.36232"
+             height="2"
+             width="64"
+             id="rect4466"
+             style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate" />
+          <rect
+             transform="matrix(0,1,-1,0,0,0)"
+             style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate"
+             id="rect4468"
+             width="64"
+             height="2"
+             x="92.36232"
+             y="-42"
+             inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
+             inkscape:export-xdpi="90"
+             inkscape:export-ydpi="90" />
+          <rect
+             transform="matrix(0,1,-1,0,0,0)"
+             inkscape:export-ydpi="90"
+             inkscape:export-xdpi="90"
+             inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
+             y="-50"
+             x="92.36232"
+             height="2"
+             width="64"
+             id="rect4470"
+             style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate" />
+          <rect
+             transform="matrix(0,1,-1,0,0,0)"
+             style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;marker:none;image-rendering:optimizeQuality;enable-background:accumulate"
+             id="rect4472"
+             width="64"
+             height="2"
+             x="92.36232"
+             y="-58"
+             inkscape:export-filename="/home/karlisson/dev/hacktoon/hacktoon.com/static/img/ground-layer.png"
+             inkscape:export-xdpi="90"
+             inkscape:export-ydpi="90" />
+        </g>
       </g>
       <g
-         transform="matrix(1.1812909,0,0,1.1812909,-333.35958,392.45038)"
+         transform="matrix(1.1812909,0,0,1.1812909,-269.35957,392.45036)"
          id="g4167-7">
         <rect
            transform="translate(-7.3674502e-6,4.5055708e-6)"
@@ -1550,7 +1553,7 @@
         </g>
       </g>
       <g
-         transform="translate(-359.0464,174.95637)"
+         transform="translate(-295.04639,174.95635)"
          id="g4176-2">
         <g
            transform="matrix(1.189332,0,0,1.1998674,-77.774332,-33.416595)"
@@ -1642,17 +1645,6 @@
          id="tspan7741"
          x="210"
          y="11.362324">3</tspan></text>
-    <text
-       sodipodi:linespacing="125%"
-       id="text7743"
-       y="11.362324"
-       x="276"
-       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       xml:space="preserve"><tspan
-         y="11.362324"
-         x="276"
-         id="tspan7745"
-         sodipodi:role="line">4</tspan></text>
     <text
        sodipodi:linespacing="125%"
        id="text7767"

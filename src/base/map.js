@@ -19,11 +19,19 @@ ac.export("map", function(env){
             }
         }.bind(this))();
 
+        this.outOfRange = function(y, x) {
+            var x_limit = x < 0 || x >= this.width;
+            var y_limit = y < 0 || y >= this.height;
+            return x_limit || y_limit;
+        };
+
         this.set = function(x, y, value){
+            if(this.outOfRange(y, x)){ return; }
             this.grid[y][x] = value;
         };
 
         this.get = function(x, y){
+            if(this.outOfRange(y, x)){ return; }
             return this.grid[y][x];
         };
 

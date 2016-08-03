@@ -39,7 +39,7 @@ ac.export("palette", function(env){
             matrix.push([]);
             for(var x=x0, j=0; x<=x1; x++, j++){
                 var tile = _self.tileset.getTileByPosition(y, x);
-                matrix[i].push(tile);
+                matrix[i].push(tile.id);
                 image.draw(tile.getCanvas(), 0, 0, j*tsize, i*tsize);
             }
         }

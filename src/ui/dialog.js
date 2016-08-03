@@ -76,7 +76,6 @@ ac.export("dialog", function(env){
         });
         dialog.open(function(){
             field.focus();
-            ac.log(field);
         });
     };
 

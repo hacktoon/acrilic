@@ -28,6 +28,10 @@ ac.export("menu", function(env){
                 env.set('CURRENT_MAP', map);
             });
         });
+        var map = $map.loadMap({"name":"weh","width":9,"height":8,"grid":[[{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13}],[{"bg":5},{"bg":5},{"bg":5},{"bg":4},{"bg":4},{"bg":4},{"bg":5},{"bg":5},{"bg":5}],[{"bg":5},{"bg":5},{"bg":5},{"bg":4},{"bg":4},{"bg":4},{"bg":5},{"bg":5},{"bg":5}],[{"bg":5},{"bg":5},{"bg":5},{"bg":4},{"bg":4},{"bg":4},{"bg":5},{"bg":5},{"bg":5}],[{"bg":5},{"bg":5},{"bg":5},{"bg":4},{"bg":4},{"bg":4},{"bg":5},{"bg":5},{"bg":5}],[{"bg":5},{"bg":5},{"bg":5},{"bg":4},{"bg":4},{"bg":4},{"bg":5},{"bg":5},{"bg":5}],[{"bg":5},{"bg":5},{"bg":5},{"bg":4},{"bg":4},{"bg":4},{"bg":5},{"bg":5},{"bg":5}],[{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13}]]});
+        $board.createBoard(map, 9, 8);
+        $board.renderMap(map);
+        env.set('CURRENT_MAP', map);
 
         $('#btn-file-import').on('click', function(){
             $dialog.openImportDialog(function(content){

@@ -2,45 +2,50 @@
 ac.export("loader", function(env){
     "use strict";
 
-    var items = {},
-        items_loaded = 0,
+    var items_loaded = 0,
         total_items,
-        callback_ref;
+        ready_callback,
+        assets = {
+            tileset: {}
+        };
 
-    var loader_functions = {
-        image: function(id, src){
+        
+    var loaders = {
+        tileset: function(item){
             var image = new Image();
 			image.onload = function(){
-				items[id] = image;
-                update_load_status();
+				item.image = image;
+                register_asset(item);
 			};
-			image.src = src;
+			image.src = item.src;
         }
     };
 
-    var update_load_status = function(){
+    var register_asset = function(item) {
+        assets[item.type][item.id] = item;
+
         items_loaded++;
         if (items_loaded == total_items){
-            callback_ref();
+            ready_callback(assets);
         }
     };
 
-    var load = function(items, callback){
+    var load_assets = function(items, callback){
         total_items = items.length;
-        callback_ref = callback;
+        ready_callback = callback;
 
         for(var i=0; i<total_items; i++){
             var item = items[i];
-            loader_functions[item.type](item.id, item.src);
+            loaders[item.type](item);
         }
     };
 
-    var get = function(asset_id){
-        return items[asset_id];
+    var get_asset = function(type, id){
+        return assets[type][id];
     };
 
     return {
-        load: load,
-        get: get
+        load_assets: load_assets,
+        get_asset: get_asset
     };
 });

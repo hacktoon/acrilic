@@ -120,14 +120,20 @@ ac.export("board", function(env){
             tool = $tools.getTool(),
             current_layer = getCurrentLayer();
 
-        tool(map, orig_row, orig_col, selection).forEach(function(pos){
-            var col = pos.col,
-                row = pos.row,
+        tool(map, orig_row, orig_col, selection).forEach(function(tile){
+            var col = tile.col,
+                row = tile.row,
                 x = col * tsize,
                 y = row * tsize;
 
             // render the selected area
             current_layer.clear(x, y, selection.width, selection.height);
+            if (tile.reset){
+                var cell = map.get(col, row) || {};
+                delete cell[current_layer_id];
+                map.set(col, row, cell);
+                return;
+            }
             current_layer.draw(selection.image, 0, 0, x, y);
 
             // update the map grid with the new tile ids
@@ -148,6 +154,7 @@ ac.export("board", function(env){
                 var cell = map.get(x, y);
                 for (var key in cell){
                     var tile = $palette.getTile(cell[key]);
+                    if (! tile){ continue; }
                     getLayer(key).draw(tile.getCanvas(), 0, 0, x * tsize, y * tsize);
                 }
             }

@@ -40,6 +40,7 @@ ac.export("map", function(env){
                 name: this.name,
                 width: this.width,
                 height: this.height,
+                tilesize: env.get("TILESIZE"),
                 grid: this.grid
             };
         };

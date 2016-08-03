@@ -4,6 +4,7 @@ ac.export("board", function(env){
 
 	var $map = ac.import("map"),
         $canvas = ac.import("canvas"),
+        $tools = ac.import("tools"),
         $palette = ac.import("palette");
 
     var container = $("#board-panel"),
@@ -113,18 +114,31 @@ ac.export("board", function(env){
         return board;
     };
 
-    var updateMap = function(map, x, y, selection) {
+    var updateMap = function(map, orig_col, orig_row, selection) {
         var tsize = env.get("TILESIZE"),
-            matrix = selection.matrix;
-        getCurrentLayer().clear(x * tsize, y * tsize, selection.width, selection.height);
-        getCurrentLayer().draw(selection.image, 0, 0, x * tsize, y * tsize);
-        for(var i=0; i<matrix.length; i++){
-            for(var j=0; j<matrix[i].length; j++){
-                var cell = map.get(j+x, i+y) || {};
-                cell[current_layer_id] = matrix[i][j].id;
-                map.set(j+x, i+y, cell);
+            matrix = selection.matrix,
+            tool = $tools.getTool(),
+            current_layer = getCurrentLayer();
+
+        tool(map, orig_row, orig_col, selection).forEach(function(pos){
+            var col = pos.col,
+                row = pos.row,
+                x = col * tsize,
+                y = row * tsize;
+
+            // render the selected area
+            current_layer.clear(x, y, selection.width, selection.height);
+            current_layer.draw(selection.image, 0, 0, x, y);
+
+            // update the map grid with the new tile ids
+            for(var i=0; i<matrix.length; i++){
+                for(var j=0; j<matrix[i].length; j++){
+                    var cell = map.get(j+col, i+row) || {};
+                    cell[current_layer_id] = matrix[i][j];
+                    map.set(j+col, i+row, cell);
+                }
             }
-        }
+        });
     };
 
     var renderMap = function(map) {

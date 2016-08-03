@@ -5,8 +5,8 @@ ac.export("tools", function(env){
         map: {}
     };
 
-    var pen = function(map, row, col) {
-        return [[row, col]];
+    var pen = function(map, row, col, selection) {
+        return [{row:row, col:col}];
     };
 
     var setTool = function(func) {

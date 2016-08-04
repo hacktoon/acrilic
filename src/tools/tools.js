@@ -1,5 +1,7 @@
 ac.export("tools", function(env){
 
+    var $fill = ac.import("fill");
+
     var _self = {
         current: undefined,
         map: {}
@@ -8,7 +10,7 @@ ac.export("tools", function(env){
     var pen = function(map, row, col, selection) {
         return [{row:row, col:col}];
     };
-    
+
     var square = function(map, row, col, selection) {
         return [{row:row, col:col}];
     };

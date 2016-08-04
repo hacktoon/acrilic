@@ -128,12 +128,6 @@ ac.export("board", function(env){
 
             // render the selected area
             current_layer.clear(x, y, selection.width, selection.height);
-            if (tile.reset){
-                var cell = map.get(col, row) || {};
-                delete cell[current_layer_id];
-                map.set(col, row, cell);
-                return;
-            }
             current_layer.draw(selection.image, 0, 0, x, y);
 
             // update the map grid with the new tile ids

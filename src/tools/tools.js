@@ -8,13 +8,13 @@ ac.export("tools", function(env){
     var pen = function(map, row, col, selection) {
         return [{row:row, col:col}];
     };
-
-    var fill = function(map, row, col, selection) {
+    
+    var square = function(map, row, col, selection) {
         return [{row:row, col:col}];
     };
 
-    var eraser = function(map, row, col, selection) {
-        return [{row:row, col:col, reset: true}];
+    var fill = function(map, row, col, selection) {
+        return [{row:row, col:col}];
     };
 
     var setTool = function(func) {
@@ -28,8 +28,8 @@ ac.export("tools", function(env){
     var initTools = function() {
         _self.map = {
             pen: pen,
-            fill: fill,
-            eraser: eraser
+            square: square,
+            fill: fill
         };
     };
 

@@ -133,9 +133,9 @@ ac.export("board", function(env){
             // update the map grid with the new tile ids
             for(var i=0; i<matrix.length; i++){
                 for(var j=0; j<matrix[i].length; j++){
-                    var cell = map.get(j+col, i+row) || {};
+                    var cell = map.get(i+row, j+col) || {};
                     cell[current_layer_id] = matrix[i][j];
-                    map.set(j+col, i+row, cell);
+                    map.set(i+row, j+col, cell);
                 }
             }
         });
@@ -143,13 +143,13 @@ ac.export("board", function(env){
 
     var renderMap = function(map) {
         var tsize = env.get("TILESIZE");
-        for (var y = 0; y < map.height; y++) {
-            for (var x = 0; x < map.width; x++) {
-                var cell = map.get(x, y);
+        for (var row = 0; row < map.height; row++) {
+            for (var col = 0; col < map.width; col++) {
+                var cell = map.get(row, col);
                 for (var key in cell){
                     var tile = $palette.getTile(cell[key]);
                     if (! tile){ continue; }
-                    getLayer(key).draw(tile.getCanvas(), 0, 0, x * tsize, y * tsize);
+                    getLayer(key).draw(tile.getCanvas(), 0, 0, col * tsize, row * tsize);
                 }
             }
         }

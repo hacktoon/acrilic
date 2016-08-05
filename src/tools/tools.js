@@ -1,4 +1,5 @@
 ac.export("tools", function(env){
+    "use strict";
 
     var $fill = ac.import("fill");
 
@@ -16,7 +17,7 @@ ac.export("tools", function(env){
     };
 
     var fill = function(map, row, col, selection) {
-        return [{row:row, col:col}];
+        return $fill.execute(map, row, col, selection);
     };
 
     var setTool = function(func) {

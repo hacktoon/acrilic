@@ -10,29 +10,29 @@ ac.export("map", function(env){
             this.height = height;
 
             if (! grid){
-                for (var y = 0; y < height; y++) {
+                for (var row = 0; row < height; row++) {
                     this.grid.push([]);
-                    for (var x = 0; x < width; x++) {
-                        this.grid[y][x] = {};
+                    for (var col = 0; col < width; col++) {
+                        this.grid[row][col] = {};
                     }
                 }
             }
         }.bind(this))();
 
-        this.outOfRange = function(y, x) {
-            var x_limit = x < 0 || x >= this.width;
-            var y_limit = y < 0 || y >= this.height;
-            return x_limit || y_limit;
+        this.outOfRange = function(row, col) {
+            var col_limit = col < 0 || col >= this.width;
+            var row_limit = row < 0 || row >= this.height;
+            return col_limit || row_limit;
         };
 
-        this.set = function(x, y, value){
-            if(this.outOfRange(y, x)){ return; }
-            this.grid[y][x] = value;
+        this.set = function(row, col, value){
+            if(this.outOfRange(row, col)){ return; }
+            this.grid[row][col] = value;
         };
 
-        this.get = function(x, y){
-            if(this.outOfRange(y, x)){ return; }
-            return this.grid[y][x];
+        this.get = function(row, col){
+            if(this.outOfRange(row, col)){ return; }
+            return this.grid[row][col];
         };
 
         this.getData = function() {

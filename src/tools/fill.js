@@ -5,7 +5,7 @@ ac.export("fill", function(env){
         visited: []
     };
 
-    var get_adjacent_cells = function(map, row, col) {
+    var getAdjacentCells = function(map, row, col) {
         var valid_cells = [],
             cells = [
                 [row+1, col],
@@ -24,9 +24,14 @@ ac.export("fill", function(env){
         return valid_cells;
     };
 
+    var floodFill = function(map, row, col, original_color) {
+        
+    };
+
     var execute = function(map, row, col, selection) {
         var orig_tile_id = map.get(row, col);
-
+        _self.visited = [];
+        floodFill(map, row, col, orig_tile_id);
     };
 
     return {

@@ -71,7 +71,7 @@ ac.export("menu", function(env){
         initFileMenu();
         initToolsMenu();
         initLayersMenu();
-	};
+    };
 
     return {
         createMenu: createMenu

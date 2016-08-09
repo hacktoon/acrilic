@@ -10,8 +10,8 @@ hr { clear:both; }
 ul, li { list-style: none; }
 
 a, h2 a:hover, h3 a:hover {
-	text-decoration: none;
-	color: #158;
+    text-decoration: none;
+    color: #158;
 }
 a:hover { text-decoration: underline; }
 
@@ -20,14 +20,14 @@ p { margin: 15px 0; }
 p img { padding: 0; }
 
 button {
-	cursor: pointer;
-	outline: none;
+    cursor: pointer;
+    outline: none;
 }
 
 input {
-	border: 1px solid #CCC;
-	padding: 5px;
-	border-radius: 3px;
+    border: 1px solid #CCC;
+    padding: 5px;
+    border-radius: 3px;
 }
 
 .unselectable {
@@ -38,54 +38,54 @@ input {
 }
 
 .form-row {
-	padding: 5px 0;
+    padding: 5px 0;
 }
 
 .form-row label {
-	color: #FFF;
-	font-weight: bold;
-	font-size: 1.1em;
-	margin-right: 10px;
+    color: #FFF;
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-right: 10px;
 }
 
 
 
 #main-menu {
     height: 40px;
-	text-align: left;
-	background: #222;
+    text-align: left;
+    background: #222;
 }
 #main-menu ul {
-	float: left;
-	margin-top: 5px;
-	border-right: 1px solid #AAA;
-	padding: 0 5px;
+    float: left;
+    margin-top: 5px;
+    border-right: 1px solid #AAA;
+    padding: 0 5px;
 }
 
 #main-menu ul li {
-	float: left;
+    float: left;
 }
 
 #main-menu .btn-menu {
-	background: transparent;
-	border: none;
-	color: #FFF;
-	padding: 5px 10px;
-	height: 30px;
-	font-weight: bold;
+    background: transparent;
+    border: none;
+    color: #FFF;
+    padding: 5px 10px;
+    height: 30px;
+    font-weight: bold;
 }
 #main-menu .btn-menu:hover {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 #main-menu .btn-menu.active {
-	background: #CCC;
-	border-radius: 3px;
-	color: #222;
+    background: #CCC;
+    border-radius: 3px;
+    color: #222;
 }
 
 #editor-panel {
-	position: absolute;
+    position: absolute;
     top: 40px;
     right: 0;
     left: 0;
@@ -106,7 +106,7 @@ input {
 #palette-panel {
     overflow-y: scroll;
     position: relative;
-	width: 271px;
+    width: 271px;
     height: 60%;
 }
 
@@ -162,7 +162,7 @@ input {
 /* MAP ---------------------------  */
 #board-panel {
     background: #CCC;
-	position: absolute;
+    position: absolute;
     top: 0;
     left: 271px;
     right: 0;
@@ -191,20 +191,20 @@ input {
 #board-panel #bg-layer { z-index: 1; }
 
 .selection-cursor {
-	position: absolute;
-	border: dotted 2px #333;
+    position: absolute;
+    border: dotted 2px #333;
     box-sizing: border-box;
-	z-index: 10;
+    z-index: 10;
 }
 
 
 /* DIALOG ---------------------------  */
 #dialog-overlay {
-	background-color: rgba(0, 0, 0, 0.5);
-	bottom: 0;
-	display: none;
-	position: fixed;
-	top: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    bottom: 0;
+    display: none;
+    position: fixed;
+    top: 0;
     left: 0;
     right: 0;
     text-align: center;
@@ -212,48 +212,48 @@ input {
 }
 
 .dialog-container {
-	background: #555;
-	border-radius: 3px;
-	box-shadow: 1px 1px 1px rgba(0,0,0,0.5);
-	min-width: 400px;
-	margin-top: 10%;
-	display: inline-block;
-	z-index: 101;
-	overflow: hidden;
+    background: #555;
+    border-radius: 3px;
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    min-width: 400px;
+    margin-top: 10%;
+    display: inline-block;
+    z-index: 101;
+    overflow: hidden;
 }
 
 .dialog-titlebar {
-	position: relative;
-	background: #222;
-	text-align: left;
+    position: relative;
+    background: #222;
+    text-align: left;
     min-height: 40px;
 }
 
 .dialog-titlebar .title {
-	color: #FFF;
-	font-size: 1.3em;
-	font-weight: bold;
-	line-height: 40px;
-	padding-left: 1em;
-	margin: 0;
+    color: #FFF;
+    font-size: 1.3em;
+    font-weight: bold;
+    line-height: 40px;
+    padding-left: 1em;
+    margin: 0;
 }
 
 .dialog-titlebar .btn-close {
-	border: 0;
-	background: transparent;
-	position: absolute;
-	right: 10px;
-	top: 10px;
-	display: block;
-	width: 20px;
-	height: 20px;
+    border: 0;
+    background: transparent;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    display: block;
+    width: 20px;
+    height: 20px;
 }
 .dialog-titlebar .svg-icon { fill: #FFF; }
 
 .dialog-content {
     font-size: 1.1em;
     padding: 20px;
-	text-align: left;
+    text-align: left;
 }
 
 .dialog-content p {
@@ -262,19 +262,19 @@ input {
 }
 
 .dialog-button-panel {
-	background: #444;
-	padding: 10px;
-	text-align: right;
+    background: #444;
+    padding: 10px;
+    text-align: right;
 }
 
 .dialog-button-panel button {
-	border: 1px solid #555;
-	background: #333;
-	border-radius: 3px;
-	padding: 5px 10px;
-	color: #FFF;
-	font-size: 1.2em;
-	margin-left: 10px;
+    border: 1px solid #555;
+    background: #333;
+    border-radius: 3px;
+    padding: 5px 10px;
+    color: #FFF;
+    font-size: 1.2em;
+    margin-left: 10px;
 }
 
 .dialog-button-panel button:hover {

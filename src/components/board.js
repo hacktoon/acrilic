@@ -121,12 +121,12 @@ ac.export("board", function(env){
         });
     };*/
 
-	var createBoard = function(map){
+    var createBoard = function(map){
         var board = createElements(map);
         _self.currentMap = map;
         registerEvents(board, updateMap);
         _self.container.html(board);
-	};
+    };
 
     return {
         createBoard: createBoard,

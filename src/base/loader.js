@@ -13,11 +13,11 @@ ac.export("loader", function(env){
     var loaders = {
         tileset: function(item){
             var image = new Image();
-			image.onload = function(){
-				item.image = image;
+            image.onload = function(){
+                item.image = image;
                 registerAsset(item);
-			};
-			image.src = item.src;
+            };
+            image.src = item.src;
         }
     };
 

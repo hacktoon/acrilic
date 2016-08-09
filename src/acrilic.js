@@ -1,12 +1,12 @@
 var ac = (function(){
-	"use strict";
+    "use strict";
 
     var _self = {
-		log: console.log.bind(console),
-		error: console.error.bind(console)
-	};
+        log: console.log.bind(console),
+        error: console.error.bind(console)
+    };
 
-	var modules = {};
+    var modules = {};
 
     // global environment
     var env = (function(){
@@ -27,15 +27,15 @@ var ac = (function(){
         };
     })();
 
-	_self.keys = {
+    _self.keys = {
         ESC: 27
-	};
+    };
 
-	_self.export = function(name, func){
-		modules[name] = func;  // store the function reference
-	};
+    _self.export = function(name, func){
+        modules[name] = func;  // store the function reference
+    };
 
-	_self.import = function(){
+    _self.import = function(){
     for (var i=0; i<arguments.length; i++){
       var name = arguments[i];
       if (! modules.hasOwnProperty(name)){
@@ -47,23 +47,23 @@ var ac = (function(){
         this[name] = modules[name](env);
       }
     }
-	};
+    };
 
-	_self.Class = function(methods) {
-		var _class = function() {
-			this.init.apply(this, arguments);
-		};
+    _self.Class = function(methods) {
+        var _class = function() {
+            this.init.apply(this, arguments);
+        };
 
-		for (var property in methods) {
-		   _class.prototype[property] = methods[property];
-		}
+        for (var property in methods) {
+           _class.prototype[property] = methods[property];
+        }
 
-		if (! _class.prototype.init) {
-			_class.prototype.init = function(){};
-		}
+        if (! _class.prototype.init) {
+            _class.prototype.init = function(){};
+        }
 
-		return _class;
-	};
+        return _class;
+    };
 
-	return _self;
+    return _self;
 })();

@@ -1,11 +1,7 @@
 (function() {
 	"use strict";
 
-    ac.import("loader");
-    ac.import("board");
-    ac.import("menu");
-    ac.import("palette");
-    ac.import("tileset");
+    ac.import("loader", "board", "menu", "palette", "tileset");
 
     var assetsMap = [
         {

@@ -2,8 +2,7 @@
 ac.export("tileset", function(env){
     "use strict";
 
-    ac.import("utils");
-    ac.import("canvas");
+    ac.import("utils", "canvas");
 
     var Tileset = ac.Class({
         init: function(rows, columns){

@@ -35,23 +35,26 @@ var ac = (function(){
 		modules[name] = func;  // store the function reference
 	};
 
-	_self.import = function(name){
-		if (! modules.hasOwnProperty(name)){
-			this.error("Module '" + name + "' doesn't exist.");
-			return;
-		}
-		if(this[name] === undefined){
-			// execute the function and receive an object
-			this[name] = modules[name](env);
-		}
+	_self.import = function(){
+    for (var i=0; i<arguments.length; i++){
+      var name = arguments[i];
+      if (! modules.hasOwnProperty(name)){
+        this.error("Module '" + name + "' doesn't exist.");
+        return;
+      }
+      if(this[name] === undefined){
+        // execute the function and receive an object
+        this[name] = modules[name](env);
+      }
+    }
 	};
 
-	_self.Class = function(methods) {   
-		var _class = function() {    
-			this.init.apply(this, arguments);          
-		};  
+	_self.Class = function(methods) {
+		var _class = function() {
+			this.init.apply(this, arguments);
+		};
 
-		for (var property in methods) { 
+		for (var property in methods) {
 		   _class.prototype[property] = methods[property];
 		}
 
@@ -59,7 +62,7 @@ var ac = (function(){
 			_class.prototype.init = function(){};
 		}
 
-		return _class;    
+		return _class;
 	};
 
 	return _self;

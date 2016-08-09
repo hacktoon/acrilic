@@ -69,13 +69,9 @@ ac.export("board", function(env){
 
     var createElements = function(map) {
         var tsize = env.get("TILESIZE"),
-            board = $('<div/>').addClass('board'),
-            layers = ac.utils.filter(map.layers, function(layer){
-                return layer.getElement();
-            });
+            board = $('<div/>').addClass('board');
 
-        board.append(layers)
-            .append(createCursor(tsize))
+        board.append(createCursor(tsize))
             .width(tsize * map.rows)
             .height(tsize * map.cols);
 

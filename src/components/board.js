@@ -1,8 +1,8 @@
 
 ac.export("board", function(env){
-	"use strict";
+    "use strict";
 
-	var $utils = ac.import("utils");
+    ac.import("utils");
 
     var _self = {
         container: $("#board-panel"),
@@ -70,7 +70,7 @@ ac.export("board", function(env){
     var createElements = function(map) {
         var tsize = env.get("TILESIZE"),
             board = $('<div/>').addClass('board'),
-            layers = $utils.filter(map.layers, function(layer){
+            layers = ac.utils.filter(map.layers, function(layer){
                 return layer.getElement();
             });
 
@@ -86,7 +86,7 @@ ac.export("board", function(env){
         _self.currentLayer = id;
     };
 
-    var renderMap = function() {
+    /*var renderMap = function() {
         for (var row = 0; row < this.rows; row++) {
             for (var col = 0; col < this.cols; col++) {
                 var tile_id = layer.get(row, col);
@@ -123,7 +123,7 @@ ac.export("board", function(env){
                 }
             }
         });
-    };
+    };*/
 
 	var createBoard = function(map){
         var board = createElements(map);

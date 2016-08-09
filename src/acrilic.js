@@ -1,12 +1,15 @@
-
 var ac = (function(){
 	"use strict";
 
-    // loaded modules
-    var _modules = {};
+    var _self = {
+		log: console.log.bind(console),
+		error: console.error.bind(console)
+	};
+
+	var modules = {};
 
     // global environment
-    var _env = (function(){
+    var env = (function(){
         var registry = {};
         return {
             set: function(key, value){
@@ -24,32 +27,40 @@ var ac = (function(){
         };
     })();
 
-    return {
-        ESC_KEY: 27,
+	_self.keys = {
+        ESC: 27
+	};
 
-        log: console.log.bind(console),
-        error: console.error.bind(console),
+	_self.export = function(name, func){
+		modules[name] = func;  // store the function reference
+	};
 
-        export: function(name, function_ref){
-            _modules[name] = {
-                func: function_ref,
-                ref: undefined  // ensures execution in runtime only
-            };
-		},
-
-        import: function(name){
-            var mod;
-            if (! _modules.hasOwnProperty(name)){
-                this.error("Module " + name + " doesn't exist.");
-                return;
-            }
-            mod = _modules[name];
-            if(mod.ref === undefined){
-                // execute the function and receive an object
-                mod.ref = mod.func(_env);
-                delete mod.func;
-            }
-            return mod.ref;
+	_self.import = function(name){
+		if (! modules.hasOwnProperty(name)){
+			this.error("Module '" + name + "' doesn't exist.");
+			return;
 		}
-    };
+		if(this[name] === undefined){
+			// execute the function and receive an object
+			this[name] = modules[name](env);
+		}
+	};
+
+	_self.Class = function(methods) {   
+		var _class = function() {    
+			this.init.apply(this, arguments);          
+		};  
+
+		for (var property in methods) { 
+		   _class.prototype[property] = methods[property];
+		}
+
+		if (! _class.prototype.init) {
+			_class.prototype.init = function(){};
+		}
+
+		return _class;    
+	};
+
+	return _self;
 })();

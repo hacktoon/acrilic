@@ -9,19 +9,19 @@ ac.export("loader", function(env){
             tileset: {}
         };
 
-        
+
     var loaders = {
         tileset: function(item){
             var image = new Image();
 			image.onload = function(){
 				item.image = image;
-                register_asset(item);
+                registerAsset(item);
 			};
 			image.src = item.src;
         }
     };
 
-    var register_asset = function(item) {
+    var registerAsset = function(item) {
         assets[item.type][item.id] = item;
 
         items_loaded++;
@@ -30,7 +30,7 @@ ac.export("loader", function(env){
         }
     };
 
-    var load_assets = function(items, callback){
+    var loadAssets = function(items, callback){
         total_items = items.length;
         ready_callback = callback;
 
@@ -40,12 +40,12 @@ ac.export("loader", function(env){
         }
     };
 
-    var get_asset = function(type, id){
+    var getAsset = function(type, id){
         return assets[type][id];
     };
 
     return {
-        load_assets: load_assets,
-        get_asset: get_asset
+        loadAssets: loadAssets,
+        getAsset: getAsset
     };
 });

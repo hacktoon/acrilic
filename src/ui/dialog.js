@@ -88,20 +88,6 @@ ac.export("dialog", function(env){
         dialog.open();
     };
 
-    var createConfirmDialog = function(message, action){
-        /*var self = this;
-        this.open('', '<p>' + message + '</p>', [
-            {title: 'OK', action: function(){
-                action();
-                self.close();
-            }},
-            {title: 'Cancel', action: function(){
-                self.close();
-            }}
-        ]);*/
-    };
-
-
     return {
         openNewMapDialog: openNewMapDialog,
         openImportDialog: openImportDialog,

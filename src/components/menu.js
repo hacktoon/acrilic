@@ -2,10 +2,10 @@
 ac.export("menu", function(env){
     "use strict";
 
-    var $dialog = ac.import("dialog"),
-        $tools = ac.import("tools"),
-        $map = ac.import("map"),
-        $board = ac.import("board");
+    ac.import("dialog");
+    ac.import("tools");
+    ac.import("map");
+    ac.import("board");
 
     var registerSwitchButton = function(selector, action) {
         var activeClass = 'active',
@@ -20,41 +20,41 @@ ac.export("menu", function(env){
     };
 
     var initToolsMenu = function() {
-        $tools.initTools();
+        ac.tools.initTools();
         registerSwitchButton('.btn-tool', function(value) {
-            $tools.setTool(value);
+            ac.tools.setTool(value);
         });
     };
 
     var initLayersMenu = function() {
         registerSwitchButton('.btn-layer', function(value) {
-            $board.activateLayer(value);
+            ac.board.activateLayer(value);
         });
     };
 
     var initFileMenu = function() {
         $('#btn-file-new').on('click', function(){
-            $dialog.openNewMapDialog(function(name, rows, cols){
-                var map = $map.createMap(name, rows, cols);
-                $board.createBoard(map);
+            ac.dialog.openNewMapDialog(function(name, rows, cols){
+                var map = ac.map.createMap(name, rows, cols);
+                ac.board.createBoard(map);
                 env.set('CURRENT_MAP', map);
             });
         });
-        var map = $map.importMap({"name":"new-map","cols":10,"rows":10,"tilesize":64,"layers":[[[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2]],[[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2]],[[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2]]]});
-        $board.createBoard(map);
+        var map = ac.map.importMap({"name":"new-map","cols":10,"rows":10,"tilesize":64,"layers":[[[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2]],[[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2]],[[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2],[2,2,2,2,2,2,2,2,2,2]]]});
+        ac.board.createBoard(map);
         map.render();
         env.set('CURRENT_MAP', map);
 
         $('#btn-file-import').on('click', function(){
-            $dialog.openImportDialog(function(content){
+            ac.dialog.openImportDialog(function(content){
                 try {
                     var mapData = JSON.parse(content);
                 } catch (err) {
                     alert("Not a valid JSON!");
                     return;
                 }
-                var map = $map.importMap(mapData);
-                $board.createBoard(mapData);
+                var map = ac.map.importMap(mapData);
+                ac.board.createBoard(mapData);
                 map.render();
                 env.set('CURRENT_MAP', map);
             });
@@ -65,8 +65,8 @@ ac.export("menu", function(env){
             if (! map){
                 return;
             }
-            var json = JSON.stringify($map.exportMap(map));
-            $dialog.openExportDialog(json);
+            var json = JSON.stringify(ac.map.exportMap(map));
+            ac.dialog.openExportDialog(json);
         });
     };
 

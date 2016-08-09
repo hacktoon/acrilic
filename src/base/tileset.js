@@ -2,44 +2,44 @@
 ac.export("tileset", function(env){
     "use strict";
 
-    var $utils = ac.import("utils"),
-        $canvas = ac.import("canvas");
+    ac.import("utils");
+    ac.import("canvas");
 
-    function Tileset(rows, columns){
-        (function init(){
+    var Tileset = ac.Class({
+        init: function(rows, columns){
             this.tile_id = 1;
             this.rows = rows;
             this.columns = columns;
-            this.tile_grid = $utils.build2DArray(rows, columns);
+            this.tile_grid = ac.utils.build2DArray(rows, columns);
             this.tile_map = {};
-        }.bind(this))();
+        },
 
-        this.createTile = function(row, col, canvas) {
+        createTile: function(row, col, canvas) {
             var tile = new Tile(this.tile_id, canvas);
             this.tile_map[this.tile_id] = tile;
             this.tile_grid[row][col] = tile;
             this.tile_id++;
-        };
+        },
 
-        this.getTileById = function(id) {
+        getTileById: function(id) {
             return this.tile_map[id];
-        };
+        },
 
-        this.getTileByPosition = function(row, col) {
+        getTileByPosition: function(row, col) {
             return this.tile_grid[row][col];
-        };
-    };
+        }
+    });
 
-    function Tile(id, canvas){
-        (function init(){
+    var Tile = ac.Class({
+        init: function(id, canvas){
             this.id = id;
             this.canvas = canvas;
-        }.bind(this))();
+        },
 
-        this.getCanvas = function() {
+        getCanvas: function() {
             return this.canvas.elem.get(0);
-        };
-    };
+        }
+    });
 
     var createTileset = function(tileset){
         var image = tileset.image,
@@ -52,7 +52,7 @@ ac.export("tileset", function(env){
 
         for (var row = 0; row < rows; row++) {
             for (var col = 0; col < columns; col++) {
-                var canvas = $canvas.createCanvas(tilesize, tilesize);
+                var canvas = ac.canvas.createCanvas(tilesize, tilesize);
                 canvas.draw(image, col*tilesize, row*tilesize, 0, 0);
                 tileset.createTile(row, col, canvas);
             }

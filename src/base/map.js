@@ -2,35 +2,35 @@
 ac.export("map", function(env){
     "use strict";
 
-    var $utils = ac.import("utils");
+    ac.import("utils");
 
-    var Map = function(name, rows, cols){
-        (function(){
+    var Map = ac.Class({
+        init: function(name, rows, cols){
             this.name = name;
             this.rows = rows;
             this.cols = cols;
             this.layers = [
-                $utils.build2DArray(rows, cols, 0),  // BG Layer
-                $utils.build2DArray(rows, cols, 0),  // FG Layer
-                $utils.build2DArray(rows, cols, {})  // Event Layer
+                ac.utils.build2DArray(rows, cols, 0),  // BG Layer
+                ac.utils.build2DArray(rows, cols, 0),  // FG Layer
+                ac.utils.build2DArray(rows, cols, {})  // Event Layer
             ];
-        }).apply(this);
+        },
 
-        this.set = function(layer_index, row, col, value){
+        set: function(layer_index, row, col, value){
             this.layers[layer_index][row][col] = value;
-        };
+        },
 
-        this.get = function(layer_index, row, col){
+        get: function(layer_index, row, col){
             return this.layers[layer_index][row][col];
-        };
+        },
 
-        this.inRange = function(row, col) {
+        inRange: function(row, col) {
             var col_range = col >= 0 || col < this.cols,
                 row_range = row >= 0 || row < this.rows;
             return col_range && row_range;
-        };
+        },
 
-        this.update = function(row, col, region) {
+        update: function(row, col, region) {
             var matrix = selection.matrix,
                 tool = $tools.getTool();
 
@@ -47,8 +47,8 @@ ac.export("map", function(env){
                     }
                 }
             });
-        };
-    };
+        }
+    });
 
     var createMap = function(name, rows, cols){
         return new Map(name, rows, cols);

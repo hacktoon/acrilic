@@ -1,13 +1,13 @@
 (function() {
 	"use strict";
 
-    var $loader = ac.import("loader"),
-        $board = ac.import("board"),
-        $menu = ac.import("menu"),
-        $palette = ac.import("palette"),
-        $tileset = ac.import("tileset");
+    ac.import("loader");
+    ac.import("board");
+    ac.import("menu");
+    ac.import("palette");
+    ac.import("tileset");
 
-    var assets_map = [
+    var assetsMap = [
         {
             id: "default",
             type: "tileset",
@@ -17,11 +17,11 @@
     ];
 
     var init = function() {
-        var default_tileset_data = $loader.get_asset("tileset", "default");
-        var tileset = $tileset.createTileset(default_tileset_data);
-        $palette.createPalette(tileset);
-        $menu.createMenu();
+        var default_tileset_data = ac.loader.getAsset("tileset", "default");
+        var tileset = ac.tileset.createTileset(default_tileset_data);
+        ac.palette.createPalette(tileset);
+        ac.menu.createMenu();
     };
 
-    $loader.load_assets(assets_map, init);
+    ac.loader.loadAssets(assetsMap, init);
 })();

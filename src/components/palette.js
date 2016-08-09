@@ -2,8 +2,7 @@
 ac.export("palette", function(env){
     "use strict";
 
-    var $canvas = ac.import("canvas"),
-        $tileset = ac.import("tileset");
+    ac.import("canvas");
 
     var doc = $(document),
         _self = {
@@ -33,7 +32,7 @@ ac.export("palette", function(env){
         var width = (x1 - x0 + 1) * tsize,
             height = (y1 - y0 + 1) * tsize;
 
-        image = $canvas.createCanvas(width, height);
+        image = ac.canvas.createCanvas(width, height);
 
         for(var y=y0, i=0; y<=y1; y++, i++){
             matrix.push([]);
@@ -69,7 +68,7 @@ ac.export("palette", function(env){
 
         _self.columns = tileset.columns;
         _self.rows = tileset.rows;
-        _self.canvas = $canvas.createCanvas(tsize*_self.columns, tsize*_self.rows);
+        _self.canvas = ac.canvas.createCanvas(tsize*_self.columns, tsize*_self.rows);
 
         for(var row = 0; row < _self.rows; row++){
             for(var col = 0; col < _self.columns; col++){

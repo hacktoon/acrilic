@@ -2,53 +2,22 @@
 ac.export("board", function(env){
 	"use strict";
 
-	var $map = ac.import("map"),
-        $canvas = ac.import("canvas"),
-        $tools = ac.import("tools"),
-        $palette = ac.import("palette");
+	var $utils = ac.import("utils");
 
-    var container = $("#board-panel"),
-        current_layer_id = 'bg',
-        layers = {
-            bg: undefined,
-            fg: undefined,
-            evt: undefined
-        },
-        cursor_class = "selection-cursor";
-
-    var getCurrentLayer = function() {
-        return layers[current_layer_id];
-    };
-
-    var getLayer = function(id) {
-        return layers[id];
-    };
-
-    var activateLayer = function(id){
-        var current_layer = getCurrentLayer();
-        current_layer_id = id;
-        if (! current_layer){
-            return;
-        }
-        current_layer.elem.removeClass('active');
-        current_layer = getCurrentLayer();
-        current_layer.elem.addClass('active');
-    };
-
-    var createCursor = function(size) {
-        var cursor = $("<div/>")
-            .addClass(cursor_class)
-            .css({width: size, height: size});
-        return cursor;
+    var _self = {
+        container: $("#board-panel"),
+        cursor: undefined,
+        currentMap: undefined,
+        currentLayer: 0
     };
 
     var getRelativeMousePosition = function(event, tilesize) {
         //deslocamento em relacao à tela
         var doc = $(document);
-        var x_offset = container.offset().left,
-            y_offset = container.offset().top,
-            x_scroll = container.scrollLeft() + doc.scrollLeft(),
-            y_scroll = container.scrollTop() + doc.scrollTop();
+        var x_offset = _self.container.offset().left,
+            y_offset = _self.container.offset().top,
+            x_scroll = _self.container.scrollLeft() + doc.scrollLeft(),
+            y_scroll = _self.container.scrollTop() + doc.scrollTop();
         //posição relativa do mouse
         var rx = event.pageX - x_offset + x_scroll,
             ry = event.pageY - y_offset + y_scroll;
@@ -61,29 +30,29 @@ ac.export("board", function(env){
     var registerEvents = function(board, action){
         var tilesize = env.get("TILESIZE"),
             mouseDown = false,
-            x = 0,
-            y = 0;
+            col = 0,
+            row = 0;
 
         board.on('mousemove', function(event){
             var pos = getRelativeMousePosition(event, tilesize);
 
-            x = pos.x;
-            y = pos.y;
+            row = pos.y;
+            col = pos.x;
 
-            board.find("."+cursor_class).css({
-                transform: "translate(" + (x * tilesize) + "px, " + (y * tilesize) + "px)"
+            _self.cursor.css({
+                transform: "translate(" + (col * tilesize) + "px, " + (row * tilesize) + "px)"
             });
 
             // Allows painting while dragging
             if(mouseDown){
-                action(x, y);
+                action(row, col);
             }
         });
 
         board.on('mousedown', function(e){
             e.preventDefault();
             mouseDown = true;
-            action(x, y);
+            action(row, col);
         });
 
         $(document).on('mouseup', function(){
@@ -91,34 +60,49 @@ ac.export("board", function(env){
         });
     };
 
-    var createLayer = function(board, id, width, height) {
-        var layer = $canvas.createCanvas(width, height);
-        layer.elem.attr('id', id).addClass('layer');
-        board.append(layer.elem);
-        return layer;
+    var createCursor = function(size) {
+        _self.cursor = $("<div/>")
+            .addClass("selection-cursor")
+            .css({width: size, height: size});
+        return _self.cursor;
     };
 
-    var createElements = function(h_tiles, v_tiles) {
-        var tilesize = env.get("TILESIZE"),
+    var createElements = function(map) {
+        var tsize = env.get("TILESIZE"),
             board = $('<div/>').addClass('board'),
-            width = tilesize * h_tiles,
-            height = tilesize * v_tiles;
+            layers = $utils.filter(map.layers, function(layer){
+                return layer.getElement();
+            });
 
-        layers.evt = createLayer(board, 'evt-layer', width, height),
-        layers.fg = createLayer(board, 'fg-layer', width, height),
-        layers.bg = createLayer(board, 'bg-layer', width, height);
+        board.append(layers)
+            .append(createCursor(tsize))
+            .width(tsize * map.rows)
+            .height(tsize * map.cols);
 
-        activateLayer('bg');
-
-        board.append(createCursor(tilesize)).width(width).height(height);
         return board;
     };
 
-    var updateMap = function(map, orig_col, orig_row, selection) {
+    var activateLayer = function(id){
+        _self.currentLayer = id;
+    };
+
+    var renderMap = function() {
+        for (var row = 0; row < this.rows; row++) {
+            for (var col = 0; col < this.cols; col++) {
+                var tile_id = layer.get(row, col);
+                var tile = $palette.getTile(tile_id);
+                if (! tile){ return; }
+                layer.draw(tile.getCanvas(), row, col);
+            }
+        }
+    };
+
+    var updateMap = function(row, col) {
         var tsize = env.get("TILESIZE"),
-            matrix = selection.matrix,
             tool = $tools.getTool(),
-            current_layer = getCurrentLayer();
+            map = _self.currentMap,
+            selection = $palette.getSelection(),
+            matrix = selection.matrix;
 
         tool(map, orig_row, orig_col, selection).forEach(function(tile){
             var col = tile.col,
@@ -128,7 +112,7 @@ ac.export("board", function(env){
 
             // render the selected area
             current_layer.clear(x, y, selection.width, selection.height);
-            current_layer.draw(selection.image, 0, 0, x, y);
+            map.draw(selection.image, 0, 0, x, y);
 
             // update the map grid with the new tile ids
             for(var i=0; i<matrix.length; i++){
@@ -141,31 +125,15 @@ ac.export("board", function(env){
         });
     };
 
-    var renderMap = function(map) {
-        var tsize = env.get("TILESIZE");
-        for (var row = 0; row < map.height; row++) {
-            for (var col = 0; col < map.width; col++) {
-                var cell = map.get(row, col);
-                for (var key in cell){
-                    var tile = $palette.getTile(cell[key]);
-                    if (! tile){ continue; }
-                    getLayer(key).draw(tile.getCanvas(), 0, 0, col * tsize, row * tsize);
-                }
-            }
-        }
-    };
-
-	var createBoard = function(map, h_tiles, v_tiles){
-        var board = createElements(h_tiles, v_tiles);
-        registerEvents(board, function(x, y) {
-            updateMap(map, x, y, $palette.getSelection());
-        });
-        container.html(board);
+	var createBoard = function(map){
+        var board = createElements(map);
+        _self.currentMap = map;
+        registerEvents(board, updateMap);
+        _self.container.html(board);
 	};
 
     return {
         createBoard: createBoard,
-        renderMap: renderMap,
         activateLayer: activateLayer
     };
 });

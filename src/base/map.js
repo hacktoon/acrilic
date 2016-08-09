@@ -2,60 +2,79 @@
 ac.export("map", function(env){
     "use strict";
 
-    var Map = function(name, width, height, grid){
-        (function(){
-            this.grid = grid || [];
-            this.name = name;
-            this.width = width;
-            this.height = height;
+    var $utils = ac.import("utils");
 
-            if (! grid){
-                for (var row = 0; row < height; row++) {
-                    this.grid.push([]);
-                    for (var col = 0; col < width; col++) {
-                        this.grid[row][col] = {};
+    var Map = function(name, rows, cols){
+        (function(){
+            this.name = name;
+            this.rows = rows;
+            this.cols = cols;
+            this.layers = [
+                $utils.build2DArray(rows, cols, 0),  // BG Layer
+                $utils.build2DArray(rows, cols, 0),  // FG Layer
+                $utils.build2DArray(rows, cols, {})  // Event Layer
+            ];
+        }).apply(this);
+
+        this.set = function(layer_index, row, col, value){
+            this.layers[layer_index][row][col] = value;
+        };
+
+        this.get = function(layer_index, row, col){
+            return this.layers[layer_index][row][col];
+        };
+
+        this.inRange = function(row, col) {
+            var col_range = col >= 0 || col < this.cols,
+                row_range = row >= 0 || row < this.rows;
+            return col_range && row_range;
+        };
+
+        this.update = function(row, col, region) {
+            var matrix = selection.matrix,
+                tool = $tools.getTool();
+
+            tool(map, orig_row, orig_col, selection).forEach(function(tile){
+                var col = tile.col,
+                    row = tile.row;
+
+                // update the map grid with the new tile ids
+                for(var i=0; i<matrix.length; i++){
+                    for(var j=0; j<matrix[i].length; j++){
+                        var cell = map.get(i+row, j+col) || {};
+                        cell[current_layer_id] = matrix[i][j];
+                        map.set(i+row, j+col, cell);
                     }
                 }
-            }
-        }.bind(this))();
-
-        this.outOfRange = function(row, col) {
-            var col_limit = col < 0 || col >= this.width;
-            var row_limit = row < 0 || row >= this.height;
-            return col_limit || row_limit;
-        };
-
-        this.set = function(row, col, value){
-            if(this.outOfRange(row, col)){ return; }
-            this.grid[row][col] = value;
-        };
-
-        this.get = function(row, col){
-            if(this.outOfRange(row, col)){ return; }
-            return this.grid[row][col];
-        };
-
-        this.getData = function() {
-            return {
-                name: this.name,
-                width: this.width,
-                height: this.height,
-                tilesize: env.get("TILESIZE"),
-                grid: this.grid
-            };
+            });
         };
     };
 
-    var createMap = function(name, w, h){
-        return new Map(name, w, h);
+    var createMap = function(name, rows, cols){
+        return new Map(name, rows, cols);
     };
 
-    var loadMap = function(obj){
-        return new Map(obj.name, obj.width, obj.height, obj.grid);
+    var importMap = function(mapData) {
+        var map = new Map(mapData.name, mapData.rows, mapData.cols);
+        mapData.layers.forEach(function(layer, i) {
+            map.layers[i] = layer;
+        });
+        return map;
+    };
+
+    var exportMap = function(map) {
+        return {
+            name: map.name,
+            cols: map.cols,
+            rows: map.rows,
+            tilesize: env.get("TILESIZE"),
+            layers: map.layers
+        };
     };
 
     return {
-        createMap: createMap,
-        loadMap: loadMap
+        exportMap: exportMap,
+        importMap: importMap,
+        createMap: createMap
     };
 });

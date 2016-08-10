@@ -1,15 +1,25 @@
 ac.export("utils", function(env){
     "use strict";
 
-    var build2DArray = function(rows, cols, default_value){
+    var build2DArray = function(rows, cols, defaultValue){
         var arr = [];
         for (var row = 0; row < rows; row++) {
             arr.push([]);
             for (var col = 0; col < cols; col++) {
-                arr[row].push(default_value);
+                arr[row].push(defaultValue);
             }
         }
         return arr;
+    };
+
+    var flatten2DArray = function(arr){
+        var flatArr = [];
+        for (var row = 0; row < arr.length; row++) {
+            for (var col = 0; col < arr[row].length; col++) {
+                flatArr.push(arr[row][col]);
+            }
+        }
+        return flatArr;
     };
 
     var getRelativeMousePosition = function(event, container) {
@@ -44,6 +54,7 @@ ac.export("utils", function(env){
     return {
         getRelativeMousePosition: getRelativeMousePosition,
         build2DArray: build2DArray,
+        flatten2DArray: flatten2DArray,
         filter: filter,
         map: map
     };

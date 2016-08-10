@@ -3,6 +3,10 @@ ac.export("layer", function(env){
 
     ac.import("canvas");
 
+    var _self = {
+        currentIndex: 0
+    };
+
     var Layer = ac.Class({
         init: function(id, width, height){
             this.id = id;

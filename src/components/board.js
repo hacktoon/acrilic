@@ -2,13 +2,12 @@
 ac.export("board", function(env){
     "use strict";
 
-    ac.import("utils");
+    ac.import("utils", "map", "layer");
 
     var _self = {
         container: $("#board-panel"),
         cursor: undefined,
-        currentMap: undefined,
-        currentLayer: 0
+        currentMap: undefined
     };
 
     var registerEvents = function(board, action){
@@ -60,10 +59,6 @@ ac.export("board", function(env){
             .height(tsize * map.cols);
 
         return board;
-    };
-
-    var activateLayer = function(id){
-        _self.currentLayer = id;
     };
 
     /*var renderMap = function() {

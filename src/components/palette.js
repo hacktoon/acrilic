@@ -2,7 +2,7 @@
 ac.export("palette", function(env){
     "use strict";
 
-    ac.import("canvas");
+    ac.import("canvas", "utils");
 
     var doc = $(document),
         _self = {
@@ -79,23 +79,9 @@ ac.export("palette", function(env){
         _self.container.append(_self.canvas.elem);
     };
 
-    var getRelativeMousePosition = function(event) {
-        //calc screen offset
-        var tsize = env.get("TILESIZE")
-        var x_offset = _self.container.offset().left,
-            y_offset = _self.container.offset().top,
-            y_scroll = _self.container.scrollTop() + doc.scrollTop();
-        //relative position of mouse
-        var rx = event.pageX - x_offset,
-            ry = event.pageY - y_offset + y_scroll;
-        if (rx < 0) { rx = 0; }
-        if (ry < 0) { ry = 0; }
-        return { x: Math.floor(rx / tsize), y: Math.floor(ry / tsize)};
-    };
-
     var updateSelector = function(event, x0, y0) {
         var tsize = env.get("TILESIZE"), rx0, rx1, ry0, ry1;
-        var pos = getRelativeMousePosition(event);
+        var pos = ac.utils.getRelativeMousePosition(event, _self.container);
         rx0 = Math.min(x0, pos.x);
         ry0 = Math.min(y0, pos.y);
         rx1 = Math.max(x0, pos.x);
@@ -117,7 +103,7 @@ ac.export("palette", function(env){
             y0 = 0;
 
         _self.overlay.on("mousedown", function(event){
-            var pos = getRelativeMousePosition(event);
+            var pos = ac.utils.getRelativeMousePosition(event, _self.container);
             x0 = pos.x;
             y0 = pos.y;
             dragging = true;

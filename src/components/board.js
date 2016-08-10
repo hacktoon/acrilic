@@ -11,22 +11,6 @@ ac.export("board", function(env){
         currentLayer: 0
     };
 
-    var getRelativeMousePosition = function(event, tilesize) {
-        //deslocamento em relacao à tela
-        var doc = $(document);
-        var x_offset = _self.container.offset().left,
-            y_offset = _self.container.offset().top,
-            x_scroll = _self.container.scrollLeft() + doc.scrollLeft(),
-            y_scroll = _self.container.scrollTop() + doc.scrollTop();
-        //posição relativa do mouse
-        var rx = event.pageX - x_offset + x_scroll,
-            ry = event.pageY - y_offset + y_scroll;
-
-        rx = (rx < 0) ? 0 : rx;
-        ry = (ry < 0) ? 0 : ry;
-        return {x: Math.floor(rx / tilesize), y: Math.floor(ry / tilesize)};
-    };
-
     var registerEvents = function(board, action){
         var tilesize = env.get("TILESIZE"),
             mouseDown = false,
@@ -34,7 +18,7 @@ ac.export("board", function(env){
             row = 0;
 
         board.on('mousemove', function(event){
-            var pos = getRelativeMousePosition(event, tilesize);
+            var pos = ac.utils.getRelativeMousePosition(event, _self.container);
 
             row = pos.y;
             col = pos.x;

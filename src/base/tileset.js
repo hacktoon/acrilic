@@ -5,11 +5,11 @@ ac.export("tileset", function(env){
     ac.import("utils", "canvas");
 
     var Tileset = ac.Class({
-        init: function(rows, columns){
+        init: function(rows, cols){
             this.tile_id = 1;
             this.rows = rows;
-            this.columns = columns;
-            this.tile_grid = ac.utils.build2DArray(rows, columns);
+            this.cols = cols;
+            this.tile_grid = ac.utils.build2DArray(rows, cols);
             this.tile_map = {};
         },
 
@@ -43,14 +43,14 @@ ac.export("tileset", function(env){
     var createTileset = function(tileset){
         var image = tileset.image,
             tilesize = tileset.tilesize,
-            columns = Math.floor(image.width / tilesize),
+            cols = Math.floor(image.width / tilesize),
             rows = Math.floor(image.height / tilesize),
-            tileset = new Tileset(rows, columns);
+            tileset = new Tileset(rows, cols);
 
         env.set("TILESIZE", tilesize);
 
         for (var row = 0; row < rows; row++) {
-            for (var col = 0; col < columns; col++) {
+            for (var col = 0; col < cols; col++) {
                 var canvas = ac.canvas.createCanvas(tilesize, tilesize);
                 canvas.draw(image, col*tilesize, row*tilesize, 0, 0);
                 tileset.createTile(row, col, canvas);

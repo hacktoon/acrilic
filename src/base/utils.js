@@ -46,9 +46,11 @@ ac.export("utils", function(env){
     };
 
     var map = function(collection, func){
+        var mapped = [];
         for(var i=0; i<collection.length; i++){
-            func(collection[i], i);
+            mapped.push(func(collection[i]));
         }
+        return mapped;
     };
 
     return {

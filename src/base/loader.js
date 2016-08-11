@@ -2,13 +2,12 @@
 ac.export("loader", function(env){
     "use strict";
 
-    var items_loaded = 0,
-        total_items,
-        ready_callback,
+    var itemsLoaded = 0,
+        totalItems,
+        readyCallback,
         assets = {
             tileset: {}
         };
-
 
     var loaders = {
         tileset: function(item){
@@ -24,17 +23,17 @@ ac.export("loader", function(env){
     var registerAsset = function(item) {
         assets[item.type][item.id] = item;
 
-        items_loaded++;
-        if (items_loaded == total_items){
-            ready_callback(assets);
+        itemsLoaded++;
+        if (itemsLoaded == totalItems){
+            readyCallback(assets);
         }
     };
 
     var loadAssets = function(items, callback){
-        total_items = items.length;
-        ready_callback = callback;
+        totalItems = items.length;
+        readyCallback = callback;
 
-        for(var i=0; i<total_items; i++){
+        for(var i=0; i<totalItems; i++){
             var item = items[i];
             loaders[item.type](item);
         }

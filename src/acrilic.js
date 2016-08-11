@@ -39,12 +39,12 @@ var ac = (function(){
         for (var i=0; i<arguments.length; i++){
           var name = arguments[i];
           if (! modules.hasOwnProperty(name)){
-            this.error("Module '" + name + "' doesn't exist.");
+            _self.error("Module '" + name + "' doesn't exist.");
             return;
           }
-          if(this.name === undefined){
+          if(_self[name] === undefined){
             // execute the function and receive an object
-            this.name = modules[name](env);
+            _self[name] = modules[name](env);
           }
         }
     };

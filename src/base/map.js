@@ -2,7 +2,7 @@
 ac.export("map", function(env){
     "use strict";
 
-    ac.import("utils", "layers");
+    ac.import("utils");
 
     var Map = ac.Class({
         init: function(name, rows, cols){
@@ -51,7 +51,6 @@ ac.export("map", function(env){
     });
 
     var createMap = function(name, rows, cols){
-        ac.layers.createLayers(rows, cols);
         return new Map(name, rows, cols);
     };
 

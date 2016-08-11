@@ -2,12 +2,15 @@
 ac.export("board", function(env){
     "use strict";
 
-    ac.import("utils", "map");
+    ac.import("utils", "map", "layer");
 
     var _self = {
         container: $("#board-panel"),
+        currentLayer: 0,
+        currentMap: undefined,
         cursor: undefined,
-        currentMap: undefined
+        width: 0,
+        height: 0
     };
 
     var registerEvents = function(board, action){
@@ -18,7 +21,6 @@ ac.export("board", function(env){
 
         board.on('mousemove', function(event){
             var pos = ac.utils.getRelativeMousePosition(event, _self.container);
-
             row = pos.y;
             col = pos.x;
 
@@ -43,28 +45,19 @@ ac.export("board", function(env){
         });
     };
 
-    var createCursor = function(size) {
+    var createCursor = function() {
+        var tsize = env.get("TILESIZE");
         _self.cursor = $("<div/>")
             .addClass("selection-cursor")
-            .css({width: size, height: size});
+            .css({width: tsize, height: tsize});
         return _self.cursor;
     };
 
-    var createElements = function(map) {
-        var tsize = env.get("TILESIZE"),
-            board = $('<div/>').addClass('board');
-
-        board.append(createCursor(tsize))
-            .width(tsize * map.rows)
-            .height(tsize * map.cols);
+    var createElements = function(width, height) {
+        var board = $('<div/>').addClass('board');
+        board.append(createCursor()).width(width).height(height);
         _self.container.html(board);
         return board;
-    };
-
-    var activateLayer = function(index) {
-        // TODO: in a multi-map configuration, this function shall
-        // activate the layer in all maps
-        _self.currentMap.activateLayer(index);
     };
 
     var renderMap = function() {
@@ -106,9 +99,29 @@ ac.export("board", function(env){
         });
     };
 
+    var activateLayer = function(index) {
+        ac.layer.deactivateLayer(_self.currentLayer);
+        ac.layer.activateLayer(index);
+        _self.currentLayer = index;
+    };
+
+    var createLayers = function(board, width, height){
+        var layers = ac.layer.createLayers(width, height);
+        var elements = ac.utils.map(layers, function(layer){
+            return layer.getElement();
+        });
+        board.append(elements);
+    };
+
     var createBoard = function(map){
-        var board = createElements(map);
+        var tsize = env.get("TILESIZE"),
+            width = map.cols * tsize,
+            height = map.rows * tsize,
+            board = createElements(width, height);
+        _self.width = width;
+        _self.height = height;
         _self.currentMap = map;
+        createLayers(board, width, height);
         registerEvents(board, boardAction);
     };
 

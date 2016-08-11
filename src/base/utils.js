@@ -22,9 +22,9 @@ ac.export("utils", function(env){
         return flatArr;
     };
 
-    var iterate2DArray = function(rows, cols, func){
-        for (var row = 0; row < rows; row++) {
-            for (var col = 0; col < cols; col++) {
+    var iterate2DArray = function(arr, func){
+        for (var row = 0; row < arr.length; row++) {
+            for (var col = 0; col < arr[row].length; col++) {
                 func(row, col);
             }
         }

@@ -47,7 +47,11 @@ ac.export("map", function(env){
                     }
                 }
             });
-        }
+        },
+
+        asArray: function() {
+            return this.layers[0];
+        },
     });
 
     var createMap = function(name, rows, cols){

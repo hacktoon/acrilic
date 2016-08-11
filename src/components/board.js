@@ -64,7 +64,7 @@ ac.export("board", function(env){
         var tsize = env.get("TILESIZE"),
             map = _self.currentMap;
 
-        ac.utils.iterate2DArray(map.rows, map.cols, function(row, col) {
+        ac.utils.iterate2DArray(map.asArray(), function(row, col) {
             for(var layerIndex in ac.layer.getLayers()){
                 var tile_id = map.get(layerIndex, row, col),
                     tile = ac.palette.getTile(tile_id);
@@ -91,12 +91,10 @@ ac.export("board", function(env){
             ac.layer.updateLayer(layerIndex, x, y, selection.image);
 
             // update the map grid with the new tile ids
-            for(var i=0; i<submap.length; i++){
-                for(var j=0; j<submap[i].length; j++){
-                    var cell = map.get(layerIndex, i+row, j+col) || {};
-                    map.set(layerIndex, i+row, j+col, submap[i][j]);
-                }
-            }
+            ac.utils.iterate2DArray(submap, function(subrow, subcol) {
+                var cell = map.get(layerIndex, subrow+row, subcol+col) || {};
+                map.set(layerIndex, subrow+row, subcol+col, submap[subrow][subcol]);
+            });
         });
     };
 

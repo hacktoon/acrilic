@@ -65,21 +65,22 @@ ac.export("board", function(env){
             map = _self.currentMap;
 
         ac.utils.iterate2DArray(map.rows, map.cols, function(row, col) {
-            for(var index in ac.layer.getLayers()){
-                var tile_id = map.get(index, row, col);
-                var tile = ac.palette.getTile(tile_id);
+            for(var layerIndex in ac.layer.getLayers()){
+                var tile_id = map.get(layerIndex, row, col),
+                    tile = ac.palette.getTile(tile_id);
                 if (! tile){ continue; }
-                ac.layer.updateLayer(index, tile.getCanvas(), row*tsize, col*tsize);
+                ac.layer.updateLayer(layerIndex, col*tsize, row*tsize, tile.getCanvas());
             }
         });
     };
 
-    var boardAction = function(row, col) {
+    var boardAction = function(orig_row, orig_col) {
         var tsize = env.get("TILESIZE"),
             tool = ac.tools.getCurrentTool(),
             map = _self.currentMap,
             selection = ac.palette.getSelection(),
-            matrix = selection.matrix;
+            submap = selection.submap,
+            layerIndex = _self.currentLayer;
 
         tool(map, orig_row, orig_col, selection).forEach(function(tile){
             var col = tile.col,
@@ -87,16 +88,13 @@ ac.export("board", function(env){
                 x = col * tsize,
                 y = row * tsize;
 
-            // render the selected area
-            current_layer.clear(x, y, selection.width, selection.height);
-            map.draw(selection.image, 0, 0, x, y);
+            ac.layer.updateLayer(layerIndex, x, y, selection.image);
 
             // update the map grid with the new tile ids
-            for(var i=0; i<matrix.length; i++){
-                for(var j=0; j<matrix[i].length; j++){
-                    var cell = map.get(i+row, j+col) || {};
-                    cell[current_layer_id] = matrix[i][j];
-                    map.set(i+row, j+col, cell);
+            for(var i=0; i<submap.length; i++){
+                for(var j=0; j<submap[i].length; j++){
+                    var cell = map.get(layerIndex, i+row, j+col) || {};
+                    map.set(layerIndex, i+row, j+col, submap[i][j]);
                 }
             }
         });

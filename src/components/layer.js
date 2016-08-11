@@ -15,8 +15,9 @@ ac.export("layer", function(env){
             this.canvas.elem.attr("id", id).addClass('layer');
         },
 
-        update: function(image, row, col){
-            this.canvas.draw(image, 0, 0, col, row);
+        update: function(image, x, y){
+            this.canvas.clear(x, y, image.width, image.height);
+            this.canvas.draw(image, 0, 0, x, y);
         },
 
         getElement: function(){
@@ -38,11 +39,8 @@ ac.export("layer", function(env){
         _self.currentLayer = index;
     };
 
-    var deactivateLayer = function(index) {
-    };
-
-    var updateLayer = function(index, image, row, col) {
-        _self.layers[index].update(image, row, col);
+    var updateLayer = function(layerIndex, x, y, image) {
+        _self.layers[layerIndex].update(image, x, y);
     };
 
     var getLayers = function() {

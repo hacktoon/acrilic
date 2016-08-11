@@ -16,12 +16,12 @@ ac.export("map", function(env){
             ];
         },
 
-        set: function(layer_index, row, col, value){
-            this.layers[layer_index][row][col] = value;
+        set: function(layerIndex, row, col, value){
+            this.layers[layerIndex][row][col] = value;
         },
 
-        get: function(layer_index, row, col){
-            return this.layers[layer_index][row][col];
+        get: function(layerIndex, row, col){
+            return this.layers[layerIndex][row][col];
         },
 
         inRange: function(row, col) {

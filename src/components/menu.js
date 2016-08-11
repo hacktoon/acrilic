@@ -2,10 +2,7 @@
 ac.export("menu", function(env){
     "use strict";
 
-    var $dialog = ac.import("dialog"),
-        $tools = ac.import("tools"),
-        $map = ac.import("map"),
-        $board = ac.import("board");
+    ac.import("dialog", "tools", "map", "board");
 
     var registerSwitchButton = function(selector, action) {
         var activeClass = 'active',
@@ -20,42 +17,42 @@ ac.export("menu", function(env){
     };
 
     var initToolsMenu = function() {
-        $tools.initTools();
+        ac.tools.initTools();
         registerSwitchButton('.btn-tool', function(value) {
-            $tools.setTool(value);
+            ac.tools.setTool(value);
         });
     };
 
     var initLayersMenu = function() {
         registerSwitchButton('.btn-layer', function(value) {
-            $board.activateLayer(value);
+            ac.board.activateLayer(value);
         });
     };
 
     var initFileMenu = function() {
         $('#btn-file-new').on('click', function(){
-            $dialog.openNewMapDialog(function(name, horz_tiles, vert_tiles){
-                var map = $map.createMap(name, horz_tiles, vert_tiles);
-                $board.createBoard(map, horz_tiles, vert_tiles);
+            ac.dialog.openNewMapDialog(function(name, rows, cols){
+                var map = ac.map.createMap(name, rows, cols);
+                ac.board.createBoard(map);
                 env.set('CURRENT_MAP', map);
             });
         });
-        var map = $map.loadMap({"name":"weh","width":9,"height":8,"grid":[[{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13}],[{"bg":5},{"bg":5},{"bg":5},{"bg":4},{"bg":4},{"bg":4},{"bg":5},{"bg":5},{"bg":5}],[{"bg":5},{"bg":5},{"bg":5},{"bg":4},{"bg":4},{"bg":4},{"bg":5},{"bg":5},{"bg":5}],[{"bg":5},{"bg":5},{"bg":5},{"bg":4},{"bg":4},{"bg":4},{"bg":5},{"bg":5},{"bg":5}],[{"bg":5},{"bg":5},{"bg":5},{"bg":4},{"bg":4},{"bg":4},{"bg":5},{"bg":5},{"bg":5}],[{"bg":5},{"bg":5},{"bg":5},{"bg":4},{"bg":4},{"bg":4},{"bg":5},{"bg":5},{"bg":5}],[{"bg":5},{"bg":5},{"bg":5},{"bg":4},{"bg":4},{"bg":4},{"bg":5},{"bg":5},{"bg":5}],[{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13},{"bg":13}]]});
-        $board.createBoard(map, 9, 8);
-        $board.renderMap(map);
+        var map = ac.map.importMap({"name":"new-map","cols":10,"rows":10,"tilesize":64,"layers":[[[7,7,6,6,3,3,3,3,3,6],[7,6,6,3,3,3,3,3,6,6],[6,3,3,3,3,3,3,6,6,8],[3,3,3,3,3,3,6,6,6,8],[3,3,3,3,3,6,6,6,6,8],[3,3,3,3,6,6,6,6,8,8],[3,3,3,6,6,6,6,6,8,8],[3,3,6,6,6,6,8,8,8,8],[3,6,6,6,6,8,8,8,8,8],[6,6,6,8,8,8,8,8,8,8]],[[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1]],[[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1]]]});
+        ac.board.createBoard(map);
+        ac.board.renderMap();
         env.set('CURRENT_MAP', map);
 
         $('#btn-file-import').on('click', function(){
-            $dialog.openImportDialog(function(content){
+            ac.dialog.openImportDialog(function(content){
                 try {
-                    var obj = JSON.parse(content);
+                    var mapData = JSON.parse(content);
                 } catch (err) {
                     alert("Not a valid JSON!");
                     return;
                 }
-                var map = $map.loadMap(obj);
-                $board.createBoard(map, obj.width, obj.height);
-                $board.renderMap(map);
+                var map = ac.map.importMap(mapData);
+                ac.board.createBoard(mapData);
+                ac.board.renderMap();
                 env.set('CURRENT_MAP', map);
             });
         });
@@ -65,8 +62,8 @@ ac.export("menu", function(env){
             if (! map){
                 return;
             }
-            var json = JSON.stringify(map.getData());
-            $dialog.openExportDialog(json);
+            var json = JSON.stringify(ac.map.exportMap(map));
+            ac.dialog.openExportDialog(json);
         });
     };
 
@@ -74,7 +71,7 @@ ac.export("menu", function(env){
         initFileMenu();
         initToolsMenu();
         initLayersMenu();
-	};
+    };
 
     return {
         createMenu: createMenu

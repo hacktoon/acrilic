@@ -1,41 +1,44 @@
 ac.export("tools", function(env){
+    "use strict";
+
+    ac.import("fill");
 
     var _self = {
         current: undefined,
-        map: {}
+        tools: {}
     };
 
     var pen = function(map, row, col, selection) {
         return [{row:row, col:col}];
     };
 
-    var fill = function(map, row, col, selection) {
+    var square = function(map, row, col, selection) {
         return [{row:row, col:col}];
     };
 
-    var eraser = function(map, row, col, selection) {
-        return [{row:row, col:col, reset: true}];
+    var fill = function(map, row, col, selection) {
+        return ac.fill.execute(map, row, col, selection);
     };
 
     var setTool = function(func) {
         _self.current = func;
     };
 
-    var getTool = function() {
-        return _self.map[_self.current];
+    var getCurrentTool = function() {
+        return _self.tools[_self.current];
     };
 
     var initTools = function() {
-        _self.map = {
+        _self.tools = {
             pen: pen,
-            fill: fill,
-            eraser: eraser
+            square: square,
+            fill: fill
         };
     };
 
     return {
         initTools: initTools,
-        getTool: getTool,
+        getCurrentTool: getCurrentTool,
         setTool: setTool
     };
 });

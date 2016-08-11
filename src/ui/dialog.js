@@ -10,7 +10,7 @@ ac.export("dialog", function(env){
             });
 
             $(document).on('keydown', function(e){
-                if (e.which == ac.ESC_KEY){
+                if (e.which == ac.keys.ESC){
                     dialog.close();
                 }
             });
@@ -87,20 +87,6 @@ ac.export("dialog", function(env){
         $("#field-file-export-map").focus().val(value);
         dialog.open();
     };
-
-    var createConfirmDialog = function(message, action){
-        /*var self = this;
-        this.open('', '<p>' + message + '</p>', [
-            {title: 'OK', action: function(){
-                action();
-                self.close();
-            }},
-            {title: 'Cancel', action: function(){
-                self.close();
-            }}
-        ]);*/
-    };
-
 
     return {
         openNewMapDialog: openNewMapDialog,

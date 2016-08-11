@@ -55,7 +55,8 @@ ac.export("palette", function(env){
     var initElements = function(tileset){
         var tsize = env.get("TILESIZE"),
             overlay = $("<div/>").attr("id", "palette-overlay"),
-            selector = $("<div/>").attr("id", "palette-selector"),
+            selector = $("<div/>").attr("id", "palette-selector")
+                .css({width: tsize, height: tsize}),
             width = tileset.cols * tsize,
             height = tileset.rows * tsize;
 

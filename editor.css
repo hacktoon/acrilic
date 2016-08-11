@@ -120,8 +120,6 @@ input {
 }
 
 #palette-panel #palette-selector {
-    width: 64px;
-    height: 64px;
     box-sizing: border-box;
     cursor: pointer;
     position: absolute;
@@ -150,7 +148,6 @@ input {
     border: solid 7px #333;
     z-index: 1;
 }
-
 
 #project-panel {
     background: #FFF;
@@ -190,11 +187,35 @@ input {
 #board-panel #fg-layer { z-index: 2; }
 #board-panel #bg-layer { z-index: 1; }
 
-.selection-cursor {
-    position: absolute;
-    border: dotted 2px #333;
+#board-panel .selection-cursor {
     box-sizing: border-box;
+    cursor: pointer;
+    position: absolute;
+    left: 0;
+    top: 0;
     z-index: 10;
+}
+#board-panel .selection-cursor:after,
+#board-panel .selection-cursor:before {
+    position: absolute;
+    display: block;
+    content: "";
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+}
+#board-panel .selection-cursor:after {
+    border: solid 3px #FFF;
+    left: 2px;
+    top: 2px;
+    bottom: 2px;
+    right: 2px;
+    z-index: 2;
+}
+#board-panel .selection-cursor:before {
+    border: solid 7px #333;
+    z-index: 1;
 }
 
 

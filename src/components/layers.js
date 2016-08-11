@@ -1,9 +1,10 @@
-ac.export("layer", function(env){
+ac.export("layers", function(env){
     "use strict";
 
     ac.import("canvas");
 
     var _self = {
+        layers: [],
         currentIndex: 0
     };
 
@@ -31,13 +32,19 @@ ac.export("layer", function(env){
         }
     });
 
-    var createLayer = function(id, rows, cols) {
+    var createLayers = function(rows, cols) {
         var tsize = env.get("TILESIZE");
-        return new Layer(id, tsize*cols, tsize*rows);
+        var width = tsize*cols,
+            height = tsize*rows;
+        _self.layers.concat([
+            new Layer("bg", width, height),
+            new Layer("fg", width, height),
+            new Layer("event", width, height)
+        ]);
     }
 
     return {
-        createLayer: createLayer
+        createLayers: createLayers
     };
 
 });

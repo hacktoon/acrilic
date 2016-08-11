@@ -2,7 +2,7 @@
 ac.export("board", function(env){
     "use strict";
 
-    ac.import("utils", "map", "layer");
+    ac.import("utils", "map");
 
     var _self = {
         container: $("#board-panel"),
@@ -11,7 +11,7 @@ ac.export("board", function(env){
     };
 
     var registerEvents = function(board, action){
-        var tilesize = env.get("TILESIZE"),
+        var tsize = env.get("TILESIZE"),
             mouseDown = false,
             col = 0,
             row = 0;
@@ -23,7 +23,7 @@ ac.export("board", function(env){
             col = pos.x;
 
             _self.cursor.css({
-                transform: "translate(" + (col * tilesize) + "px, " + (row * tilesize) + "px)"
+                transform: "translate(" + (col * tsize) + "px, " + (row * tsize) + "px)"
             });
 
             // Allows painting while dragging
@@ -57,11 +57,17 @@ ac.export("board", function(env){
         board.append(createCursor(tsize))
             .width(tsize * map.rows)
             .height(tsize * map.cols);
-
+        _self.container.html(board);
         return board;
     };
 
-    /*var renderMap = function() {
+    var activateLayer = function(index) {
+        // TODO: in a multi-map configuration, this function shall
+        // activate the layer in all maps
+        _self.currentMap.activateLayer(index);
+    };
+
+    var renderMap = function() {
         for (var row = 0; row < this.rows; row++) {
             for (var col = 0; col < this.cols; col++) {
                 var tile_id = layer.get(row, col);
@@ -72,7 +78,7 @@ ac.export("board", function(env){
         }
     };
 
-    var updateMap = function(row, col) {
+    var boardAction = function(row, col) {
         var tsize = env.get("TILESIZE"),
             tool = $tools.getTool(),
             map = _self.currentMap,
@@ -98,17 +104,17 @@ ac.export("board", function(env){
                 }
             }
         });
-    };*/
+    };
 
     var createBoard = function(map){
         var board = createElements(map);
         _self.currentMap = map;
-        registerEvents(board, updateMap);
-        _self.container.html(board);
+        registerEvents(board, boardAction);
     };
 
     return {
         createBoard: createBoard,
-        activateLayer: activateLayer
+        activateLayer: activateLayer,
+        renderMap: renderMap
     };
 });

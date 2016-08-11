@@ -36,17 +36,17 @@ var ac = (function(){
     };
 
     _self.import = function(){
-    for (var i=0; i<arguments.length; i++){
-      var name = arguments[i];
-      if (! modules.hasOwnProperty(name)){
-        this.error("Module '" + name + "' doesn't exist.");
-        return;
-      }
-      if(this[name] === undefined){
-        // execute the function and receive an object
-        this[name] = modules[name](env);
-      }
-    }
+        for (var i=0; i<arguments.length; i++){
+          var name = arguments[i];
+          if (! modules.hasOwnProperty(name)){
+            this.error("Module '" + name + "' doesn't exist.");
+            return;
+          }
+          if(this.name === undefined){
+            // execute the function and receive an object
+            this.name = modules[name](env);
+          }
+        }
     };
 
     _self.Class = function(methods) {

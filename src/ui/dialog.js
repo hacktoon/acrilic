@@ -10,7 +10,7 @@ ac.export("dialog", function(env){
             });
 
             $(document).on('keydown', function(e){
-                if (e.which == ac.ESC_KEY){
+                if (e.which == ac.keys.ESC){
                     dialog.close();
                 }
             });

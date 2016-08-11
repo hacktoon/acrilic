@@ -168,6 +168,16 @@ input {
     overflow: auto;
 }
 
+#board-panel .board-overlay {
+    overflow: hidden;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 15;
+}
+
 #board-panel .board {
     background: url("img/screen_bg.png");
     position: absolute;

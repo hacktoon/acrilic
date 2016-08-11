@@ -25,8 +25,8 @@ ac.export("map", function(env){
         },
 
         inRange: function(row, col) {
-            var col_range = col >= 0 || col < this.cols,
-                row_range = row >= 0 || row < this.rows;
+            var col_range = col >= 0 && col < this.cols,
+                row_range = row >= 0 && row < this.rows;
             return col_range && row_range;
         },
 

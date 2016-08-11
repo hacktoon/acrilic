@@ -6,11 +6,10 @@ ac.export("board", function(env){
 
     var _self = {
         container: $("#board-panel"),
+        overlay: undefined,
         currentLayer: 0,
         currentMap: undefined,
-        cursor: undefined,
-        width: 0,
-        height: 0
+        cursor: undefined
     };
 
     var registerEvents = function(board, action){
@@ -19,7 +18,7 @@ ac.export("board", function(env){
             col = 0,
             row = 0;
 
-        board.on('mousemove', function(event){
+        _self.overlay.on('mousemove', function(event){
             var pos = ac.utils.getRelativeMousePosition(event, _self.container);
             row = pos.y;
             col = pos.x;
@@ -28,16 +27,21 @@ ac.export("board", function(env){
                 transform: "translate(" + (col * tsize) + "px, " + (row * tsize) + "px)"
             });
 
-            // Allows painting while dragging
             if(mouseDown){
-                action(row, col);
+                action(row, col);  // Allows painting while dragging
             }
-        });
-
-        board.on('mousedown', function(e){
+        }).on('mousedown', function(e){
             e.preventDefault();
             mouseDown = true;
             action(row, col);
+        }).on('mouseenter', function(e){
+            var selection = ac.palette.getSelection();
+            _self.cursor.css({
+                width: selection.width,
+                height: selection.height
+            }).show();
+        }).on('mouseleave', function(e){
+            _self.cursor.hide();
         });
 
         $(document).on('mouseup', function(){
@@ -47,16 +51,21 @@ ac.export("board", function(env){
 
     var createCursor = function() {
         var tsize = env.get("TILESIZE");
-        _self.cursor = $("<div/>")
+        var cursor = $("<div/>")
             .addClass("selection-cursor")
-            .css({width: tsize, height: tsize});
-        return _self.cursor;
+            .css({width: tsize, height: tsize})
+            .hide();
+        return cursor;
     };
 
     var createElements = function(width, height) {
-        var board = $('<div/>').addClass('board');
-        board.append(createCursor()).width(width).height(height);
-        _self.container.html(board);
+        var board = $('<div/>').addClass('board'),
+            overlay = $("<div/>").addClass("board-overlay")
+                .css({width: width, height: height});
+        board.width(width).height(height);
+        _self.cursor = createCursor();
+        _self.overlay = overlay.append(_self.cursor);
+        _self.container.html([board, overlay]);
         return board;
     };
 
@@ -74,7 +83,7 @@ ac.export("board", function(env){
         });
     };
 
-    var boardAction = function(orig_row, orig_col) {
+    var updateMap = function(orig_row, orig_col) {
         var tsize = env.get("TILESIZE"),
             tool = ac.tools.getCurrentTool(),
             map = _self.currentMap,
@@ -83,17 +92,21 @@ ac.export("board", function(env){
             layerIndex = _self.currentLayer;
 
         tool(map, orig_row, orig_col, selection).forEach(function(tile){
-            var col = tile.col,
-                row = tile.row,
-                x = col * tsize,
-                y = row * tsize;
+            var tile_col = tile.col,
+                tile_row = tile.row,
+                x = tile_col * tsize,
+                y = tile_row * tsize;
 
             ac.layer.updateLayer(layerIndex, x, y, selection.image);
 
             // update the map grid with the new tile ids
             ac.utils.iterate2DArray(submap, function(subrow, subcol) {
-                var cell = map.get(layerIndex, subrow+row, subcol+col) || {};
-                map.set(layerIndex, subrow+row, subcol+col, submap[subrow][subcol]);
+                var row = subrow + tile_row,
+                    col = subcol + tile_col;
+
+                if (! map.inRange(row, col)) { return; }
+                var cell = map.get(layerIndex, row, col) || {};
+                map.set(layerIndex, row, col, submap[subrow][subcol]);
             });
         });
     };
@@ -116,11 +129,9 @@ ac.export("board", function(env){
             width = map.cols * tsize,
             height = map.rows * tsize,
             board = createElements(width, height);
-        _self.width = width;
-        _self.height = height;
         _self.currentMap = map;
         createLayers(board, width, height);
-        registerEvents(board, boardAction);
+        registerEvents(board, updateMap);
     };
 
     return {

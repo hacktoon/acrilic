@@ -51,7 +51,7 @@ ac.export("menu", function(env){
                     return;
                 }
                 var map = ac.map.importMap(mapData);
-                ac.board.createBoard(mapData);
+                ac.board.createBoard(map);
                 ac.board.renderMap();
                 env.set('CURRENT_MAP', map);
             });

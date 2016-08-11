@@ -49,9 +49,9 @@ ac.export("map", function(env){
             });
         },
 
-        asArray: function() {
-            return this.layers[0];
-        },
+        getLayer: function(layerIndex) {
+            return this.layers[layerIndex || 0];
+        }
     });
 
     var createMap = function(name, rows, cols){

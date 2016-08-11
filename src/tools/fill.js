@@ -25,10 +25,10 @@ ac.export("fill", function(env){
     };
 
     var floodFill = function(map, row, col, original_color) {
-        
+
     };
 
-    var execute = function(map, row, col, selection) {
+    var execute = function(map, row, col) {
         var orig_tile_id = map.get(row, col);
         _self.visited = [];
         floodFill(map, row, col, orig_tile_id);

@@ -8,16 +8,16 @@ ac.export("tools", function(env){
         tools: {}
     };
 
-    var pen = function(map, row, col, selection) {
+    var pen = function(map, row, col) {
         return [{row:row, col:col}];
     };
 
-    var square = function(map, row, col, selection) {
+    var square = function(map, row, col) {
         return [{row:row, col:col}];
     };
 
-    var fill = function(map, row, col, selection) {
-        return ac.fill.execute(map, row, col, selection);
+    var fill = function(map, row, col) {
+        return ac.fill.execute(map, row, col);
     };
 
     var setTool = function(func) {

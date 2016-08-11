@@ -73,7 +73,7 @@ ac.export("board", function(env){
         var tsize = env.get("TILESIZE"),
             map = _self.currentMap;
 
-        ac.utils.iterate2DArray(map.asArray(), function(row, col) {
+        ac.utils.iterate2DArray(map.getLayer(), function(row, col) {
             for(var layerIndex in ac.layer.getLayers()){
                 var tile_id = map.get(layerIndex, row, col),
                     tile = ac.palette.getTile(tile_id);
@@ -83,7 +83,7 @@ ac.export("board", function(env){
         });
     };
 
-    var updateMap = function(orig_row, orig_col) {
+    var updateMap = function(eventRow, eventCol) {
         var tsize = env.get("TILESIZE"),
             tool = ac.tools.getCurrentTool(),
             map = _self.currentMap,
@@ -91,7 +91,10 @@ ac.export("board", function(env){
             submap = selection.submap,
             layerIndex = _self.currentLayer;
 
-        tool(map, orig_row, orig_col, selection).forEach(function(tile){
+        var mapLayer = map.getLayer(layerIndex);
+        var selectedTiles = tool(mapLayer, eventRow, eventCol);
+
+        selectedTiles.forEach(function(tile){
             var tile_col = tile.col,
                 tile_row = tile.row,
                 x = tile_col * tsize,
@@ -112,7 +115,7 @@ ac.export("board", function(env){
     };
 
     var activateLayer = function(index) {
-        ac.layer.activateLayer(index);
+        ac.layer.activateLayer(index || 0);
         _self.currentLayer = index;
     };
 
@@ -132,6 +135,7 @@ ac.export("board", function(env){
         _self.currentMap = map;
         createLayers(board, width, height);
         registerEvents(board, updateMap);
+        activateLayer(_self.currentLayer);
     };
 
     return {

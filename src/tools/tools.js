@@ -5,7 +5,7 @@ ac.export("tools", function(env){
 
     var _self = {
         current: undefined,
-        map: {}
+        tools: {}
     };
 
     var pen = function(map, row, col, selection) {
@@ -24,12 +24,12 @@ ac.export("tools", function(env){
         _self.current = func;
     };
 
-    var getTool = function() {
-        return _self.map[_self.current];
+    var getCurrentTool = function() {
+        return _self.tools[_self.current];
     };
 
     var initTools = function() {
-        _self.map = {
+        _self.tools = {
             pen: pen,
             square: square,
             fill: fill
@@ -38,7 +38,7 @@ ac.export("tools", function(env){
 
     return {
         initTools: initTools,
-        getTool: getTool,
+        getCurrentTool: getCurrentTool,
         setTool: setTool
     };
 });

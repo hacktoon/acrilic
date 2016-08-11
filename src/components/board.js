@@ -2,7 +2,7 @@
 ac.export("board", function(env){
     "use strict";
 
-    ac.import("utils", "map", "layer");
+    ac.import("utils", "map", "layer", "palette", "tools");
 
     var _self = {
         container: $("#board-panel"),
@@ -61,19 +61,21 @@ ac.export("board", function(env){
     };
 
     var renderMap = function() {
-        for (var row = 0; row < this.rows; row++) {
-            for (var col = 0; col < this.cols; col++) {
-                var tile_id = layer.get(row, col);
-                var tile = $palette.getTile(tile_id);
-                if (! tile){ return; }
-                layer.draw(tile.getCanvas(), row, col);
+        var tsize = env.get("TILESIZE"),
+            map = _self.currentMap;
+        for (var row = 0; row < map.rows; row++) {
+            for (var col = 0; col < map.cols; col++) {
+                var tile_id = map.get(_self.currentLayer, row, col);
+                var tile = ac.palette.getTile(tile_id);
+                if (! tile){ continue; }
+                ac.layer.updateLayer(_self.currentLayer, tile.getCanvas(), row*tsize, col*tsize);
             }
         }
     };
 
     var boardAction = function(row, col) {
         var tsize = env.get("TILESIZE"),
-            tool = $tools.getTool(),
+            tool = ac.tools.getCurrentTool(),
             map = _self.currentMap,
             selection = $palette.getSelection(),
             matrix = selection.matrix;
@@ -106,8 +108,8 @@ ac.export("board", function(env){
     };
 
     var createLayers = function(board, width, height){
-        var layers = ac.layer.createLayers(width, height);
-        var elements = ac.utils.map(layers, function(layer){
+        var layers = ac.layer.createLayers(width, height),
+            elements = ac.utils.map(layers, function(layer){
             return layer.getElement();
         });
         board.append(elements);

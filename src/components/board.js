@@ -63,21 +63,22 @@ ac.export("board", function(env){
     var renderMap = function() {
         var tsize = env.get("TILESIZE"),
             map = _self.currentMap;
-        for (var row = 0; row < map.rows; row++) {
-            for (var col = 0; col < map.cols; col++) {
-                var tile_id = map.get(_self.currentLayer, row, col);
+
+        ac.utils.iterate2DArray(map.rows, map.cols, function(row, col) {
+            for(var index in ac.layer.getLayers()){
+                var tile_id = map.get(index, row, col);
                 var tile = ac.palette.getTile(tile_id);
                 if (! tile){ continue; }
-                ac.layer.updateLayer(_self.currentLayer, tile.getCanvas(), row*tsize, col*tsize);
+                ac.layer.updateLayer(index, tile.getCanvas(), row*tsize, col*tsize);
             }
-        }
+        });
     };
 
     var boardAction = function(row, col) {
         var tsize = env.get("TILESIZE"),
             tool = ac.tools.getCurrentTool(),
             map = _self.currentMap,
-            selection = $palette.getSelection(),
+            selection = ac.palette.getSelection(),
             matrix = selection.matrix;
 
         tool(map, orig_row, orig_col, selection).forEach(function(tile){
@@ -102,7 +103,6 @@ ac.export("board", function(env){
     };
 
     var activateLayer = function(index) {
-        ac.layer.deactivateLayer(_self.currentLayer);
         ac.layer.activateLayer(index);
         _self.currentLayer = index;
     };

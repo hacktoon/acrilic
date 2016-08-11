@@ -22,6 +22,14 @@ ac.export("utils", function(env){
         return flatArr;
     };
 
+    var iterate2DArray = function(rows, cols, func){
+        for (var row = 0; row < rows; row++) {
+            for (var col = 0; col < cols; col++) {
+                func(row, col);
+            }
+        }
+    };
+
     var getRelativeMousePosition = function(event, container) {
         var tilesize = env.get("TILESIZE"),
             doc = $(document),
@@ -56,6 +64,7 @@ ac.export("utils", function(env){
     return {
         getRelativeMousePosition: getRelativeMousePosition,
         build2DArray: build2DArray,
+        iterate2DArray: iterate2DArray,
         flatten2DArray: flatten2DArray,
         filter: filter,
         map: map

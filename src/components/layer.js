@@ -4,7 +4,8 @@ ac.export("layer", function(env){
     ac.import("canvas");
 
     var _self = {
-        layers: []
+        layers: [],
+        currentLayer: 0
     };
 
     var Layer = ac.Class({
@@ -32,15 +33,20 @@ ac.export("layer", function(env){
     });
 
     var activateLayer = function(index) {
+        _self.layers[_self.currentLayer].deactivate();
         _self.layers[index].activate();
+        _self.currentLayer = index;
     };
 
     var deactivateLayer = function(index) {
-        _self.layers[index].deactivate();
     };
 
     var updateLayer = function(index, image, row, col) {
         _self.layers[index].update(image, row, col);
+    };
+
+    var getLayers = function() {
+        return _self.layers;
     };
 
     var createLayers = function(width, height) {
@@ -55,8 +61,8 @@ ac.export("layer", function(env){
     return {
         createLayers: createLayers,
         updateLayer: updateLayer,
-        activateLayer: activateLayer,
-        deactivateLayer: deactivateLayer
+        getLayers: getLayers,
+        activateLayer: activateLayer
     };
 
 });

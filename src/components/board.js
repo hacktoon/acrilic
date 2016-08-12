@@ -5,6 +5,7 @@ ac.export("board", function(env){
     ac.import("utils", "map", "layer", "palette", "tools");
 
     var _self = {
+        doc: $(document),
         container: $("#board-panel"),
         overlay: undefined,
         currentLayer: 0,
@@ -12,39 +13,54 @@ ac.export("board", function(env){
         cursor: undefined
     };
 
+    var setCursorPosition = function(row, col){
+        var tsize = env.get("TILESIZE");
+        _self.cursor.css({
+            transform: "translate(" + (col * tsize) + "px, " + (row * tsize) + "px)"
+        });
+    };
+
     var registerEvents = function(board, action){
-        var tsize = env.get("TILESIZE"),
-            mouseDown = false,
+        var mouseDown = false,
+            mouseOver = false,
             col = 0,
             row = 0;
 
-        _self.overlay.on('mousemove', function(event){
+        _self.overlay
+        .on('mousemove', function(event){
             var pos = ac.utils.getRelativeMousePosition(event, _self.container);
             row = pos.y;
             col = pos.x;
 
-            _self.cursor.css({
-                transform: "translate(" + (col * tsize) + "px, " + (row * tsize) + "px)"
-            });
+            setCursorPosition(row, col);
 
-            if(mouseDown){
-                action(row, col);  // Allows painting while dragging
-            }
+            // Allows painting while dragging
+            if(mouseDown){ action(row, col); }
         }).on('mousedown', function(e){
             e.preventDefault();
             mouseDown = true;
             action(row, col);
         }).on('mouseenter', function(e){
-            var selection = ac.palette.getSelection();
-            _self.cursor.css({
-                width: selection.width,
-                height: selection.height
-            }).show();
+            mouseOver = true;
+            if(ac.palette.getSelection())
+                _self.cursor.show();
         }).on('mouseleave', function(e){
+            mouseOver = false;
             _self.cursor.hide();
         });
 
-        $(document).on('mouseup', function(){
+        _self.doc
+        .on("selection-ready", function(){
+            var selection = ac.palette.getSelection();
+
+            _self.cursor.css({
+                width: selection.width,
+                height: selection.height
+            });
+            if(mouseOver){
+                _self.cursor.show();
+            }
+        }).on('mouseup', function(){
             mouseDown = false;
         });
     };

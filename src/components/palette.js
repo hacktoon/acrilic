@@ -109,6 +109,7 @@ ac.export("palette", function(env){
             x0 = pos.x;
             y0 = pos.y;
             dragging = true;
+            _self.selection = undefined;
         });
 
         _self.doc.on("mousemove", function(event){
@@ -120,6 +121,7 @@ ac.export("palette", function(env){
             if (! dragging){ return; }
             dragging = false;
             setSelection(updateSelector(event, x0, y0));
+            _self.doc.trigger("selection-ready");
         });
     };
 

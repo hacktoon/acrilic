@@ -21,8 +21,8 @@ ac.export("board", function(env){
     };
 
     var registerEvents = function(board, action){
-        var mouseDown = false,
-            mouseOver = false,
+        var mouseUp = true,
+            mouseOut = true,
             col = 0,
             row = 0;
 
@@ -35,33 +35,30 @@ ac.export("board", function(env){
             setCursorPosition(row, col);
 
             // Allows painting while dragging
-            if(mouseDown){ action(row, col); }
+            mouseUp || action(row, col);
         }).on('mousedown', function(e){
             e.preventDefault();
-            mouseDown = true;
+            mouseUp = false;
             action(row, col);
         }).on('mouseenter', function(e){
-            mouseOver = true;
-            if(ac.palette.getSelection())
+            mouseOut = false;
+            if(ac.palette.getSelection()){
                 _self.cursor.show();
+            }
         }).on('mouseleave', function(e){
-            mouseOver = false;
+            mouseOut = true;
             _self.cursor.hide();
+        }).on('mouseup', function(){
+            mouseUp = true;
         });
 
-        _self.doc
-        .on("selection-ready", function(){
+        _self.doc.on("selection-ready", function(){
             var selection = ac.palette.getSelection();
-
             _self.cursor.css({
                 width: selection.width,
                 height: selection.height
             });
-            if(mouseOver){
-                _self.cursor.show();
-            }
-        }).on('mouseup', function(){
-            mouseDown = false;
+            mouseOut || _self.cursor.show();
         });
     };
 

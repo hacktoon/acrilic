@@ -34,7 +34,6 @@ ac.export("menu", function(env){
             ac.dialog.openNewMapDialog(function(name, rows, cols){
                 var map = ac.map.createMap(name, rows, cols);
                 ac.board.createBoard(map);
-                env.set('CURRENT_MAP', map);
             });
         });
 
@@ -49,7 +48,6 @@ ac.export("menu", function(env){
                 var map = ac.map.importMap(mapData);
                 ac.board.createBoard(map);
                 ac.board.renderMap();
-                env.set('CURRENT_MAP', map);
             });
         });
 
@@ -58,7 +56,8 @@ ac.export("menu", function(env){
             if (! map){
                 return;
             }
-            ac.dialog.openExportDialog(ac.map.exportMap(map));
+            var json = JSON.stringify(ac.map.exportMap(map));
+            ac.dialog.openExportDialog(json);
         });
     };
 

@@ -34,9 +34,12 @@ ac.export("layer", function(env){
     });
 
     var activateLayer = function(index) {
+        if(! _self.layers.length){
+            return;
+        }
         _self.layers[_self.currentLayer].deactivate();
-        _self.layers[index].activate();
         _self.currentLayer = index;
+        _self.layers[index].activate();
     };
 
     var updateLayer = function(layerIndex, x, y, image) {

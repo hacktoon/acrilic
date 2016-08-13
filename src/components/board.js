@@ -96,6 +96,10 @@ ac.export("board", function(env){
         });
     };
 
+    var saveMap = function(map) {
+        ac.fs.saveFile(map.name, ac.map.exportMap(map));
+    };
+
     var updateMap = function(eventRow, eventCol) {
         var tsize = env.get("TILESIZE"),
             tool = ac.tools.getCurrentTool(),
@@ -126,7 +130,7 @@ ac.export("board", function(env){
                 map.set(layerIndex, row, col, submap[subrow][subcol]);
             });
         });
-        ac.fs.saveFile(ac.map.exportMap(map));
+        saveMap(map);
     };
 
     var activateLayer = function(index) {
@@ -148,9 +152,11 @@ ac.export("board", function(env){
             height = map.rows * tsize,
             board = createElements(width, height);
         _self.currentMap = map;
+        env.set('CURRENT_MAP', map);
         createLayers(board, width, height);
         registerEvents(board, updateMap);
         activateLayer(_self.currentLayer);
+        saveMap(map);
     };
 
     return {

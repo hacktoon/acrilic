@@ -7,7 +7,7 @@ ac.export("fs", function(env){
         saveFile: function(name, content){
             var json = JSON.stringify(content);
             localStorage.setItem(name, json);
-            localStorage.setItem(LAST_OPEN, name);
+            localStorage.setItem(LAST_OPEN, json);
         },
 
         getRecentFile: function(){
@@ -15,7 +15,11 @@ ac.export("fs", function(env){
         },
 
         loadFile: function(name){
-            return JSON.parse(localStorage.getItem(name));
+            var content = localStorage.getItem(name);
+            if (content){
+                return JSON.parse(content);
+            }
+            return;
         }
     };
 });

@@ -2,7 +2,7 @@
 ac.export("board", function(env){
     "use strict";
 
-    ac.import("utils", "map", "layer", "palette", "tools");
+    ac.import("utils", "map", "layer", "palette", "tools", "fs");
 
     var _self = {
         doc: $(document),
@@ -102,7 +102,8 @@ ac.export("board", function(env){
             map = _self.currentMap,
             selection = ac.palette.getSelection(),
             submap = selection.submap,
-            layerIndex = _self.currentLayer;
+            layerIndex = _self.currentLayer,
+            current_map = env.get("CURRENT_MAP");
 
         var mapLayer = map.getLayer(layerIndex);
         var selectedTiles = tool(mapLayer, eventRow, eventCol);
@@ -125,6 +126,7 @@ ac.export("board", function(env){
                 map.set(layerIndex, row, col, submap[subrow][subcol]);
             });
         });
+        ac.fs.saveFile(ac.map.exportMap(map));
     };
 
     var activateLayer = function(index) {
@@ -135,8 +137,8 @@ ac.export("board", function(env){
     var createLayers = function(board, width, height){
         var layers = ac.layer.createLayers(width, height),
             elements = ac.utils.map(layers, function(layer){
-            return layer.getElement();
-        });
+                return layer.getElement();
+            });
         board.append(elements);
     };
 

@@ -51,9 +51,9 @@ ac.export("dialog", function(env){
         dialog.init("New map", '#tpl-dialog-file-new');
         dialog.addButton('OK', function(){
             var name = $('#field-file-new-name').val(),
-                horz_tiles = Number($('#field-file-new-width').val()),
-                vert_tiles = Number($('#field-file-new-height').val());
-            action(name, horz_tiles, vert_tiles);
+                cols = Number($('#field-file-new-width').val()),
+                rows = Number($('#field-file-new-height').val());
+            action(name, rows, cols);
             dialog.close();
         });
         dialog.addButton('Cancel', function(){

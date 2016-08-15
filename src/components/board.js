@@ -112,14 +112,12 @@ ac.export("board", function(env){
             selectedTiles = tool(mapLayer, eventRow, eventCol);
 
         selectedTiles.forEach(function(tile){
-            var tileCol = tile.col,
-                tileRow = tile.row,
-                x = tileCol * tsize,
-                y = tileRow * tsize;
+            var x = tile.col * tsize,
+                y = tile.row * tsize;
             // update the layers with the new tile image
             ac.layer.updateLayer(layerIndex, x, y, selection.image);
             // update the map grid with the new tile ids
-            map.update(layerIndex, tileRow, tileCol, selection.submap);
+            map.update(layerIndex, tile.row, tile.col, selection.submap);
         });
         saveMap(map);
     };

@@ -47,6 +47,7 @@ ac.export("board", function(env){
             }
         }).on('mouseleave', function(e){
             mouseOut = true;
+            mouseUp = true;
             _self.cursor.hide();
         }).on('mouseup', function(){
             mouseUp = true;
@@ -86,6 +87,7 @@ ac.export("board", function(env){
         var tsize = env.get("TILESIZE"),
             map = _self.currentMap;
 
+        //map.getLayer() is used here only to send a matrix with specific cols x rows
         ac.utils.iterate2DArray(map.getLayer(), function(row, col) {
             for(var layerIndex in ac.layer.getLayers()){
                 var tile_id = map.get(layerIndex, row, col),
@@ -105,30 +107,19 @@ ac.export("board", function(env){
             tool = ac.tools.getCurrentTool(),
             map = _self.currentMap,
             selection = ac.palette.getSelection(),
-            submap = selection.submap,
             layerIndex = _self.currentLayer,
-            current_map = env.get("CURRENT_MAP");
-
-        var mapLayer = map.getLayer(layerIndex);
-        var selectedTiles = tool(mapLayer, eventRow, eventCol);
+            mapLayer = map.getLayer(layerIndex),
+            selectedTiles = tool(mapLayer, eventRow, eventCol);
 
         selectedTiles.forEach(function(tile){
-            var tile_col = tile.col,
-                tile_row = tile.row,
-                x = tile_col * tsize,
-                y = tile_row * tsize;
-
+            var tileCol = tile.col,
+                tileRow = tile.row,
+                x = tileCol * tsize,
+                y = tileRow * tsize;
+            // update the layers with the new tile image
             ac.layer.updateLayer(layerIndex, x, y, selection.image);
-
             // update the map grid with the new tile ids
-            ac.utils.iterate2DArray(submap, function(subrow, subcol) {
-                var row = subrow + tile_row,
-                    col = subcol + tile_col;
-
-                if (! map.inRange(row, col)) { return; }
-                var cell = map.get(layerIndex, row, col) || {};
-                map.set(layerIndex, row, col, submap[subrow][subcol]);
-            });
+            map.update(layerIndex, tileRow, tileCol, selection.submap);
         });
         saveMap(map);
     };

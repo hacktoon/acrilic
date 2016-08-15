@@ -24,29 +24,20 @@ ac.export("map", function(env){
             return this.layers[layerIndex][row][col];
         },
 
+        update: function(layerIndex, tileRow, tileCol, submap) {
+            ac.utils.iterate2DArray(submap, function(subrow, subcol) {
+                var row = subrow + tileRow,
+                    col = subcol + tileCol;
+
+                if (! this.inRange(row, col)) { return; }
+                this.set(layerIndex, row, col, submap[subrow][subcol]);
+            }.bind(this));
+        },
+
         inRange: function(row, col) {
             var col_range = col >= 0 && col < this.cols,
                 row_range = row >= 0 && row < this.rows;
             return col_range && row_range;
-        },
-
-        update: function(row, col, region) {
-            var matrix = selection.matrix,
-                tool = $tools.getTool();
-
-            tool(map, orig_row, orig_col, selection).forEach(function(tile){
-                var col = tile.col,
-                    row = tile.row;
-
-                // update the map grid with the new tile ids
-                for(var i=0; i<matrix.length; i++){
-                    for(var j=0; j<matrix[i].length; j++){
-                        var cell = map.get(i+row, j+col) || {};
-                        cell[current_layer_id] = matrix[i][j];
-                        map.set(i+row, j+col, cell);
-                    }
-                }
-            });
         },
 
         getLayer: function(layerIndex) {

@@ -3,10 +3,7 @@ ac.export("tools", function(env){
 
     ac.import("fill");
 
-    var _self = {
-        current: undefined,
-        tools: {}
-    };
+    var _self = {};
 
     var updateTile = function(row, col, boardData) {
         var tsize = env.get("TILESIZE"),
@@ -20,7 +17,7 @@ ac.export("tools", function(env){
         boardData.map.update(layer.index, row, col, selection.submap);
     };
 
-    var pen = (function(){
+    _self.pen = (function(){
         return {
             mousedown: function(row, col, boardData) {
                 updateTile(row, col, boardData);
@@ -32,7 +29,7 @@ ac.export("tools", function(env){
         };
     })();
 
-    var square = (function(){
+    _self.square = (function(){
         var row0, col0;
         return {
             mousedown: function(row, col, boardData) {
@@ -49,7 +46,7 @@ ac.export("tools", function(env){
         };
     })();
 
-    var fill = {
+    _self.fill = {
         mousedown: function(row, col, boardData) {
             return ac.fill.execute(row, col, boardData);
         },
@@ -57,25 +54,11 @@ ac.export("tools", function(env){
         mouseup: function() {}
     };
 
-    var setTool = function(func) {
-        _self.current = func;
-    };
-
-    var getCurrentTool = function() {
-        return _self.tools[_self.current];
-    };
-
-    var initTools = function() {
-        _self.tools = {
-            pen: pen,
-            square: square,
-            fill: fill
-        };
+    var getTool = function() {
+        return _self[env.get("CURRENT_TOOL")];
     };
 
     return {
-        initTools: initTools,
-        getCurrentTool: getCurrentTool,
-        setTool: setTool
+        getTool: getTool
     };
 });

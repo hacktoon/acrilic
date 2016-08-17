@@ -2,63 +2,13 @@
 ac.export("board", function(env){
     "use strict";
 
-    ac.import("utils", "map", "palette", "tools", "fs", "canvas");
+    ac.import("utils", "map", "palette", "tools", "fs");
 
     var _self = {
         doc: $(document),
         container: $("#board-panel"),
         overlay: undefined,
-        layers: [],
-        currentLayer: 0,
-        currentMap: undefined,
         cursor: undefined
-    };
-
-    var Layer = ac.Class({
-        init: function(index, id, width, height){
-            this.index = index;
-            this.id = id;
-            this.canvas = ac.canvas.createCanvas(width, height);
-            this.canvas.elem.attr("id", id).addClass('layer');
-        },
-
-        update: function(image, x, y){
-            this.canvas.clear(x, y, image.width, image.height);
-            this.canvas.draw(image, 0, 0, x, y);
-        },
-
-        getElement: function(){
-            return this.canvas.elem;
-        },
-
-        activate: function(){
-            this.canvas.elem.addClass("active");
-        },
-
-        deactivate: function(){
-            this.canvas.elem.removeClass("active");
-        }
-    });
-
-    var createLayers = function(board, width, height){
-        _self.layers = [
-            new Layer(0, "bg-layer", width, height),
-            new Layer(1, "fg-layer", width, height),
-            new Layer(2, "evt-layer", width, height)
-        ];
-        var elements = ac.utils.map(_self.layers, function(layer){
-            return layer.getElement();
-        });
-        board.append(elements);
-    };
-
-    var activateLayer = function(index) {
-        if(! _self.layers.length){
-            return;
-        }
-        _self.layers[_self.currentLayer].deactivate();
-        _self.currentLayer = index;
-        _self.layers[index].activate();
     };
 
     var updateCursor = function(params){
@@ -153,30 +103,17 @@ ac.export("board", function(env){
         return cursor;
     };
 
-    var createElements = function(width, height) {
-        var board = $('<div/>').addClass('board'),
+    var createElements = function(map) {
+        var tsize = env.get("TILESIZE"),
+            width = map.cols * tsize,
+            height = map.rows * tsize,
+            board = $('<div/>').addClass('board'),
             overlay = $("<div/>").addClass("board-overlay")
                 .css({width: width, height: height});
         board.width(width).height(height);
         _self.cursor = createCursor();
         _self.overlay = overlay.append(_self.cursor);
         _self.container.html([board, overlay]);
-        return board;
-    };
-
-    var renderMap = function() {
-        var tsize = env.get("TILESIZE"),
-            map = _self.currentMap;
-
-        //map.getLayer() is used here only to send a matrix with specific cols x rows
-        ac.utils.iterate2DArray(map.getLayer(), function(row, col) {
-            for(var layerIndex in _self.layers){
-                var tile_id = map.get(layerIndex, row, col),
-                    tile = ac.palette.getTile(tile_id);
-                if (! tile){ continue; }
-                _self.layers[layerIndex].update(tile.getCanvas(), col*tsize, row*tsize);
-            }
-        });
     };
 
     var saveMap = function() {
@@ -185,21 +122,12 @@ ac.export("board", function(env){
     };
 
     var createBoard = function(map){
-        var tsize = env.get("TILESIZE"),
-            width = map.cols * tsize,
-            height = map.rows * tsize,
-            board = createElements(width, height);
-        _self.currentMap = map;
-        env.set('CURRENT_MAP', map);
-        createLayers(board, width, height);
+        createElements(map);
         registerEvents();
-        activateLayer(_self.currentLayer);
         saveMap();
     };
 
     return {
-        createBoard: createBoard,
-        activateLayer: activateLayer,
-        renderMap: renderMap
+        createBoard: createBoard
     };
 });

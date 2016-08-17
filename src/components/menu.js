@@ -2,7 +2,7 @@
 ac.export("menu", function(env){
     "use strict";
 
-    ac.import("dialog", "tools", "map", "board");
+    ac.import("dialog", "map", "board");
 
     var registerSwitchButton = function(selector, action) {
         var activeClass = 'active',
@@ -17,15 +17,18 @@ ac.export("menu", function(env){
     };
 
     var initToolsMenu = function() {
-        ac.tools.initTools();
         registerSwitchButton('.btn-tool', function(value) {
-            ac.tools.setTool(value);
+            env.set("CURRENT_TOOL", value);
         });
     };
 
     var initLayersMenu = function() {
         registerSwitchButton('.btn-layer', function(value) {
-            ac.board.activateLayer(value);
+            var map = env.get("CURRENT_MAP");
+            env.set("CURRENT_LAYER", value);
+            if (map){
+                map.activateLayer(value);
+            }
         });
     };
 
@@ -34,6 +37,7 @@ ac.export("menu", function(env){
             ac.dialog.openNewMapDialog(function(name, rows, cols){
                 var map = ac.map.createMap(name, rows, cols);
                 ac.board.createBoard(map);
+                env.set('CURRENT_MAP', map);
             });
         });
 
@@ -47,7 +51,7 @@ ac.export("menu", function(env){
                 }
                 var map = ac.map.importMap(mapData);
                 ac.board.createBoard(map);
-                ac.board.renderMap();
+                env.set('CURRENT_MAP', map);
             });
         });
 

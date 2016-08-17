@@ -2,15 +2,63 @@
 ac.export("board", function(env){
     "use strict";
 
-    ac.import("utils", "map", "layer", "palette", "tools", "fs");
+    ac.import("utils", "map", "palette", "tools", "fs", "canvas");
 
     var _self = {
         doc: $(document),
         container: $("#board-panel"),
         overlay: undefined,
+        layers: [],
         currentLayer: 0,
         currentMap: undefined,
         cursor: undefined
+    };
+
+    var Layer = ac.Class({
+        init: function(index, id, width, height){
+            this.index = index;
+            this.id = id;
+            this.canvas = ac.canvas.createCanvas(width, height);
+            this.canvas.elem.attr("id", id).addClass('layer');
+        },
+
+        update: function(image, x, y){
+            this.canvas.clear(x, y, image.width, image.height);
+            this.canvas.draw(image, 0, 0, x, y);
+        },
+
+        getElement: function(){
+            return this.canvas.elem;
+        },
+
+        activate: function(){
+            this.canvas.elem.addClass("active");
+        },
+
+        deactivate: function(){
+            this.canvas.elem.removeClass("active");
+        }
+    });
+
+    var createLayers = function(board, width, height){
+        _self.layers = [
+            new Layer(0, "bg-layer", width, height),
+            new Layer(1, "fg-layer", width, height),
+            new Layer(2, "evt-layer", width, height)
+        ];
+        var elements = ac.utils.map(_self.layers, function(layer){
+            return layer.getElement();
+        });
+        board.append(elements);
+    };
+
+    var activateLayer = function(index) {
+        if(! _self.layers.length){
+            return;
+        }
+        _self.layers[_self.currentLayer].deactivate();
+        _self.currentLayer = index;
+        _self.layers[index].activate();
     };
 
     var updateCursor = function(params){
@@ -40,7 +88,7 @@ ac.export("board", function(env){
         return {
             map: _self.currentMap,
             selection: getSelection(),
-            layer: _self.currentLayer,
+            layer: _self.layers[_self.currentLayer]
         };
     };
 
@@ -58,7 +106,7 @@ ac.export("board", function(env){
             updateCursor({row: mouseRow, col: mouseCol});
             if (mouseDown){
                 // allow painting while dragging
-                getTool().mousedown(mouseRow, mouseCol, getBoardData());
+                getTool().mousemove(mouseRow, mouseCol, getBoardData());
             }
         })
         .on('mousedown', function(event){
@@ -69,7 +117,6 @@ ac.export("board", function(env){
         .on('mouseup', function(event){
             getTool().mouseup(mouseRow, mouseCol, getBoardData());
             mouseDown = false;
-            saveMap();
         })
         .on('mouseenter', function(){
             mouseOver = true;
@@ -79,17 +126,21 @@ ac.export("board", function(env){
         })
         .on('mouseleave', function(){
             mouseOver = false;
-            mouseDown = false;
             _self.cursor.hide();
         });
 
-        // event triggered when the mouse is released on palette selection
-        _self.doc.on("selectionready", function(){
+        _self.doc
+        .on("selectionready", function(){
+            // event triggered when the mouse is released on palette selection
             var selection = getSelection();
             updateCursor({width: selection.width, height: selection.height});
             if (mouseOver){
                 _self.cursor.show();
             }
+        })
+        .on('mouseup', function(event){
+            mouseDown = false;
+            saveMap();
         });
     };
 
@@ -119,11 +170,11 @@ ac.export("board", function(env){
 
         //map.getLayer() is used here only to send a matrix with specific cols x rows
         ac.utils.iterate2DArray(map.getLayer(), function(row, col) {
-            for(var layerIndex in ac.layer.getLayers()){
+            for(var layerIndex in _self.layers){
                 var tile_id = map.get(layerIndex, row, col),
                     tile = ac.palette.getTile(tile_id);
                 if (! tile){ continue; }
-                ac.layer.updateLayer(layerIndex, col*tsize, row*tsize, tile.getCanvas());
+                _self.layers[layerIndex].update(tile.getCanvas(), col*tsize, row*tsize);
             }
         });
     };
@@ -131,19 +182,6 @@ ac.export("board", function(env){
     var saveMap = function() {
         var map = _self.currentMap;
         ac.fs.saveFile(map.name, ac.map.exportMap(map));
-    };
-
-    var activateLayer = function(index) {
-        ac.layer.activateLayer(index || 0);
-        _self.currentLayer = index;
-    };
-
-    var createLayers = function(board, width, height){
-        var layers = ac.layer.createLayers(width, height),
-            elements = ac.utils.map(layers, function(layer){
-                return layer.getElement();
-            });
-        board.append(elements);
     };
 
     var createBoard = function(map){

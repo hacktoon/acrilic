@@ -121,7 +121,7 @@ ac.export("palette", function(env){
             if (! dragging){ return; }
             dragging = false;
             setSelection(updateSelector(event, x0, y0));
-            _self.doc.trigger("selection-ready");
+            _self.doc.trigger("selectionready");
         });
     };
 

@@ -13,53 +13,83 @@ ac.export("board", function(env){
         cursor: undefined
     };
 
-    var setCursorPosition = function(row, col){
-        var tsize = env.get("TILESIZE");
-        _self.cursor.css({
-            transform: "translate(" + (col * tsize) + "px, " + (row * tsize) + "px)"
-        });
+    var updateCursor = function(params){
+        var tsize = env.get("TILESIZE"),
+            css = {};
+        if (params.row !== undefined && params.col !== undefined){
+            var x = params.col * tsize,
+                y = params.row * tsize;
+            css.transform = "translate(" + x + "px, " + y + "px)";
+        }
+        if (params.width && params.height){
+            css.width = params.width;
+            css.height = params.height;
+        }
+        _self.cursor.css(css);
     };
 
-    var registerEvents = function(board, action){
-        var mouseUp = true,
-            mouseOut = true,
-            col = 0,
-            row = 0;
+    var getSelection = function(){
+        return ac.palette.getSelection();
+    };
+
+    var getTool = function(){
+        return ac.tools.getCurrentTool();
+    };
+
+    var getBoardData = function(){
+        return {
+            map: _self.currentMap,
+            selection: getSelection(),
+            layer: _self.currentLayer,
+        };
+    };
+
+    var registerEvents = function(){
+        var mouseDown = false,
+            mouseOver = true,
+            mouseRow = 0,
+            mouseCol = 0;
 
         _self.overlay
         .on('mousemove', function(event){
             var pos = ac.utils.getRelativeMousePosition(event, _self.container);
-            row = pos.y;
-            col = pos.x;
-
-            setCursorPosition(row, col);
-
-            // Allows painting while dragging
-            mouseUp || action(row, col);
-        }).on('mousedown', function(e){
-            e.preventDefault();
-            mouseUp = false;
-            action(row, col);
-        }).on('mouseenter', function(e){
-            mouseOut = false;
-            if(ac.palette.getSelection()){
+            mouseCol = pos.x;
+            mouseRow = pos.y;
+            updateCursor({row: mouseRow, col: mouseCol});
+            if (mouseDown){
+                // allow painting while dragging
+                getTool().mousedown(mouseRow, mouseCol, getBoardData());
+            }
+        })
+        .on('mousedown', function(event){
+            event.preventDefault();
+            getTool().mousedown(mouseRow, mouseCol, getBoardData());
+            mouseDown = true;
+        })
+        .on('mouseup', function(event){
+            getTool().mouseup(mouseRow, mouseCol, getBoardData());
+            mouseDown = false;
+            saveMap();
+        })
+        .on('mouseenter', function(){
+            mouseOver = true;
+            if(getSelection()){
                 _self.cursor.show();
             }
-        }).on('mouseleave', function(e){
-            mouseOut = true;
-            mouseUp = true;
+        })
+        .on('mouseleave', function(){
+            mouseOver = false;
+            mouseDown = false;
             _self.cursor.hide();
-        }).on('mouseup', function(){
-            mouseUp = true;
         });
 
-        _self.doc.on("selection-ready", function(){
-            var selection = ac.palette.getSelection();
-            _self.cursor.css({
-                width: selection.width,
-                height: selection.height
-            });
-            mouseOut || _self.cursor.show();
+        // event triggered when the mouse is released on palette selection
+        _self.doc.on("selectionready", function(){
+            var selection = getSelection();
+            updateCursor({width: selection.width, height: selection.height});
+            if (mouseOver){
+                _self.cursor.show();
+            }
         });
     };
 
@@ -98,28 +128,9 @@ ac.export("board", function(env){
         });
     };
 
-    var saveMap = function(map) {
+    var saveMap = function() {
+        var map = _self.currentMap;
         ac.fs.saveFile(map.name, ac.map.exportMap(map));
-    };
-
-    var updateMap = function(eventRow, eventCol) {
-        var tsize = env.get("TILESIZE"),
-            tool = ac.tools.getCurrentTool(),
-            map = _self.currentMap,
-            selection = ac.palette.getSelection(),
-            layerIndex = _self.currentLayer,
-            mapLayer = map.getLayer(layerIndex),
-            selectedTiles = tool(mapLayer, eventRow, eventCol);
-
-        selectedTiles.forEach(function(tile){
-            var x = tile.col * tsize,
-                y = tile.row * tsize;
-            // update the layers with the new tile image
-            ac.layer.updateLayer(layerIndex, x, y, selection.image);
-            // update the map grid with the new tile ids
-            map.update(layerIndex, tile.row, tile.col, selection.submap);
-        });
-        saveMap(map);
     };
 
     var activateLayer = function(index) {
@@ -143,9 +154,9 @@ ac.export("board", function(env){
         _self.currentMap = map;
         env.set('CURRENT_MAP', map);
         createLayers(board, width, height);
-        registerEvents(board, updateMap);
+        registerEvents();
         activateLayer(_self.currentLayer);
-        saveMap(map);
+        saveMap();
     };
 
     return {

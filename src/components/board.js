@@ -26,25 +26,13 @@ ac.export("board", function(env){
         _self.cursor.css(css);
     };
 
-    var getSelection = function(){
-        return ac.palette.getSelection();
-    };
-
     var getTool = function(){
-        return ac.tools.getCurrentTool();
-    };
-
-    var getBoardData = function(){
-        return {
-            map: _self.currentMap,
-            selection: getSelection(),
-            layer: _self.layers[_self.currentLayer]
-        };
+        return ac.tools.getTool(env.get("CURRENT_TOOL"));
     };
 
     var registerEvents = function(){
         var mouseDown = false,
-            mouseOver = true,
+            mouseOver = false,
             mouseRow = 0,
             mouseCol = 0;
 
@@ -56,21 +44,23 @@ ac.export("board", function(env){
             updateCursor({row: mouseRow, col: mouseCol});
             if (mouseDown){
                 // allow painting while dragging
-                getTool().mousemove(mouseRow, mouseCol, getBoardData());
+                getTool().mousemove(mouseRow, mouseCol);
             }
         })
         .on('mousedown', function(event){
             event.preventDefault();
-            getTool().mousedown(mouseRow, mouseCol, getBoardData());
+            getTool().mousedown(mouseRow, mouseCol);
             mouseDown = true;
         })
         .on('mouseup', function(event){
-            getTool().mouseup(mouseRow, mouseCol, getBoardData());
+            getTool().mouseup(mouseRow, mouseCol);
             mouseDown = false;
+            saveMap();
         })
         .on('mouseenter', function(){
             mouseOver = true;
-            if(getSelection()){
+            // TODO: create onselect  for palette to avoid this code below
+            if(getSelectedTiles()){
                 _self.cursor.show();
             }
         })
@@ -82,7 +72,7 @@ ac.export("board", function(env){
         _self.doc
         .on("selectionready", function(){
             // event triggered when the mouse is released on palette selection
-            var selection = getSelection();
+            var selection = getSelectedTiles();
             updateCursor({width: selection.width, height: selection.height});
             if (mouseOver){
                 _self.cursor.show();
@@ -90,7 +80,6 @@ ac.export("board", function(env){
         })
         .on('mouseup', function(event){
             mouseDown = false;
-            saveMap();
         });
     };
 
@@ -110,15 +99,19 @@ ac.export("board", function(env){
             board = $('<div/>').addClass('board'),
             overlay = $("<div/>").addClass("board-overlay")
                 .css({width: width, height: height});
-        board.width(width).height(height);
+        board.width(width)
+             .height(height)
+             .html(map.getElement());
         _self.cursor = createCursor();
         _self.overlay = overlay.append(_self.cursor);
         _self.container.html([board, overlay]);
     };
 
     var saveMap = function() {
-        var map = _self.currentMap;
-        ac.fs.saveFile(map.name, ac.map.exportMap(map));
+        var map = env.get('CURRENT_MAP');
+        if(map){
+            ac.fs.saveFile(map.name, ac.map.exportMap(map));
+        }
     };
 
     var createBoard = function(map){

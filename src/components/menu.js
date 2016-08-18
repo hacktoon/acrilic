@@ -25,9 +25,10 @@ ac.export("menu", function(env){
     var initLayersMenu = function() {
         registerSwitchButton('.btn-layer', function(value) {
             var map = env.get("CURRENT_MAP");
-            env.set("CURRENT_LAYER", value);
+            var index = Number(value);
+            env.set("CURRENT_LAYER", index);
             if (map){
-                map.activateLayer(value);
+                map.activateLayer(index);
             }
         });
     };
@@ -36,8 +37,8 @@ ac.export("menu", function(env){
         $('#btn-file-new').on('click', function(){
             ac.dialog.openNewMapDialog(function(name, rows, cols){
                 var map = ac.map.createMap(name, rows, cols);
-                ac.board.createBoard(map);
                 env.set('CURRENT_MAP', map);
+                ac.board.createBoard(map);
             });
         });
 
@@ -50,8 +51,9 @@ ac.export("menu", function(env){
                     return;
                 }
                 var map = ac.map.importMap(mapData);
-                ac.board.createBoard(map);
                 env.set('CURRENT_MAP', map);
+                ac.board.createBoard(map);
+                map.renderMap();
             });
         });
 

@@ -12,24 +12,6 @@ ac.export("utils", function(env){
         return arr;
     };
 
-    var flatten2DArray = function(arr){
-        var flatArr = [];
-        for (var row = 0; row < arr.length; row++) {
-            for (var col = 0; col < arr[row].length; col++) {
-                flatArr.push(arr[row][col]);
-            }
-        }
-        return flatArr;
-    };
-
-    var iterate2DArray = function(arr, func){
-        for (var row = 0; row < arr.length; row++) {
-            for (var col = 0; col < arr[row].length; col++) {
-                func(row, col);
-            }
-        }
-    };
-
     var getRelativeMousePosition = function(event, container) {
         var tilesize = env.get("TILESIZE"),
             doc = $(document),
@@ -64,8 +46,6 @@ ac.export("utils", function(env){
     return {
         getRelativeMousePosition: getRelativeMousePosition,
         build2DArray: build2DArray,
-        iterate2DArray: iterate2DArray,
-        flatten2DArray: flatten2DArray,
         filter: filter,
         map: map
     };

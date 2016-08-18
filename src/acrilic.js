@@ -10,7 +10,9 @@ var ac = (function(){
 
     // global environment
     var env = (function(){
-        var registry = {};
+        var registry = {
+            NULL_TILE_ID: 0
+        };
         return {
             set: function(key, value){
                 registry[key] = value;

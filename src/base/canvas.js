@@ -2,7 +2,7 @@
 ac.export("canvas", function(env){
     "use strict";
 
-    var Canvas = ac.Class({
+    var Canvas  = //elimina essa classe  ac.Class({
         init: function(width, height){
             this.width = width;
             this.height = height;

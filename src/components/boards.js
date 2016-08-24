@@ -1,11 +1,10 @@
 
-ac.export("board", function(env){
+ac.export("boards", function(env){
     "use strict";
 
     ac.import("utils", "map", "palette", "tools", "fs");
 
     var _self = {
-        doc: $(document),
         container: $("#board-panel"),
         overlay: undefined,
         cursor: undefined
@@ -69,7 +68,7 @@ ac.export("board", function(env){
             _self.cursor.hide();
         });
 
-        _self.doc
+        env.get("DOCUMENT")
         .on("selectionready", function(){
             // event triggered when the mouse is released on palette selection
             var selection = getSelectedTiles();

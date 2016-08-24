@@ -11,7 +11,8 @@ var ac = (function(){
     // global environment
     var env = (function(){
         var registry = {
-            NULL_TILE_ID: 0
+            NULL_TILE_ID: 0,
+            DOCUMENT: $(document)
         };
         return {
             set: function(key, value){

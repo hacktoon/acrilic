@@ -4,67 +4,58 @@ ac.export("maps", function(env){
 
     ac.import("utils");
 
-    var Matrix = ac.Class({
-        init: function(rows, cols, defaultValue){
-            this.matrix = ac.utils.build2DArray(rows, cols, defaultValue);
-        },
-
-        set: function(row, col, value){
-            if (! this.inRange(row, col)) { return; }
-            this.matrix[row][col] = value;
-        },
-
-        get: function(row, col){
-            if (! this.inRange(row, col)) { return; }
-            return this.matrix[row][col];
+    /*
+    The Map is a tridimensional array of tiles, in which each cell contains a Tile object id
+    */
+    var Map = ac.Class({
+        init: function(name, rows, cols){
+            var nullTileID = env.get("NULL_TILE_ID");
+            this.name = name;
+            this.rows = rows;
+            this.cols = cols;
+            this.grids = [
+                ac.utils.build2DArray(rows, cols, nullTileID),  // BG Layer
+                ac.utils.build2DArray(rows, cols, nullTileID),  // FG Layer
+                ac.utils.build2DArray(rows, cols, nullTileID)   // Event Layer
+            ];
         },
 
         inRange: function(row, col) {
             var col_range = col >= 0 && col < this.cols,
                 row_range = row >= 0 && row < this.rows;
             return col_range && row_range;
-        }
-    });
+        },
 
-    /*
-    A Map of int values pointing to tiles in a tileset
-    */
-    var Map = ac.Class({
-        init: function(rows, cols){
-            this.rows = rows;
-            this.cols = cols;
-            this.matrices = [
-                new Matrix(rows, cols, 0),  // BG Layer
-                new Matrix(rows, cols, 0),  // FG Layer
-                new Matrix(rows, cols, 0)   // Event Layer
-            ];
+        currentGrid: function(){
+            var layer = env.get("CURRENT_LAYER");
+            return this.grids[layer];
         },
 
         set: function(row, col, tile){
-            var layer = env.get("CURRENT_LAYER");
-            this.matrices[layer].set(row, col, tile);
+            if (! this.inRange(row, col)) { return; }
+            this.currentGrid()[row][col] = tile;
         },
 
         get: function(row, col){
-            var layer = env.get("CURRENT_LAYER"),
-            return this.matrices[layer].get(row, col);
+            if (! this.inRange(row, col)) { return; }
+            return this.currentGrid()[row][col];
         }
     });
 
-    var create = function(name, rows, cols){
+    var createMap = function(name, rows, cols){
         return new Map(name, rows, cols);
     };
 
-    var createFrom = function(mapData) {
-        var map = create(mapData.name, mapData.rows, mapData.cols);
-        mapData.matrices.forEach(function(matrix, i) {
-            map.matrices[i] = matrix;
+    var createMapFrom = function(mapData){
+        var map = createMap(mapData.name, mapData.rows, mapData.cols);
+        mapData.grids.forEach(function(grid, i) {
+            map.grids[i] = grid;
         });
         return map;
     };
 
     return {
-        createFrom: createFrom,
-        create: create
+        createMapFrom: createMapFrom,
+        createMap: createMap
     };
 });

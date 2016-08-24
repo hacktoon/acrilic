@@ -8,11 +8,11 @@ ac.export("tiles", function(env){
         }
     });
 
-    var create = function(id, canvas){
+    var createTile = function(id, canvas){
         return new Tile(id, canvas);
     };
 
     return {
-        create: create
+        createTile: createTile
     };
 });

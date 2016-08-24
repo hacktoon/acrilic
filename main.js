@@ -1,7 +1,7 @@
 (function() {
 	"use strict";
 
-    ac.import("loader", "board", "menu", "palette", "tileset", "fs");
+    ac.import("assets", "boards", "menu", "palette", "tileset", "filesystem");
 
     var assetsMap = [
         {
@@ -13,22 +13,13 @@
     ];
 
     var loadRecentFile = function() {
-        var recentFile = ac.fs.getRecentFile(),
-            map;
+        var recentFile = ac.filesystem.getRecentFile();
         if(! recentFile){ return; }
-
-        try {
-            map = ac.map.importMap(recentFile);
-        } catch(err) {
-            ac.log("Error loading file '" + recentFile.name + "': " + err);
-            return;
-        }
-        ac.board.createBoard(map);
-        map.renderMap();
-    }
+        ac.boards.createBoard(recentFile);
+    };
 
     var init = function() {
-        var default_tileset_data = ac.loader.getAsset("tileset", "default"),
+        var default_tileset_data = ac.assets.getAsset("tileset", "default"),
             tileset = ac.tileset.createTileset(default_tileset_data);
 
         ac.palette.createPalette(tileset);
@@ -37,5 +28,5 @@
         loadRecentFile();
     };
 
-    ac.loader.loadAssets(assetsMap, init);
+    ac.assets.loadAssets(assetsMap, init);
 })();

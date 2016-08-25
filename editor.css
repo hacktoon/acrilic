@@ -99,14 +99,14 @@ input {
     top: 0;
     left: 0;
     bottom: 0;
-    width: 271px;
+    width: 335px;
     overflow: hidden;
 }
 
 #palette-panel {
     overflow-y: scroll;
     position: relative;
-    width: 271px;
+    width: 335px;
     height: 60%;
 }
 
@@ -151,7 +151,7 @@ input {
 
 #project-panel {
     background: #FFF;
-    width: 320px;
+    width: 335px;
     height: 40%;
 }
 
@@ -161,7 +161,7 @@ input {
     background: #CCC;
     position: absolute;
     top: 0;
-    left: 271px;
+    left: 335px;
     right: 0;
     bottom: 0;
     z-index: 1;
@@ -179,7 +179,7 @@ input {
 }
 
 #board-panel .board {
-    background: url("img/screen_bg.png");
+    background: url("data/img/screen_bg.png");
     position: absolute;
 }
 

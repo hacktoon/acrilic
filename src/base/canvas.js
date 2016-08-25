@@ -2,7 +2,7 @@
 ac.export("canvas", function(env){
     "use strict";
 
-    var Canvas  = //elimina essa classe  ac.Class({
+    /*var Canvas = //elimina essa classe  ac.Class({
         init: function(width, height){
             this.width = width;
             this.height = height;
@@ -24,7 +24,7 @@ ac.export("canvas", function(env){
         getElement: function(){
             return this.elem.get(0);
         }
-    });
+    });*/
 
     return {
         createCanvas: function(width, height){

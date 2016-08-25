@@ -8,8 +8,7 @@ ac.export("maps", function(env){
     The Map is a tridimensional array of tiles, in which each cell contains a Tile object id
     */
     var Map = ac.Class({
-        init: function(name, rows, cols){
-            var nullTileID = env.get("NULL_TILE_ID");
+        init: function(name, rows, cols, nullTileID){
             this.name = name;
             this.rows = rows;
             this.cols = cols;
@@ -43,7 +42,7 @@ ac.export("maps", function(env){
     });
 
     var createMap = function(name, rows, cols){
-        return new Map(name, rows, cols);
+        return new Map(name, rows, cols, 0);
     };
 
     var createMapFrom = function(mapData){

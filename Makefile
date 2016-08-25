@@ -2,5 +2,5 @@
 
 build:
 	mkdir -p build/
-	cat lib/*.js src/acrilic.js src/**/*.js main.js > build/Acrilic.js
-	inkscape -e tilesets/default.png -i default tilesets/default.svg
+	inkscape -e data/tilesets/default/default.png -i tileset data/tilesets/default/default.svg
+	cat lib/*.js src/acrilic.js data/**/**/data.js src/**/*.js main.js > build/Acrilic.js

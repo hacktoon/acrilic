@@ -2,9 +2,9 @@
 ac.export("tilesets", function(env){
     "use strict";
 
-    ac.import("assets", "tiles");
+    ac.import("tiles");
 
-    var _self = {
+    var self = {
         tilesets: []
     };
 
@@ -16,9 +16,9 @@ ac.export("tilesets", function(env){
         }
     });
 
-    var createTileset = function(id, tilemap, image){
+    var createTileset = function(tilesetData){
         var tileset = new Tileset(id, tilesize, image);
-        _self.tilesets.push(tileset);
+        self.tilesets.push(tileset);
         return tileset;
     };
 

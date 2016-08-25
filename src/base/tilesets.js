@@ -13,21 +13,34 @@ ac.export("tilesets", function(env){
             this.id = id;
             this.name = name;
             this.tilesize = tilesize;
-            this.tiles = this.buildTiles(map);
+            this.tiles = this.buildTiles(image, map);
         },
 
-        buildTiles: function(map) {
+        createCanvas: function(image, x, y){
             var tsize = this.tilesize;
+            var canvas = $("<canvas/>").attr({height: tsize, width: tsize}).get(0);
+            canvas.getContext("2d").drawImage(image, x*tsize, y*tsize, tsize, tsize, 0, 0, tsize, tsize);
+            return canvas;
+        },
+
+        buildTiles: function(image, map) {
             var tiles = {};
             for(var i in map){
-                var tile_map = map[i];
+                var position = map[i];
+                var canvas = this.createCanvas(image, position[0], position[1]);
+                tiles[i] = ac.tiles.createTile(i, canvas);
             }
-        }
+            return tiles;
+        },
 
         getTile: function(id) {
             return this.tiles[id];
         }
     });
+    
+    var getTileset = function(id){
+        return self.tilesets[id];
+    };
 
     var init = function(tilesetSpecs){
         for(var i=0; i<tilesetSpecs.length; i++){

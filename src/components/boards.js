@@ -2,7 +2,7 @@
 ac.export("boards", function(env){
     "use strict";
 
-    ac.import("utils", "maps", "palette", "tools", "fs");
+    ac.import("utils", "maps", "palette", "tools");
 
     var _self = {
         container: $("#board-panel"),

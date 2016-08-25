@@ -2,7 +2,7 @@
 ac.export("tilesets", function(env){
     "use strict";
 
-    ac.import("tiles");
+    ac.import("utils", "tiles");
 
     var self = {
         tilesets: []
@@ -18,7 +18,7 @@ ac.export("tilesets", function(env){
 
         createCanvas: function(image, x, y){
             var tsize = this.tilesize;
-            var canvas = $("<canvas/>").attr({height: tsize, width: tsize}).get(0);
+            var canvas = ac.utils.createCanvas(width, height);
             canvas.getContext("2d").drawImage(image, x*tsize, y*tsize, tsize, tsize, 0, 0, tsize, tsize);
             return canvas;
         },

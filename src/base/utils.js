@@ -42,10 +42,15 @@ ac.export("utils", function(env){
         }
         return mapped;
     };
+    
+    var createCanvas = function(width, height){
+        return $("<canvas/>").attr({width: width, height: height}).get(0);
+    };
 
     return {
         getRelativeMousePosition: getRelativeMousePosition,
         build2DArray: build2DArray,
+        createCanvas: createCanvas,
         filter: filter,
         map: map
     };

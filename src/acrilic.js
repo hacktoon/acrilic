@@ -4,7 +4,7 @@ var ac = (function(){
     var self = {
         log: console.log.bind(console),
         error: console.error.bind(console),
-        tilesets: [],
+        tilesetSpecs: [],
         modules: {},
         keys: {
             ESC: 27
@@ -61,15 +61,15 @@ var ac = (function(){
         assets.items.push({src: src, callback: callback});
     };
 
-    self.registerTilesetData = function(tilesetData){
-        registerAsset(tilesetData.src, function(image){
-            tilesetData.image = image;
-            self.tilesets.push(tilesetData);
+    self.registerTilesetSpec = function(tilesetSpec){
+        registerAsset(tilesetSpec.src, function(image){
+            tilesetSpec.image = image;
+            self.tilesetSpecs.push(tilesetSpec);
         });
     };
 
-    self.getTilesetData = function(id){
-        return self.tilesets;
+    self.getTilesetSpecs = function(id){
+        return self.tilesetSpecs;
     };
 
     self.export = function(name, func){

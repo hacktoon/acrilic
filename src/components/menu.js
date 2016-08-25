@@ -2,7 +2,7 @@
 ac.export("menu", function(env){
     "use strict";
 
-    ac.import("dialog", "map", "boards");
+    ac.import("dialog", "boards");
 
     var registerSwitchButton = function(selector, action) {
         var activeClass = 'active',
@@ -31,7 +31,7 @@ ac.export("menu", function(env){
     var initFileMenu = function() {
         $('#btn-file-new').on('click', function(){
             ac.dialog.openNewMapDialog(function(name, rows, cols){
-                var map = ac.map.createMap(name, rows, cols);
+                
                 env.set('CURRENT_MAP', map);
                 ac.boards.createBoard(map);
             });

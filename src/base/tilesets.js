@@ -9,20 +9,41 @@ ac.export("tilesets", function(env){
     };
 
     var Tileset = ac.Class({
-        init: function(id, tilesize, image){
+        init: function(id, name, tilesize, image, map){
             this.id = id;
+            this.name = name;
             this.tilesize = tilesize;
-            this.tiles = {};
+            this.tiles = this.buildTiles(map);
+        },
+
+        buildTiles: function(map) {
+            var tsize = this.tilesize;
+            var tiles = {};
+            for(var i in map){
+                var tile_map = map[i];
+            }
+        }
+
+        getTile: function(id) {
+            return this.tiles[id];
         }
     });
 
-    var createTileset = function(tilesetData){
-        var tileset = new Tileset(id, tilesize, image);
-        self.tilesets.push(tileset);
-        return tileset;
+    var init = function(tilesetSpecs){
+        for(var i=0; i<tilesetSpecs.length; i++){
+            var spec = tilesetSpecs[i],
+                id = spec.id,
+                name = spec.name,
+                tilesize = spec.tilesize,
+                image = spec.image,
+                map = spec.map;
+
+            self.tilesets[id] = new Tileset(id, name, tilesize, image, map);
+        }
     };
 
     return {
-        createTileset: createTileset
+        init: init,
+        getTileset: getTileset
     };
 });

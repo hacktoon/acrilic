@@ -10,13 +10,12 @@
     };
 
     var init = function() {
-        var default_tileset_data = ac.getTilesetData("default"),
-            tileset = ac.tilesets.createTileset(default_tileset_data);
+        ac.tilesets.init(ac.getTilesetSpecs());
 
-        ac.palette.createPalette(tileset);
-        ac.menu.createMenu();
-
-        loadRecentFile();
+        // ac.palette.createPalette(tileset);
+        // ac.menu.createMenu();
+        //
+        // loadRecentFile();
     };
 
     ac.init(init);

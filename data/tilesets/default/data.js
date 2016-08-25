@@ -1,5 +1,6 @@
-ac.registerTilesetData({
+ac.registerTilesetSpec({
     id: "default",
+    name: "Default tileset",
     tilesize: 64,
     src: "data/tilesets/default/default.png",
     map: {

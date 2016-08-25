@@ -11,9 +11,9 @@
 
     var init = function() {
         ac.tilesets.init(ac.getTilesetSpecs());
-
+        
+        ac.menu.createMenu();
         // ac.palette.createPalette(tileset);
-        // ac.menu.createMenu();
         //
         // loadRecentFile();
     };

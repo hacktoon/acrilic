@@ -30,11 +30,10 @@ ac.export("menu", function(env){
 
     var initFileMenu = function() {
         $('#btn-file-new').on('click', function(){
-            ac.dialog.openNewMapDialog(function(name, rows, cols){
-                
+            ac.dialog.openNewFileDialog(function(name, rows, cols){
                 env.set('CURRENT_MAP', map);
-                ac.boards.createBoard(map);
-            });
+                //ac.boards.createBoard(map);
+            }, ac.getTilesetSpecs());
         });
 
         $('#btn-file-import').on('click', function(){
@@ -45,9 +44,9 @@ ac.export("menu", function(env){
                     alert("Not a valid JSON!");
                     return;
                 }
-                var map = ac.maps.createMapFrom(mapData);
+                //var map = ac.maps.createMapFrom(mapData);
                 env.set('CURRENT_MAP', map);
-                ac.boards.createBoard(map);
+                //ac.boards.createBoard(map);
             });
         });
 

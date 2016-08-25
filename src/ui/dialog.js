@@ -47,8 +47,19 @@ ac.export("dialog", function(env){
         }
     };
 
-    var openNewMapDialog = function(action){
-        dialog.init("New map", '#tpl-dialog-file-new');
+    var openNewFileDialog = function(action, tilesetSpecs){
+        dialog.init("New file", '#tpl-dialog-file-new', function(){
+            var options = [];
+            for(var i=0; i<tilesetSpecs.length; i++){
+                var item = tilesetSpecs[i];
+                var option = $("<option/>").val(item.id).html(item.name);
+                ac.log(option);
+                options.push(option);
+            }
+            $('#field-file-new-tileset').append(options);
+        });
+
+        //<option value="default">Default tileset</option>
         dialog.addButton('OK', function(){
             var name = $('#field-file-new-name').val(),
                 cols = Number($('#field-file-new-width').val()),
@@ -89,7 +100,7 @@ ac.export("dialog", function(env){
     };
 
     return {
-        openNewMapDialog: openNewMapDialog,
+        openNewFileDialog: openNewFileDialog,
         openImportDialog: openImportDialog,
         openExportDialog: openExportDialog
     };

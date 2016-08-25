@@ -18,7 +18,7 @@ ac.export("tilesets", function(env){
 
         createCanvas: function(image, x, y){
             var tsize = this.tilesize;
-            var canvas = ac.utils.createCanvas(width, height);
+            var canvas = ac.utils.createCanvas(tsize, tsize);
             canvas.getContext("2d").drawImage(image, x*tsize, y*tsize, tsize, tsize, 0, 0, tsize, tsize);
             return canvas;
         },

@@ -2,7 +2,7 @@
 ac.export("palette", function(env){
     "use strict";
 
-    ac.import("canvas", "utils");
+    ac.import("utils");
 
     var _self = {
         doc: $(document),
@@ -12,7 +12,6 @@ ac.export("palette", function(env){
         selector: undefined,
         cols: 0,
         rows: 0,
-        canvas: undefined,
         selection: {}
     };
 
@@ -33,19 +32,15 @@ ac.export("palette", function(env){
         var width = (x1 - x0 + 1) * tsize,
             height = (y1 - y0 + 1) * tsize;
 
-        image = ac.canvas.createCanvas(width, height);
-
         for(var y=y0, i=0; y<=y1; y++, i++){
             submap.push([]);
             for(var x=x0, j=0; x<=x1; x++, j++){
                 var tile = _self.tileset.getTileByPosition(y, x);
                 submap[i].push(tile.id);
-                image.draw(tile.getCanvas(), 0, 0, j*tsize, i*tsize);
             }
         }
 
         _self.selection = {
-            image: image.getElement(),
             submap: submap,
             width: width,
             height: height
@@ -70,15 +65,13 @@ ac.export("palette", function(env){
 
         _self.cols = tileset.cols;
         _self.rows = tileset.rows;
-        _self.canvas = ac.canvas.createCanvas(tsize*_self.cols, tsize*_self.rows);
 
         for(var row = 0; row < _self.rows; row++){
             for(var col = 0; col < _self.cols; col++){
                 var tile = tileset.getTileByPosition(row, col);
-                _self.canvas.draw(tile.getCanvas(), 0, 0, col*tsize, row*tsize);
             }
         }
-        _self.container.append(_self.canvas.elem);
+        //_self.container.append(_self.canvas.elem);
     };
 
     var updateSelector = function(event, x0, y0) {

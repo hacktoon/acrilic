@@ -40,7 +40,7 @@ ac.export("menu", function(env){
         $('#btn-file-import').on('click', function(){
             ac.dialog.openImportDialog(function(json){
                 try {
-                    var file = ac.files.importFile(json);
+                    var file = ac.files.createFileFromJSON(json);
                 } catch (err) {
                     alert("Not a valid JSON!");
                     return;

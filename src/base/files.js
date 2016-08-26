@@ -21,13 +21,13 @@ ac.export("files", function(env){
         return new File(id, tileset, map);
     };
 
-    var importFile = function(json){
+    var createFileFromJSON = function(json){
         var fileData = JSON.parse(json);
-        return new File(fileData.id, fileData.tileset, fileData.map);
+        return createFile(fileData.id, fileData.tileset, fileData.map);
     };
 
     return {
         createFile: createFile,
-        importFile: importFile
+        createFileFromJSON: createFileFromJSON
     };
  });

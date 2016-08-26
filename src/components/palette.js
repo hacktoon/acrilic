@@ -15,14 +15,6 @@ ac.export("palette", function(env){
         selection: {}
     };
 
-    var getSelection = function() {
-        return self.selection;
-    };
-
-    var getTile = function(id) {
-        return self.tileset.getTileById(id);
-    };
-
     var setSelection = function(points) {
         var pts = points || {x0: 0, y0: 0, x1: 0, y1: 0};
         var x0 = pts.x0, y0 = pts.y0, x1 = pts.x1, y1 = pts.y1;
@@ -45,19 +37,6 @@ ac.export("palette", function(env){
             width: width,
             height: height
         };
-    };
-
-    var initElements = function(tileset){
-        var tsize = env.get("TILESIZE"),
-            overlay = $("<div/>").attr("id", "palette-overlay"),
-            selector = $("<div/>").attr("id", "palette-selector")
-                .css({width: tsize, height: tsize}),
-            width = tileset.cols * tsize,
-            height = tileset.rows * tsize;
-
-        self.overlay = overlay.css({width: width, height: height});
-        self.selector = selector;
-        self.container.append(overlay).append(selector);
     };
 
     var loadTileset = function(tileset){
@@ -119,21 +98,24 @@ ac.export("palette", function(env){
     };
 
     var loadTileset = function(tileset) {
+        var width = tileset.cols * tsize,
+            height = tileset.rows * tsize;
         self.tileset = tileset;
+        self.overlay.css({width: width, height: height});
         loadTileset(tileset);
         registerEvents();
         setSelection();
     };
 
     var init = function() {
-        initElements();
-
+        var tsize = env.get("TILESIZE"),
+        self.overlay = $("<div/>").attr("id", "palette-overlay");
+        self.selector = $("<div/>").attr("id", "palette-selector").css({width: tsize, height: tsize}),
+        self.container.append([self.overlay, self.selector]);
     };
 
     return {
         init: init,
-        getTile: getTile,
-        getSelection: getSelection,
         loadTileset: loadTileset
     };
 });

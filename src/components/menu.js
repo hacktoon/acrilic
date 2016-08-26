@@ -50,7 +50,7 @@ ac.export("menu", function(env){
         });
 
         $('#btn-file-export').on('click', function(){
-            var file = ac.editor.getCurrentFile();
+            var file = env.get("CURRENT_FILE");
             if (! file){ return; }
             ac.dialog.openExportDialog(file.toJSON());
         });

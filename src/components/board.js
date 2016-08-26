@@ -1,32 +1,29 @@
 
-ac.export("boards", function(env){
+ac.export("board", function(env){
     "use strict";
 
-    ac.import("utils", "maps", "palette", "tools");
+    ac.import("utils", "tilesets");
 
-    var _self = {
+    var self = {
         container: $("#board-panel"),
         overlay: undefined,
-        cursor: undefined
+        cursor: undefined,
+        currentFile: undefined,
+        tilesize: 0
     };
 
     var updateCursor = function(params){
-        var tsize = env.get("TILESIZE"),
-            css = {};
+        var css = {};
         if (params.row !== undefined && params.col !== undefined){
-            var x = params.col * tsize,
-                y = params.row * tsize;
+            var x = params.col * self.tilesize,
+                y = params.row * self.tilesize;
             css.transform = "translate(" + x + "px, " + y + "px)";
         }
         if (params.width && params.height){
             css.width = params.width;
             css.height = params.height;
         }
-        _self.cursor.css(css);
-    };
-
-    var getTool = function(){
-        return ac.tools.getTool(env.get("CURRENT_TOOL"));
+        self.cursor.css(css);
     };
 
     var registerEvents = function(){
@@ -35,9 +32,9 @@ ac.export("boards", function(env){
             mouseRow = 0,
             mouseCol = 0;
 
-        _self.overlay
+        self.overlay
         .on('mousemove', function(event){
-            var pos = ac.utils.getRelativeMousePosition(event, _self.container);
+            var pos = ac.utils.getRelativeMousePosition(event, self.container);
             mouseCol = pos.x;
             mouseRow = pos.y;
             updateCursor({row: mouseRow, col: mouseCol});
@@ -59,13 +56,13 @@ ac.export("boards", function(env){
         .on('mouseenter', function(){
             mouseOver = true;
             // TODO: create onselect  for palette to avoid this code below
-            if(getSelectedTiles()){
-                _self.cursor.show();
-            }
+            // if(getSelectedTiles()){
+            //     self.cursor.show();
+            // }
         })
         .on('mouseleave', function(){
             mouseOver = false;
-            _self.cursor.hide();
+            self.cursor.hide();
         });
 
         env.get("DOCUMENT")
@@ -74,7 +71,7 @@ ac.export("boards", function(env){
             var selection = getSelectedTiles();
             updateCursor({width: selection.width, height: selection.height});
             if (mouseOver){
-                _self.cursor.show();
+                self.cursor.show();
             }
         })
         .on('mouseup', function(event){
@@ -82,44 +79,34 @@ ac.export("boards", function(env){
         });
     };
 
-    var createCursor = function() {
-        var tsize = env.get("TILESIZE");
-        var cursor = $("<div/>")
-            .addClass("selection-cursor")
-            .css({width: tsize, height: tsize})
-            .hide();
-        return cursor;
+    var createLayers = function() {
+
     };
 
     var createElements = function(map) {
-        var tsize = env.get("TILESIZE"),
-            width = map.cols * tsize,
-            height = map.rows * tsize,
-            board = $('<div/>').addClass('board'),
-            overlay = $("<div/>").addClass("board-overlay")
-                .css({width: width, height: height});
-        board.width(width)
-             .height(height)
-             .html(map.getElement());
-        _self.cursor = createCursor();
-        _self.overlay = overlay.append(_self.cursor);
-        _self.container.html([board, overlay]);
+        self.board = $('<div/>').addClass('board').html();
+        self.overlay = $("<div/>").addClass("board-overlay").append(self.cursor);
+        self.cursor = $("<div/>").addClass("selection-cursor").hide();
+        self.container.html([self.board, self.overlay]);
     };
 
-    var saveMap = function() {
-        var map = env.get('CURRENT_MAP');
-        if(map){
-            ac.fs.saveFile(map.name, ac.map.exportMap(map));
-        }
+    var loadFile = function(file){
+        self.tilesize = env.get("TILESIZE");
+        var width = file.map.cols * self.tilesize,
+            height = file.map.rows * self.tilesize;
+        self.cursor.css({width: self.tilesize, height: self.tilesize})
+        self.board.css({width: width, height: height});
+        self.overlay.css({width: width, height: height});
+        self.currentFile = file;
     };
 
-    var createBoard = function(map){
-        createElements(map);
+    var init = function(){
+        createElements();
         registerEvents();
-        saveMap();
     };
 
     return {
-        createBoard: createBoard
+        init: init,
+        loadFile: loadFile
     };
 });

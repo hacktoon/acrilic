@@ -1,7 +1,7 @@
 ac.export("editor", function(env){
     "use strict";
 
-    ac.import("palette", "boards", "files");
+    ac.import("palette", "board", "tilesets");
 
     var self = {
         currentFile: undefined
@@ -12,7 +12,11 @@ ac.export("editor", function(env){
     };
 
     var openFile = function(file){
+        var tileset = ac.tilesets.getTileset(file.tileset);
         self.currentFile = file;
+        env.set("TILESIZE", tileset.tilesize);
+        //ac.board.loadFile(file);
+        ac.palette.loadTileset(tileset);
     };
 
     var getCurrentFile = function(){

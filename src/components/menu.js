@@ -56,13 +56,13 @@ ac.export("menu", function(env){
         });
     };
 
-    var createMenu = function() {
+    var init = function() {
         initFileMenu();
         initToolsMenu();
         initLayersMenu();
     };
 
     return {
-        createMenu: createMenu
+        init: init
     };
 });

@@ -120,13 +120,18 @@ ac.export("palette", function(env){
 
     var loadTileset = function(tileset) {
         self.tileset = tileset;
-        initElements(tileset);
         loadTileset(tileset);
         registerEvents();
         setSelection();
     };
 
+    var init = function() {
+        initElements();
+
+    };
+
     return {
+        init: init,
         getTile: getTile,
         getSelection: getSelection,
         loadTileset: loadTileset

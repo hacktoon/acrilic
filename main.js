@@ -1,21 +1,13 @@
 (function() {
 	"use strict";
 
-    ac.import("boards", "menu", "palette", "tilesets", "filesystem");
-
-    var loadRecentFile = function() {
-        var recentFile = ac.filesystem.getRecentFile();
-        if(! recentFile){ return; }
-        ac.boards.createBoard(recentFile);
-    };
+    ac.import("menu", "tilesets", "board", "palette");
 
     var init = function() {
         ac.tilesets.init(ac.getTilesetSpecs());
-        
-        ac.menu.createMenu();
-        // ac.palette.createPalette(tileset);
-        //
-        // loadRecentFile();
+        ac.board.init();
+        ac.palette.init();
+        ac.menu.init();
     };
 
     ac.init(init);

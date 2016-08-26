@@ -6,6 +6,14 @@ ac.export("files", function(env){
             this.id = id;
             this.tileset = tileset;
             this.map = map;
+        },
+
+        toJSON: function(){
+            return JSON.stringify({
+                id: this.id,
+                tileset: this.tileset,
+                map: this.map.toJSON()
+            });
         }
     });
 
@@ -13,7 +21,13 @@ ac.export("files", function(env){
         return new File(id, tileset, map);
     };
 
+    var importFile = function(json){
+        var fileData = JSON.parse(json);
+        return new File(fileData.id, fileData.tileset, fileData.map);
+    };
+
     return {
-        createFile: createFile
+        createFile: createFile,
+        importFile: importFile
     };
  });

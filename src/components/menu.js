@@ -2,7 +2,7 @@
 ac.export("menu", function(env){
     "use strict";
 
-    ac.import("dialog", "boards");
+    ac.import("dialog", "editor", "maps");
 
     var registerSwitchButton = function(selector, action) {
         var activeClass = 'active',
@@ -30,33 +30,29 @@ ac.export("menu", function(env){
 
     var initFileMenu = function() {
         $('#btn-file-new').on('click', function(){
-            ac.dialog.openNewFileDialog(function(name, rows, cols){
-                env.set('CURRENT_MAP', map);
-                //ac.boards.createBoard(map);
-            }, ac.getTilesetSpecs());
+            ac.dialog.openNewFileDialog(function(id, rows, cols, tileset){
+                var map = ac.maps.createMap(rows, cols);
+                var file = ac.files.createFile(id, tileset, map);
+                ac.editor.openFile(file);
+            });
         });
 
         $('#btn-file-import').on('click', function(){
-            ac.dialog.openImportDialog(function(content){
+            ac.dialog.openImportDialog(function(json){
                 try {
-                    var mapData = JSON.parse(content);
+                    var file = ac.files.importFile(json);
                 } catch (err) {
                     alert("Not a valid JSON!");
                     return;
                 }
-                //var map = ac.maps.createMapFrom(mapData);
-                env.set('CURRENT_MAP', map);
-                //ac.boards.createBoard(map);
+                ac.editor.openFile(file);
             });
         });
 
         $('#btn-file-export').on('click', function(){
-            var map = env.get('CURRENT_MAP');
-            if (! map){
-                return;
-            }
-            var json = JSON.stringify(ac.map.exportMap(map));
-            ac.dialog.openExportDialog(json);
+            var file = ac.editor.getCurrentFile();
+            if (! file){ return; }
+            ac.dialog.openExportDialog(file.toJSON());
         });
     };
 

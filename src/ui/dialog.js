@@ -47,29 +47,31 @@ ac.export("dialog", function(env){
         }
     };
 
-    var openNewFileDialog = function(action, tilesetSpecs){
+    var openNewFileDialog = function(action){
         dialog.init("New file", '#tpl-dialog-file-new', function(){
             var options = [];
+            var tilesetSpecs = ac.getTilesetSpecs();
             for(var i=0; i<tilesetSpecs.length; i++){
                 var item = tilesetSpecs[i];
                 var option = $("<option/>").val(item.id).html(item.name);
-                ac.log(option);
                 options.push(option);
             }
             $('#field-file-new-tileset').append(options);
         });
 
-        //<option value="default">Default tileset</option>
         dialog.addButton('OK', function(){
             var name = $('#field-file-new-name').val(),
                 cols = Number($('#field-file-new-width').val()),
-                rows = Number($('#field-file-new-height').val());
-            action(name, rows, cols);
+                rows = Number($('#field-file-new-height').val()),
+                tileset = $('#field-file-new-tileset').val();
+            action(name, rows, cols, tileset);
             dialog.close();
         });
+
         dialog.addButton('Cancel', function(){
             dialog.close();
         });
+
         dialog.open();
     };
 

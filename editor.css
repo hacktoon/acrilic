@@ -178,7 +178,7 @@ input {
     z-index: 15;
 }
 
-#board-panel .board {
+#board-panel #board {
     background: url("data/img/screen_bg.png");
     position: absolute;
 }

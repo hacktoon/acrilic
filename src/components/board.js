@@ -5,7 +5,7 @@ ac.export("board", function(env){
     ac.import("utils", "tilesets");
 
     var self = {
-        container: $("#board-panel"),
+        container: $("#board"),
         overlay: undefined,
         cursor: undefined,
         currentFile: undefined,
@@ -84,10 +84,9 @@ ac.export("board", function(env){
     };
 
     var createElements = function(map) {
-        self.board = $('<div/>').addClass('board').html();
         self.overlay = $("<div/>").addClass("board-overlay").append(self.cursor);
         self.cursor = $("<div/>").addClass("selection-cursor").hide();
-        self.container.html([self.board, self.overlay]);
+        self.container.html(self.overlay);
     };
 
     var loadFile = function(file){
@@ -95,7 +94,6 @@ ac.export("board", function(env){
         var width = file.map.cols * self.tilesize,
             height = file.map.rows * self.tilesize;
         self.cursor.css({width: self.tilesize, height: self.tilesize})
-        self.board.css({width: width, height: height});
         self.overlay.css({width: width, height: height});
         self.currentFile = file;
     };

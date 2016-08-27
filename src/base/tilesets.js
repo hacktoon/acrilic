@@ -5,39 +5,43 @@ ac.export("tilesets", function(env){
     ac.import("utils", "tiles");
 
     var self = {
-        tilesets: []
+        tilesets: {}
     };
 
     var Tileset = ac.Class({
-        init: function(id, name, tilesize, image, map){
+        init: function(id, name, tilesize, image, positionMap){
+            var rows = image.height / tilesize,
+                cols = image.width / tilesize;
             this.id = id;
             this.name = name;
+            this.image = image;
             this.tilesize = tilesize;
-            this.tiles = this.buildTiles(image, map);
-        },
+            this.tiles = {};
+            this.positionMap = positionMap;
+            this.tilemap = ac.utils.build2DArray(rows, cols);
 
-        createCanvas: function(image, x, y){
-            var tsize = this.tilesize;
-            var canvas = ac.utils.createCanvas(tsize, tsize);
-            canvas.getContext("2d").drawImage(image, x*tsize, y*tsize, tsize, tsize, 0, 0, tsize, tsize);
-            return canvas;
-        },
-
-        buildTiles: function(image, map) {
-            var tiles = {};
-            for(var i in map){
-                var position = map[i];
-                var canvas = this.createCanvas(image, position[0], position[1]);
-                tiles[i] = ac.tiles.createTile(i, canvas);
+            for(var id in positionMap){
+                var pos = positionMap[id],
+                    canvas = ac.utils.cropToCanvas(image, tilesize, pos[0], pos[1]),
+                    tile = ac.tiles.createTile(id, canvas);
+                this.tiles[id] = tile;
+                this.tilemap[pos[1]][pos[0]] = tile;
             }
-            return tiles;
         },
 
-        getTile: function(id) {
+        getTileByID: function(id) {
             return this.tiles[id];
+        },
+
+        getTileByPosition: function(row, col) {
+            return this.tilemap[row][col];
+        },
+
+        getTilePosition: function(id) {
+            return this.positionMap[id];
         }
     });
-    
+
     var getTileset = function(id){
         return self.tilesets[id];
     };

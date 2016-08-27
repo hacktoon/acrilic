@@ -5,14 +5,12 @@ ac.export("palette", function(env){
     ac.import("utils");
 
     var self = {
-        doc: $(document),
         container: $('#palette-panel'),
+        overlay: $("#palette-overlay"),
+        selector: $("#palette-selector"),
         tileset: undefined,
-        overlay: undefined,
-        selector: undefined,
-        cols: 0,
         rows: 0,
-        selection: {}
+        cols: 0
     };
 
     var setSelection = function(points) {
@@ -39,18 +37,20 @@ ac.export("palette", function(env){
         };
     };
 
-    var loadTileset = function(tileset){
-        var tsize = env.get("TILESIZE");
+    var drawTiles = function(tileset){
+        var tsize = tileset.tilesize,
+            width = tileset.image.width,
+            height = tileset.image.height,
+            canvas = ac.utils.createCanvas(width, height);
 
-        self.cols = tileset.cols;
-        self.rows = tileset.rows;
-
-        for(var row = 0; row < self.rows; row++){
-            for(var col = 0; col < self.cols; col++){
-                var tile = tileset.getTileByPosition(row, col);
-            }
+        for(var id in tileset.tiles){
+            var tile = tileset.getTileByID(id),
+                pos = tileset.getTilePosition(id),
+                x = pos[0] * tsize,
+                y = pos[1] * tsize;
+            canvas.getContext("2d").drawImage(tile.canvas, x, y);
         }
-        //self.container.append(self.canvas.elem);
+        self.container.append(canvas);
     };
 
     var updateSelector = function(event, x0, y0) {
@@ -72,7 +72,8 @@ ac.export("palette", function(env){
     };
 
     var registerEvents = function() {
-        var dragging = false,
+        var doc = env.get("DOCUMENT"),
+            dragging = false,
             x0 = 0,
             y0 = 0;
 
@@ -84,34 +85,34 @@ ac.export("palette", function(env){
             self.selection = undefined;
         });
 
-        self.doc.on("mousemove", function(event){
+        doc
+        .on("mousemove", function(event){
             if (! dragging){ return; }
             updateSelector(event, x0, y0);
-        });
-
-        self.doc.on("mouseup", function(event){
+        })
+        .on("mouseup", function(event){
             if (! dragging){ return; }
             dragging = false;
             setSelection(updateSelector(event, x0, y0));
-            self.doc.trigger("selectionready");
+            doc.trigger("selectionready");
         });
     };
 
     var loadTileset = function(tileset) {
-        var width = tileset.cols * tsize,
-            height = tileset.rows * tsize;
+        var tsize = tileset.tilesize,
+            width = tileset.image.width,
+            height = tileset.image.height;
+        self.rows = height / tsize;
+        self.cols = width / tsize;
         self.tileset = tileset;
         self.overlay.css({width: width, height: height});
-        loadTileset(tileset);
-        registerEvents();
+        self.selector.css({width: tsize, height: tsize});
+        drawTiles(tileset);
         setSelection();
     };
 
     var init = function() {
-        var tsize = env.get("TILESIZE"),
-        self.overlay = $("<div/>").attr("id", "palette-overlay");
-        self.selector = $("<div/>").attr("id", "palette-selector").css({width: tsize, height: tsize}),
-        self.container.append([self.overlay, self.selector]);
+        registerEvents();
     };
 
     return {

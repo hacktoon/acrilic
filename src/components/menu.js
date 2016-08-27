@@ -2,7 +2,7 @@
 ac.export("menu", function(env){
     "use strict";
 
-    ac.import("dialog", "editor", "maps");
+    ac.import("dialog", "editor", "maps", "files");
 
     var registerSwitchButton = function(selector, action) {
         var activeClass = 'active',

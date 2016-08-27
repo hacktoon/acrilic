@@ -42,15 +42,22 @@ ac.export("utils", function(env){
         }
         return mapped;
     };
-    
+
     var createCanvas = function(width, height){
         return $("<canvas/>").attr({width: width, height: height}).get(0);
+    };
+
+    var cropToCanvas = function(image, size, x, y){
+        var canvas = createCanvas(size, size);
+        canvas.getContext("2d").drawImage(image, x*size, y*size, size, size, 0, 0, size, size);
+        return canvas;
     };
 
     return {
         getRelativeMousePosition: getRelativeMousePosition,
         build2DArray: build2DArray,
         createCanvas: createCanvas,
+        cropToCanvas: cropToCanvas,
         filter: filter,
         map: map
     };

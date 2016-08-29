@@ -8,107 +8,117 @@ ac.export("palette", function(env){
         container: $('#palette-panel'),
         overlay: $("#palette-overlay"),
         selector: $("#palette-selector"),
+        view: $("#palette-view"),
         tileset: undefined,
         rows: 0,
         cols: 0
     };
 
-    var setSelection = function(points) {
-        var pts = points || {x0: 0, y0: 0, x1: 0, y1: 0};
-        var x0 = pts.x0, y0 = pts.y0, x1 = pts.x1, y1 = pts.y1;
-        var tsize = env.get("TILESIZE");
-        var image, submap = [];
+    var selectTiles = function(points) {
+        var pts = points || {col0: 0, row0: 0, col1: 0, row1: 0},
+            col0 = pts.col0, row0 = pts.row0, col1 = pts.col1, row1 = pts.row1,
+            cols = col1 - col0 + 1,
+            rows = row1 - row0 + 1,
+            submap = ac.utils.build2DArray(rows, cols);
 
-        var width = (x1 - x0 + 1) * tsize,
-            height = (y1 - y0 + 1) * tsize;
-
-        for(var y=y0, i=0; y<=y1; y++, i++){
-            submap.push([]);
-            for(var x=x0, j=0; x<=x1; x++, j++){
-                var tile = self.tileset.getTileByPosition(y, x);
-                submap[i].push(tile.id);
+        for(var row=row0; row<=row1; row++){
+            for(var col=col0; col<=col1; col++){
+                var tile = self.tileset.getTileByPosition(row, col);
+                submap[row-row0][col-col0] = tile.id;
             }
         }
-
-        self.selection = {
-            submap: submap,
-            width: width,
-            height: height
-        };
+        env.set("SELECTED_TILES", submap);
+        console.table(submap);
     };
 
-    var drawTiles = function(tileset){
-        var tsize = tileset.tilesize,
-            width = tileset.image.width,
-            height = tileset.image.height,
-            canvas = ac.utils.createCanvas(width, height);
-
-        for(var id in tileset.tiles){
-            var tile = tileset.getTileByID(id),
-                pos = tileset.getTilePosition(id),
-                x = pos[0] * tsize,
-                y = pos[1] * tsize;
-            canvas.getContext("2d").drawImage(tile.canvas, x, y);
-        }
-        self.container.append(canvas);
-    };
-
-    var updateSelector = function(event, x0, y0) {
-        var tsize = env.get("TILESIZE"), rx0, rx1, ry0, ry1;
-        var pos = ac.utils.getRelativeMousePosition(event, self.container);
-        rx0 = Math.min(x0, pos.x);
-        ry0 = Math.min(y0, pos.y);
-        rx1 = Math.max(x0, pos.x);
-        ry1 = Math.max(y0, pos.y);
-
-        if (rx1 >= self.cols) { rx1 = self.cols - 1; }
-        if (ry1 >= self.rows) { ry1 = self.rows - 1; }
+    var updateSelector = function(points) {
+        var tsize = self.tileset.tilesize,
+            pts = points || {col0: 0, row0: 0, col1: 0, row1: 0};
         self.selector.css({
-            width: (rx1 - rx0 + 1) * tsize,
-            height: (ry1 - ry0 + 1) * tsize,
-            transform: "translate(" + (rx0 * tsize) + "px, " + (ry0 * tsize) + "px)"
+            width: (pts.col1 - pts.col0 + 1) * tsize,
+            height: (pts.row1 - pts.row0 + 1) * tsize,
+            transform: "translate(" + (pts.col0 * tsize) + "px, " + (pts.row0 * tsize) + "px)"
         });
-        return {x0: rx0, y0: ry0, x1: rx1, y1: ry1};
+    };
+
+    var getNormalizedPoints = function(row0, col0, row1, col1) {
+        // avoid off-limit points and fix inverted coordinates
+        col0 = Math.min(col0, col1);
+        row0 = Math.min(row0, row1);
+
+        col1 = Math.max(col0, col1);
+        row1 = Math.max(row0, row1);
+
+        // avoid selecting cells outside the max width/height
+        col1 = Math.min(col1, self.tileset.cols - 1);
+        row1 = Math.min(row1, self.tileset.rows - 1);
+        return {col0: col0, row0: row0, col1: col1, row1: row1};
     };
 
     var registerEvents = function() {
         var doc = env.get("DOCUMENT"),
+            mousePos = ac.utils.getRelativeMousePosition,
             dragging = false,
-            x0 = 0,
-            y0 = 0;
+            col0 = 0,
+            row0 = 0;
 
-        self.overlay.on("mousedown", function(event){
-            var pos = ac.utils.getRelativeMousePosition(event, self.container);
-            x0 = pos.x;
-            y0 = pos.y;
+        self.overlay
+        .on("mousedown", function(event){
+            var tsize, pos;
+            if (! self.tileset){ return; }
+            tsize = self.tileset.tilesize;
+            pos = mousePos(self.container, tsize, event.pageX, event.pageY);
+            col0 = pos.col;
+            row0 = pos.row;
             dragging = true;
-            self.selection = undefined;
+            doc.trigger("tileSelectionStart");
         });
 
         doc
         .on("mousemove", function(event){
-            if (! dragging){ return; }
-            updateSelector(event, x0, y0);
+            var pos, points, tsize;
+            if (! (self.tileset && dragging)){ return; }
+            tsize = self.tileset.tilesize;
+            pos = mousePos(self.container, tsize, event.pageX, event.pageY);
+            points = getNormalizedPoints(row0, col0, pos.row, pos.col);
+            updateSelector(points);
+            doc.trigger("tileSelectionMove");
         })
         .on("mouseup", function(event){
-            if (! dragging){ return; }
+            var pos, points, tsize;
+            if (! (self.tileset && dragging)){ return; }
+            tsize = self.tileset.tilesize;
             dragging = false;
-            setSelection(updateSelector(event, x0, y0));
-            doc.trigger("selectionready");
+            pos = mousePos(self.container, tsize, event.pageX, event.pageY);
+            points = getNormalizedPoints(row0, col0, pos.row, pos.col);
+            selectTiles(points);
+            updateSelector(points);
+            doc.trigger("tileSelectionEnd");
         });
     };
 
+    var drawPalette = function(tileset){
+        for(var row=0; row < tileset.rows; row++){
+            for(var col=0; col < tileset.cols; col++){
+                var tile = tileset.getTileByPosition(row, col),
+                    x = col * tileset.tilesize,
+                    y = row * tileset.tilesize;
+                self.canvas.getContext("2d").drawImage(tile.canvas, x, y);
+            }
+        }
+    };
+
     var loadTileset = function(tileset) {
-        var tsize = tileset.tilesize,
-            width = tileset.image.width,
+        var width = tileset.image.width,
             height = tileset.image.height;
-        self.rows = height / tsize;
-        self.cols = width / tsize;
         self.tileset = tileset;
+        self.selector.css({width: tileset.tilesize, height: tileset.tilesize});
         self.overlay.css({width: width, height: height});
-        self.selector.css({width: tsize, height: tsize});
-        drawTiles(tileset);
-        setSelection();
+        self.canvas = ac.utils.createCanvas(width, height);
+        self.view.html(self.canvas);
+        drawPalette(tileset);
+        selectTiles();
+        updateSelector();
     };
 
     var init = function() {

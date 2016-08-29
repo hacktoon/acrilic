@@ -12,19 +12,17 @@ ac.export("utils", function(env){
         return arr;
     };
 
-    var getRelativeMousePosition = function(event, container) {
-        var tilesize = env.get("TILESIZE"),
-            doc = $(document),
+    var getRelativeMousePosition = function(container, tsize, mouseX, mouseY) {
+        var doc = env.get("DOCUMENT"),
             x_offset = container.offset().left,
             y_offset = container.offset().top,
             x_scroll = container.scrollLeft() + doc.scrollLeft(),
-            y_scroll = container.scrollTop() + doc.scrollTop();
-        var rx = event.pageX - x_offset + x_scroll,
-            ry = event.pageY - y_offset + y_scroll;
-
-        rx = (rx < 0) ? 0 : rx;
-        ry = (ry < 0) ? 0 : ry;
-        return {x: Math.floor(rx / tilesize), y: Math.floor(ry / tilesize)};
+            y_scroll = container.scrollTop() + doc.scrollTop(),
+            rx = mouseX - x_offset + x_scroll,
+            ry = mouseY - y_offset + y_scroll;
+        rx = Math.max(rx, 0);
+        ry = Math.max(ry, 0);
+        return {col: Math.floor(rx / tsize), row: Math.floor(ry / tsize)};
     };
 
     var filter = function(collection, func){

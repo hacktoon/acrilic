@@ -9,23 +9,23 @@ ac.export("tilesets", function(env){
     };
 
     var Tileset = ac.Class({
-        init: function(id, name, tilesize, image, positionMap){
-            var rows = image.height / tilesize,
-                cols = image.width / tilesize;
+        init: function(id, name, tilesize, image, tilemap){
             this.id = id;
             this.name = name;
+            this.tiles = {};
             this.image = image;
             this.tilesize = tilesize;
-            this.tiles = {};
-            this.positionMap = positionMap;
-            this.tilemap = ac.utils.build2DArray(rows, cols);
+            this.rows = image.height / tilesize;
+            this.cols = image.width / tilesize;
+            this.tilemap = ac.utils.build2DArray(this.rows, this.cols);
 
-            for(var id in positionMap){
-                var pos = positionMap[id],
-                    canvas = ac.utils.cropToCanvas(image, tilesize, pos[0], pos[1]),
-                    tile = ac.tiles.createTile(id, canvas);
+            for(var id in tilemap){
+                var id = Number(id),
+                    tileData = tilemap[id],
+                    canvas = ac.utils.cropToCanvas(image, tilesize, tileData.col, tileData.row),
+                    tile = ac.tiles.createTile(id, canvas, tileData.walk || false);
                 this.tiles[id] = tile;
-                this.tilemap[pos[1]][pos[0]] = tile;
+                this.tilemap[tileData.row][tileData.col] = tile;
             }
         },
 
@@ -35,10 +35,6 @@ ac.export("tilesets", function(env){
 
         getTileByPosition: function(row, col) {
             return this.tilemap[row][col];
-        },
-
-        getTilePosition: function(id) {
-            return this.positionMap[id];
         }
     });
 
@@ -48,14 +44,14 @@ ac.export("tilesets", function(env){
 
     var init = function(tilesetSpecs){
         for(var i=0; i<tilesetSpecs.length; i++){
-            var spec = tilesetSpecs[i],
-                id = spec.id,
-                name = spec.name,
-                tilesize = spec.tilesize,
-                image = spec.image,
-                map = spec.map;
-
-            self.tilesets[id] = new Tileset(id, name, tilesize, image, map);
+            var spec = tilesetSpecs[i];
+            self.tilesets[spec.id] = new Tileset(
+                spec.id,
+                spec.name,
+                spec.tilesize,
+                spec.image,
+                spec.tilemap
+            );
         }
     };
 

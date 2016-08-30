@@ -1,7 +1,7 @@
 ac.export("filesystem", function(env){
     "use strict";
 
-    ac.import("utils", "files");
+    ac.import("utils");
 
     var self = {
       LAST_OPEN: 'last-saved'

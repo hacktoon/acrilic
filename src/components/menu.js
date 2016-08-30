@@ -2,7 +2,7 @@
 ac.export("menu", function(env){
     "use strict";
 
-    ac.import("dialog", "editor", "board", "files");
+    ac.import("dialog", "editor");
 
     var registerSwitchButton = function(selector, action) {
         var activeClass = 'active',
@@ -40,7 +40,7 @@ ac.export("menu", function(env){
         $('#btn-file-import').on('click', function(){
             ac.dialog.openImportDialog(function(json){
                 try {
-                    var file = ac.files.createFileFromJSON(json);
+                    var file = ac.editor.createFileFromJSON(json);
                 } catch (err) {
                     alert("Not a valid JSON!");
                     return;

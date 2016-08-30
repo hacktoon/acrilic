@@ -3,14 +3,9 @@ ac.export("tools", function(env){
 
     ac.import("fill");
 
-    var _self = {};
+    var self = {};
 
-    var updateTile = function(row, col) {
-        var map = env.get("CURRENT_MAP");
-        map.set(row, col);
-    };
-
-    _self.pen = (function(){
+    self.pen = (function(){
         return {
             mousedown: function(row, col) {
                 updateTile(row, col);
@@ -22,7 +17,7 @@ ac.export("tools", function(env){
         };
     })();
 
-    _self.square = (function(){
+    self.square = (function(){
         var row0, col0;
         return {
             mousedown: function(row, col) {
@@ -39,7 +34,7 @@ ac.export("tools", function(env){
         };
     })();
 
-    _self.fill = {
+    self.fill = {
         mousedown: function(row, col) {
             return ac.fill.execute(row, col);
         },
@@ -47,11 +42,9 @@ ac.export("tools", function(env){
         mouseup: function() {}
     };
 
-    var getTool = function(id) {
-        return _self[id];
-    };
-
     return {
-        getTool: getTool
+        // drag: drag,
+        // mousedown: mousedown,
+        // mouseup: mouseup
     };
 });

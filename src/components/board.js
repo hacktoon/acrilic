@@ -2,7 +2,7 @@
 ac.export("board", function(env){
     "use strict";
 
-    ac.import("utils", "tilesets");
+    ac.import("utils", "tilesets", "tools");
 
     var self = {
         container: $("#board"),
@@ -13,80 +13,60 @@ ac.export("board", function(env){
         layers: []
     };
 
-    var updateCursor = function(params){
-        var css = {};
-        if (params.row !== undefined && params.col !== undefined){
-            var x = params.col * self.tilesize,
-                y = params.row * self.tilesize;
-            css.transform = "translate(" + x + "px, " + y + "px)";
-        }
-        if (params.width && params.height){
-            css.width = params.width;
-            css.height = params.height;
-        }
-        self.selector.css(css);
+    var updateSelector = function(mouseState){
+        var selection = env.get("SELECTED_TILES"),
+            tsize = self.tileset.tilesize,
+            x = tsize * mouseState.col,
+            y = tsize * mouseState.row;
+
+        self.selector.css({
+            transform: "translate(" + x + "px, " + y + "px)",
+            height: tsize * selection.length,
+            width: tsize * selection[0].length,
+            display: mouseState.over && mouseState.ready ? "block" : "none"
+        });
     };
 
     var registerEvents = function(){
-        var mouseDown = false,
-            mouseOver = false,
-            mouseRow = 0,
-            mouseCol = 0,
-            mousePos = ac.utils.getRelativeMousePosition;
+        var mousePos = ac.utils.getRelativeMousePosition,
+            mouseState = {
+                down: false, over: false, ready: true, row: 0, col: 0
+            };
 
         self.overlay
-        .on('mousemove', function(event){
-            var tsize, pos;
-            if ( ! self.layers.length ) { return; }
-            tsize = self.tilesize;
-            pos = mousePos(self.container, tsize, event.pageX, event.pageY);
-            mouseCol = pos.x;
-            mouseRow = pos.y;
-            updateCursor({row: mouseRow, col: mouseCol});
-            if (mouseDown){
-                // allow painting while dragging
-                //getTool().mousemove(mouseRow, mouseCol);
-            }
-        })
+        .on("mouseenter", function(){ mouseState.over = true; })
+        .on("mouseleave", function(){ mouseState.over = false; })
         .on('mousedown', function(event){
             if ( ! self.layers.length ) { return; }
-            event.preventDefault();
-            //getTool().mousedown(mouseRow, mouseCol);
-            mouseDown = true;
-        })
-        .on('mouseup', function(event){
-            if ( ! self.layers.length ) { return; }
-            //getTool().mouseup(mouseRow, mouseCol);
-            mouseDown = false;
-        })
-        .on('mouseenter', function(){
-            mouseOver = true;
-            // TODO: create onselect  for palette to avoid this code below
-            // if(getSelectedTiles()){
-            //     self.selector.show();
-            // }
-        })
-        .on('mouseleave', function(){
-            mouseOver = false;
-            self.selector.hide();
+            //ac.tools.mousedown(row, col);
+            mouseState.down = true;
         });
 
         env.get("DOCUMENT")
+        .on("mouseup", function(event){ mouseState.down = false; })
+        .on("tileSelectionStart", function(){ mouseState.ready = false; })
         .on("tileSelectionEnd", function(){
             // event triggered when the mouse is released on palette selection
             if ( ! self.layers.length ) { return; }
-            var selection = env.get("SELECTED_TILES");
-            updateCursor({width: selection.width, height: selection.height});
-            if (mouseOver){
-                self.selector.show();
-            }
-        })
-        .on("mouseup", function(event){
-            mouseDown = false;
+            mouseState.ready = true;
+            updateSelector(mouseState);
         })
         .on("layerChange", function(event){
             if ( ! self.layers.length ) { return; }
             showCurrentLayer();
+        })
+        .on('mousemove', function(event){
+            var tsize, pos;
+            if ( ! self.layers.length ) { return; }
+            tsize = self.tileset.tilesize;
+            pos = mousePos(self.container, tsize, event.pageX, event.pageY);
+            mouseState.col = pos.col;
+            mouseState.row = pos.row;
+            if (mouseState.down){
+                // allow painting while dragging
+                //ac.tools.drag(row, col, self.map, self.layers);
+            }
+            updateSelector(mouseState);
         });
     };
 

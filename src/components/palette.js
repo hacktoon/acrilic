@@ -28,6 +28,7 @@ ac.export("palette", function(env){
             }
         }
         env.set("SELECTED_TILES", submap);
+        env.get("DOCUMENT").trigger("tileSelectionEnd");
     };
 
     var updateSelector = function(points) {
@@ -81,7 +82,6 @@ ac.export("palette", function(env){
             pos = mousePos(self.container, tsize, event.pageX, event.pageY);
             points = getNormalizedPoints(row0, col0, pos.row, pos.col);
             updateSelector(points);
-            doc.trigger("tileSelectionMove");
         })
         .on("mouseup", function(event){
             var pos, points, tsize;
@@ -92,7 +92,6 @@ ac.export("palette", function(env){
             points = getNormalizedPoints(row0, col0, pos.row, pos.col);
             selectTiles(points);
             updateSelector(points);
-            doc.trigger("tileSelectionEnd");
         });
     };
 

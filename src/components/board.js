@@ -2,7 +2,7 @@
 ac.export("board", function(env){
     "use strict";
 
-    ac.import("utils", "tools");
+    ac.import("utils", "display", "tools");
 
     var self = {
         container: $("#board"),
@@ -10,90 +10,68 @@ ac.export("board", function(env){
         selector: $("#board-selector"),
         tileset: undefined,
         map: undefined,
-        layers: []
+        tool: undefined,
+        layers: [],
+        mouse: {
+            down: false, over: false, ready: true, row: 0, col: 0
+        };
     };
 
-    var paintCell = function(row, col, layerID) {
-        var id = self.map.get(row, col),
-            tile = self.tileset.getTileByID(id),
-            tsize = self.tileset.tilesize,
-            x = tsize * col,
-            y = tsize * row,
-            context = self.layers[layerID].getContext("2d");
-        context.clearRect(x, y, tsize, tsize);
-        context.drawImage(tile.canvas, x, y);
-    };
 
-    var paintBoard = function(cells) {
-        if (cells){
-            for(var i=0; i<cells.length; i++){
-                paintCell(cells[i].row, cells[i].col, env.get("CURRENT_LAYER"));
-            }
-            return;
-        }
-        // paint the entire board by default
-        for(var layerID=0; layerID<self.layers.length; layerID++){
-            for(var row=0; row<self.map.rows; row++){
-                for(var col=0; col<self.map.cols; col++){
-                    paintCell(row, col, layerID);
-                }
-            }
-        }
-    };
 
-    var updateSelector = function(mouseState){
+    var updateSelector = function(self.mouse){
         var selection = env.get("SELECTED_TILES"),
             tsize = self.tileset.tilesize,
-            x = tsize * mouseState.col,
-            y = tsize * mouseState.row;
+            x = tsize * self.mouse.col,
+            y = tsize * self.mouse.row;
 
         self.selector.css({
             transform: "translate(" + x + "px, " + y + "px)",
             height: tsize * selection.rows,
             width: tsize * selection.cols,
-            display: mouseState.over && mouseState.ready ? "block" : "none"
+            display: self.mouse.over && self.mouse.ready ? "block" : "none"
         });
     };
 
-    var registerEvents = function(){
-        var tool = ac.tools.getTool,
-            mousePos = ac.utils.getRelativeMousePosition,
-            mouseState = {
-                down: false, over: false, ready: true, row: 0, col: 0
-            };
+    var mouseDownEvent = function(){
+        if ( ! self.layers.length ) { return; }
+        var modifiedCells = tool().mousedown(self.mouse.row, self.mouse.col, self.map);
+        paintBoard(modifiedCells);
+        self.mouse.down = true;
+    };
 
-        self.overlay
-        .on("mouseenter", function(){ mouseState.over = true; })
-        .on("mouseleave", function(){ mouseState.over = false; })
-        .on('mousedown', function(){
-            if ( ! self.layers.length ) { return; }
-            var modifiedCells = tool().mousedown(mouseState.row, mouseState.col, self.map);
+    var mouseMoveEvent = function(e){
+        var tsize, pos;
+        if ( ! self.layers.length ) { return; }
+        tsize = self.tileset.tilesize;
+        pos = ac.utils.getRelativeMousePosition(self.container, tsize, e.pageX, e.pageY);
+        self.mouse.col = pos.col;
+        self.mouse.row = pos.row;
+        if (self.mouse.down && self.mouse.over){  // allow painting while dragging
+            var modifiedCells = tool().drag(self.mouse.row, self.mouse.col, self.map);
             paintBoard(modifiedCells);
-            mouseState.down = true;
-        });
+        }
+        updateSelector(self.mouse);
+    };
+
+    var tileSelectionEndEvent = function(){
+        if ( ! self.layers.length ) { return; }
+        self.mouse.ready = true;
+        updateSelector(self.mouse);
+    };
+
+    var registerEvents = function(){
+        self.overlay
+        .on("mouseenter", function(){ self.mouse.over = true; })
+        .on("mouseleave", function(){ self.mouse.over = false; })
+        .on('mousedown', function(){ mouseDownEvent(); });
 
         env.get("DOCUMENT")
-        .on("mouseup", function(){ mouseState.down = false; })
-        .on("tileSelectionStart", function(){ mouseState.ready = false; })
-        .on("tileSelectionEnd", function(){
-            if ( ! self.layers.length ) { return; }
-            mouseState.ready = true;
-            updateSelector(mouseState);
-        })
-        .on("layerChange", function(){ showCurrentLayer(); })
-        .on('mousemove', function(e){
-            var tsize, pos;
-            if ( ! self.layers.length ) { return; }
-            tsize = self.tileset.tilesize;
-            pos = mousePos(self.container, tsize, e.pageX, e.pageY);
-            mouseState.col = pos.col;
-            mouseState.row = pos.row;
-            if (mouseState.down && mouseState.over){  // allow painting while dragging
-                var modifiedCells = tool().drag(mouseState.row, mouseState.col, self.map);
-                paintBoard(modifiedCells);
-            }
-            updateSelector(mouseState);
-        });
+        .on("mouseup", function(){ self.mouse.down = false; })
+        .on('mousemove', function(e){ mouseMoveEvent(e); })
+        .on("tileSelectionStart", function(){ self.mouse.ready = false; })
+        .on("tileSelectionEnd", function(){ tileSelectionEndEvent(); })
+        .on("layerChange", function(){ showCurrentLayer(); });
     };
 
     var showCurrentLayer = function() {

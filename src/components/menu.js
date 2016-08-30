@@ -2,7 +2,7 @@
 ac.export("menu", function(env){
     "use strict";
 
-    ac.import("dialog", "editor", "maps", "files");
+    ac.import("dialog", "editor", "board", "files");
 
     var registerSwitchButton = function(selector, action) {
         var activeClass = 'active',
@@ -25,14 +25,14 @@ ac.export("menu", function(env){
     var initLayersMenu = function() {
         registerSwitchButton('.btn-layer', function(value) {
             env.set("CURRENT_LAYER", Number(value));
+            env.get("DOCUMENT").trigger("layerChange");
         });
     };
 
     var initFileMenu = function() {
         $('#btn-file-new').on('click', function(){
             ac.dialog.openNewFileDialog(function(id, rows, cols, tileset){
-                var map = ac.maps.createMap(rows, cols);
-                var file = ac.files.createFile(id, tileset, map);
+                var file = ac.editor.createFile(id, rows, cols, tileset);
                 ac.editor.openFile(file);
             });
         });

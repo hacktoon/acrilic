@@ -6,10 +6,11 @@ ac.export("board", function(env){
 
     var self = {
         container: $("#board"),
-        overlay: undefined,
-        cursor: undefined,
-        currentFile: undefined,
-        tilesize: 0
+        overlay: $("#board-overlay"),
+        selector: $("#board-selector"),
+        tileset: undefined,
+        map: undefined,
+        layers: []
     };
 
     var updateCursor = function(params){
@@ -23,83 +24,104 @@ ac.export("board", function(env){
             css.width = params.width;
             css.height = params.height;
         }
-        self.cursor.css(css);
+        self.selector.css(css);
     };
 
     var registerEvents = function(){
         var mouseDown = false,
             mouseOver = false,
             mouseRow = 0,
-            mouseCol = 0;
+            mouseCol = 0,
+            mousePos = ac.utils.getRelativeMousePosition;
 
         self.overlay
         .on('mousemove', function(event){
-            var pos = ac.utils.getRelativeMousePosition(event, self.container);
+            var tsize, pos;
+            if ( ! self.layers.length ) { return; }
+            tsize = self.tilesize;
+            pos = mousePos(self.container, tsize, event.pageX, event.pageY);
             mouseCol = pos.x;
             mouseRow = pos.y;
             updateCursor({row: mouseRow, col: mouseCol});
             if (mouseDown){
                 // allow painting while dragging
-                getTool().mousemove(mouseRow, mouseCol);
+                //getTool().mousemove(mouseRow, mouseCol);
             }
         })
         .on('mousedown', function(event){
+            if ( ! self.layers.length ) { return; }
             event.preventDefault();
-            getTool().mousedown(mouseRow, mouseCol);
+            //getTool().mousedown(mouseRow, mouseCol);
             mouseDown = true;
         })
         .on('mouseup', function(event){
-            getTool().mouseup(mouseRow, mouseCol);
+            if ( ! self.layers.length ) { return; }
+            //getTool().mouseup(mouseRow, mouseCol);
             mouseDown = false;
-            saveMap();
         })
         .on('mouseenter', function(){
             mouseOver = true;
             // TODO: create onselect  for palette to avoid this code below
             // if(getSelectedTiles()){
-            //     self.cursor.show();
+            //     self.selector.show();
             // }
         })
         .on('mouseleave', function(){
             mouseOver = false;
-            self.cursor.hide();
+            self.selector.hide();
         });
 
         env.get("DOCUMENT")
-        .on("selectionready", function(){
+        .on("tileSelectionEnd", function(){
             // event triggered when the mouse is released on palette selection
-            var selection = getSelectedTiles();
+            if ( ! self.layers.length ) { return; }
+            var selection = env.get("SELECTED_TILES");
             updateCursor({width: selection.width, height: selection.height});
             if (mouseOver){
-                self.cursor.show();
+                self.selector.show();
             }
         })
-        .on('mouseup', function(event){
+        .on("mouseup", function(event){
             mouseDown = false;
+        })
+        .on("layerChange", function(event){
+            if ( ! self.layers.length ) { return; }
+            showCurrentLayer();
         });
     };
 
-    var createLayers = function() {
-
+    var showCurrentLayer = function() {
+        var index = env.get("CURRENT_LAYER");
+        $("#board .layer.active").removeClass("active");
+        $(self.layers[index]).addClass("active");
     };
 
-    var createElements = function(map) {
-        self.overlay = $("<div/>").addClass("board-overlay").append(self.cursor);
-        self.cursor = $("<div/>").addClass("selection-cursor").hide();
-        self.container.html(self.overlay);
+    var createLayers = function(width, height) {
+        var layers = [];
+        for(var i=0; i<3; i++){
+            var layer = ac.utils.createCanvas(width, height);
+            $(layer).addClass("layer");
+            layers.push(layer);
+        }
+        self.layers = layers;
+        self.container.html(layers);
+        showCurrentLayer();
     };
 
-    var loadFile = function(file){
-        self.tilesize = env.get("TILESIZE");
-        var width = file.map.cols * self.tilesize,
-            height = file.map.rows * self.tilesize;
-        self.cursor.css({width: self.tilesize, height: self.tilesize})
+    var loadFile = function(map, tileset){
+        var tsize = tileset.tilesize,
+            width = map.cols * tsize,
+            height = map.rows * tsize;
+
+        self.tileset = tileset;
+        self.map = map;
+        self.selector.css({width: tsize, height: tsize});
         self.overlay.css({width: width, height: height});
-        self.currentFile = file;
+        self.container.css({width: width, height: height});
+        createLayers(width, height);
     };
 
     var init = function(){
-        createElements();
         registerEvents();
     };
 

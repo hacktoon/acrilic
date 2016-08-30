@@ -85,6 +85,7 @@ input {
 }
 
 #editor-panel {
+    background: #DDD;
     position: absolute;
     top: 40px;
     right: 0;
@@ -94,7 +95,6 @@ input {
 
 /* TILESET PALETTE --------------------------- */
 #sidebar-panel {
-    background: #E1007E;
     position: absolute;
     top: 0;
     left: 0;
@@ -104,10 +104,12 @@ input {
 }
 
 #palette-panel {
+    background: #E1007E;
     overflow-y: scroll;
     position: relative;
     width: 335px;
     height: 60%;
+    display: none;
 }
 
 #palette-panel #palette-overlay {
@@ -152,7 +154,6 @@ input {
 
 /* PROJECT PANEL --------------------------- */
 #project-panel {
-    background: #FFF;
     width: 335px;
     height: 40%;
 }
@@ -160,7 +161,6 @@ input {
 
 /* MAP ---------------------------  */
 #board-panel {
-    background: #CCC;
     position: absolute;
     top: 0;
     left: 335px;
@@ -170,7 +170,12 @@ input {
     overflow: auto;
 }
 
-#board-panel .board-overlay {
+#board-panel #board {
+    background: url("data/img/screen_bg.png");
+    position: absolute;
+}
+
+#board-panel #board-overlay {
     overflow: hidden;
     position: absolute;
     left: 0;
@@ -178,11 +183,6 @@ input {
     bottom: 0;
     right: 0;
     z-index: 15;
-}
-
-#board-panel #board {
-    background: url("data/img/screen_bg.png");
-    position: absolute;
 }
 
 #board-panel .layer {
@@ -199,16 +199,17 @@ input {
 #board-panel #fg-layer { z-index: 2; }
 #board-panel #bg-layer { z-index: 1; }
 
-#board-panel .selection-cursor {
+#board-panel #board-selector {
     box-sizing: border-box;
     cursor: pointer;
     position: absolute;
+    display: none;
     left: 0;
     top: 0;
     z-index: 10;
 }
-#board-panel .selection-cursor:after,
-#board-panel .selection-cursor:before {
+#board-panel #board-selector:after,
+#board-panel #board-selector:before {
     position: absolute;
     display: block;
     content: "";
@@ -217,7 +218,7 @@ input {
     bottom: 0;
     right: 0;
 }
-#board-panel .selection-cursor:after {
+#board-panel #board-selector:after {
     border: solid 3px #FFF;
     left: 2px;
     top: 2px;
@@ -225,7 +226,7 @@ input {
     right: 2px;
     z-index: 2;
 }
-#board-panel .selection-cursor:before {
+#board-panel #board-selector:before {
     border: solid 7px #333;
     z-index: 1;
 }

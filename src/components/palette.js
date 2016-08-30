@@ -28,7 +28,6 @@ ac.export("palette", function(env){
             }
         }
         env.set("SELECTED_TILES", submap);
-        console.table(submap);
     };
 
     var updateSelector = function(points) {
@@ -119,6 +118,7 @@ ac.export("palette", function(env){
         drawPalette(tileset);
         selectTiles();
         updateSelector();
+        self.container.show();
     };
 
     var init = function() {

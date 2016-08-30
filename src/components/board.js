@@ -105,7 +105,7 @@ ac.export("board", function(env){
 
     var createLayers = function(width, height) {
         var layers = [];
-        for(var i=0; i<3; i++){
+        for(var i=0; i<ac.LAYERS; i++){
             var layer = ac.utils.createCanvas(width, height);
             $(layer).addClass("layer");
             layers.push(layer);

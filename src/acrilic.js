@@ -2,6 +2,7 @@ var ac = (function(){
     "use strict";
 
     var self = {
+        LAYERS: 3,
         log: console.log.bind(console),
         error: console.error.bind(console),
         tilesetSpecs: [],

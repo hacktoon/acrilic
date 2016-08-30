@@ -16,6 +16,7 @@ ac.export("maps", function(env){
                 ac.utils.build2DArray(rows, cols, defaultValue),  // FG Layer
                 ac.utils.build2DArray(rows, cols, defaultValue)   // Event Layer
             ];
+            this.walk = ac.utils.build2DArray(rows, cols, 0);
         },
 
         inRange: function(row, col) {
@@ -29,9 +30,10 @@ ac.export("maps", function(env){
             return this.grids[layer];
         },
 
-        set: function(row, col, tileID){
+        set: function(row, col, tile){
             if (! this.inRange(row, col)) { return; }
-            this.currentGrid()[row][col] = tileID;
+            this.currentGrid()[row][col] = tile.id;
+            this.walk[row][col] = tile.walk;
         },
 
         get: function(row, col){
@@ -43,7 +45,8 @@ ac.export("maps", function(env){
             return {
                 rows: this.rows,
                 cols: this.cols,
-                grids: this.grids
+                grids: this.grids,
+                walk: this.walk
             };
         }
     });

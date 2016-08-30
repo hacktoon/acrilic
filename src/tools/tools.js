@@ -1,7 +1,7 @@
 ac.export("tools", function(env){
     "use strict";
 
-    ac.import("fill");
+    ac.import("fill", "tilesets");
 
     var self = {};
 
@@ -13,7 +13,7 @@ ac.export("tools", function(env){
                 var relRow = row + row0,
                     relCol = col + col0,
                     id = selection.submap[row][col];
-                map.set(relRow, relCol, id);
+                map.set(relRow, relCol, ac.tilesets.getTileByID(id));
                 modifiedCells.push({row: relRow, col: relCol});
             }
         }

@@ -1,12 +1,15 @@
 var ac = (function(){
     "use strict";
 
+    var modules = {};
+
     var self = {
-        LAYERS: 3,
         log: console.log.bind(console),
         error: console.error.bind(console),
-        tilesetSpecs: [],
-        modules: {},
+        data: {
+            layers: []
+            tilesets: []
+        },
         keys: {
             ESC: 27
         }
@@ -14,9 +17,7 @@ var ac = (function(){
 
     // global environment
     var env = (function(){
-        var registry = {
-            DOCUMENT: $(document)
-        };
+        var registry = {};
 
         return {
             set: function(key, value){
@@ -65,28 +66,24 @@ var ac = (function(){
     self.registerTilesetSpec = function(tilesetSpec){
         registerAsset(tilesetSpec.src, function(image){
             tilesetSpec.image = image;
-            self.tilesetSpecs.push(tilesetSpec);
+            self.data.tilesets.push(tilesetSpec);
         });
     };
 
-    self.getTilesetSpecs = function(id){
-        return self.tilesetSpecs;
-    };
-
     self.export = function(name, func){
-        self.modules[name] = func;  // store the function reference
+        modules[name] = func;  // store the function reference
     };
 
     self.import = function(){
         for (var i=0; i<arguments.length; i++){
           var name = arguments[i];
-          if (! self.modules.hasOwnProperty(name)){
+          if (! modules.hasOwnProperty(name)){
             self.error("Module '" + name + "' doesn't exist.");
             return;
           }
           if(self[name] === undefined){
             // execute the function and receive an object
-            self[name] = self.modules[name](env);
+            self[name] = modules[name](env);
           }
         }
     };

@@ -12,7 +12,7 @@ ac.export("utils", function(env){
         return arr;
     };
 
-    var getRelativeMousePosition = function(container, tsize, mouseX, mouseY) {
+    var relativePosition = function(container, tsize, mouseX, mouseY) {
         var doc = env.get("DOCUMENT"),
             x_offset = container.offset().left,
             y_offset = container.offset().top,
@@ -52,7 +52,7 @@ ac.export("utils", function(env){
     };
 
     return {
-        getRelativeMousePosition: getRelativeMousePosition,
+        relativePosition: relativePosition,
         build2DArray: build2DArray,
         createCanvas: createCanvas,
         cropToCanvas: cropToCanvas,

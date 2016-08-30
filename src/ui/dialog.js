@@ -50,7 +50,7 @@ ac.export("dialog", function(env){
     var openNewFileDialog = function(action){
         dialog.init("New file", '#tpl-dialog-file-new', function(){
             var options = [];
-            var tilesetSpecs = ac.getTilesetSpecs();
+            var tilesetSpecs = ac.data.tilesets;
             for(var i=0; i<tilesetSpecs.length; i++){
                 var item = tilesetSpecs[i];
                 var option = $("<option/>").val(item.id).html(item.name);

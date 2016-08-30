@@ -58,7 +58,7 @@ ac.export("palette", function(env){
 
     var registerEvents = function() {
         var doc = env.get("DOCUMENT"),
-            mousePos = ac.utils.getRelativeMousePosition,
+            mousePos = ac.utils.relativePosition,
             dragging = false,
             col0 = 0,
             row0 = 0;

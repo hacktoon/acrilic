@@ -9,9 +9,7 @@ ac.export("palette", function(env){
         overlay: $("#palette-overlay"),
         selector: $("#palette-selector"),
         view: $("#palette-view"),
-        tileset: undefined,
-        rows: 0,
-        cols: 0
+        tileset: undefined
     };
 
     var selectTiles = function(points) {
@@ -43,16 +41,15 @@ ac.export("palette", function(env){
 
     var getNormalizedPoints = function(row0, col0, row1, col1) {
         // avoid off-limit points and fix inverted coordinates
-        col0 = Math.min(col0, col1);
-        row0 = Math.min(row0, row1);
-
-        col1 = Math.max(col0, col1);
-        row1 = Math.max(row0, row1);
+        var minCol = Math.min(col0, col1),
+            minRow = Math.min(row0, row1),
+            maxCol = Math.max(col0, col1),
+            maxRow = Math.max(row0, row1);
 
         // avoid selecting cells outside the max width/height
-        col1 = Math.min(col1, self.tileset.cols - 1);
-        row1 = Math.min(row1, self.tileset.rows - 1);
-        return {col0: col0, row0: row0, col1: col1, row1: row1};
+        maxCol = Math.min(maxCol, self.tileset.cols - 1);
+        maxRow = Math.min(maxRow, self.tileset.rows - 1);
+        return {col0: minCol, row0: minRow, col1: maxCol, row1: maxRow};
     };
 
     var registerEvents = function() {

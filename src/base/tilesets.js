@@ -29,6 +29,10 @@ ac.export("tilesets", function(env){
             }
         },
 
+        getDefaultTile: function() {
+            return this.tilemap[0][0];
+        },
+
         getTileByID: function(id) {
             return this.tiles[id];
         },

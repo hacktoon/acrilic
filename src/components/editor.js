@@ -23,14 +23,17 @@ ac.export("editor", function(env){
 
     };
 
-    var createFile = function(id, rows, cols, tileset){
-        var map = ac.maps.createMap(rows, cols);
-        return new File(id, tileset, map);
+    var createFile = function(id, rows, cols, tilesetID, map){
+        var tileset = ac.tilesets.getTileset(tilesetID);
+        var defaultTile = tileset.getDefaultTile();
+        var map = ac.maps.createMap(rows, cols, defaultTile.id);
+        return new File(id, tilesetID, map);
     };
 
     var createFileFromJSON = function(json){
         var fileData = JSON.parse(json);
-        return createFile(fileData.id, fileData.tileset, fileData.map);
+        var map = ac.maps.createMapFrom(fileData.map);
+        return new File(fileData.id, fileData.tileset, map);
     };
 
     var openFile = function(file){

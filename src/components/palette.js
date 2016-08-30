@@ -25,7 +25,11 @@ ac.export("palette", function(env){
                 submap[row-row0][col-col0] = tile.id;
             }
         }
-        env.set("SELECTED_TILES", submap);
+        env.set("SELECTED_TILES", {
+            submap: submap,
+            rows: rows,
+            cols: cols
+        });
         env.get("DOCUMENT").trigger("tileSelectionEnd");
     };
 

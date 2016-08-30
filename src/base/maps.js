@@ -8,13 +8,13 @@ ac.export("maps", function(env){
     The Map is a tridimensional array of tiles, in which each cell contains a Tile object id
     */
     var Map = ac.Class({
-        init: function(rows, cols, nullTileID){
+        init: function(rows, cols, defaultValue){
             this.rows = rows;
             this.cols = cols;
             this.grids = [
-                ac.utils.build2DArray(rows, cols, nullTileID),  // BG Layer
-                ac.utils.build2DArray(rows, cols, nullTileID),  // FG Layer
-                ac.utils.build2DArray(rows, cols, nullTileID)   // Event Layer
+                ac.utils.build2DArray(rows, cols, defaultValue),  // BG Layer
+                ac.utils.build2DArray(rows, cols, defaultValue),  // FG Layer
+                ac.utils.build2DArray(rows, cols, defaultValue)   // Event Layer
             ];
         },
 
@@ -29,9 +29,9 @@ ac.export("maps", function(env){
             return this.grids[layer];
         },
 
-        set: function(row, col, tile){
+        set: function(row, col, tileID){
             if (! this.inRange(row, col)) { return; }
-            this.currentGrid()[row][col] = tile;
+            this.currentGrid()[row][col] = tileID;
         },
 
         get: function(row, col){
@@ -48,8 +48,8 @@ ac.export("maps", function(env){
         }
     });
 
-    var createMap = function(rows, cols){
-        return new Map(rows, cols, 0);
+    var createMap = function(rows, cols, defaultValue){
+        return new Map(rows, cols, defaultValue);
     };
 
     var createMapFrom = function(mapData){

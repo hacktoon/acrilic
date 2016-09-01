@@ -28,13 +28,13 @@ ac.export("fill", function(env){
 
     };
 
-    var execute = function(map, row, col) {
+    var click = function(map, row, col) {
         var orig_tile_id = map.get(row, col);
         _self.visited = [];
         floodFill(map, row, col, orig_tile_id);
     };
 
     return {
-        execute: execute
+        click: click
     };
 });

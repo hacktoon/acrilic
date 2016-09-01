@@ -5,7 +5,7 @@ ac.export("tools", function(env){
 
     var self = {};
 
-    var updateTile = function(map, row0, col0) {
+    var updateTile = function(map, row0, col0, mask) {
         var selection = env.get("SELECTED_TILES");
         var modifiedCells = [];
         for(var row=0; row<selection.rows; row++){
@@ -27,39 +27,78 @@ ac.export("tools", function(env){
 
     self.pen = (function(){
         return {
-            click: updateTile,
+            mousedown: updateTile,
+            mouseup: function() {},
             drag: updateTile
         };
     })();
 
     self.square = (function(){
-        var row0, col0;
+        var row0,
+            col0;
         return {
-            click: function(map, row, col) {
+            mousedown: function(map, row, col) {
                 row0 = row;
                 col0 = col;
-                updateTile(map, row, col);
+                map.backup();
             },
-            drag: function(map, row1, col1) {
-                var rel_row0 = Math.min(row0, row1),
-                    rel_row1 = Math.max(row0, row1),
-                    rel_col0 = Math.min(col0, col1),
-                    rel_col1 = Math.max(col0, col1);
+            mouseup: function(map, row, col) {
+                var rel_row0 = Math.min(row0, row),
+                    rel_row1 = Math.max(row0, row),
+                    rel_col0 = Math.min(col0, col),
+                    rel_col1 = Math.max(col0, col);
                 for(var row=rel_row0; row<=rel_row1; row++){
                     for(var col=rel_col0; col<=rel_col1; col++){
                         updateTile(map, row, col);
                     }
                 }
+            },
+            drag: function(map, row, col) {
+                prevSubmap = ac.utils.build2DArray(row-row0+1, col-col0+1);
+                this.mouseup(map, row, col);
             }
         };
     })();
 
-    self.fill = {
-        click: function(map, row, col) {
-            return ac.fill.execute(row, col);
-        },
-        drag: function() {}
-    };
+    self.fill = (function(){
+        var visited = [];
+        var getAdjacentCells = function(map, row, col) {
+            var valid_cells = [],
+                cells = [
+                    [row+1, col],
+                    [row-1, col],
+                    [row, col+1],
+                    [row, col-1]
+                ];
+
+            for(var i=0; i<cells.length; i++){
+                var cell = cells[i];
+                if(! map.get(cell[0], cell[1])){
+                    continue;
+                }
+                valid_cells.push(cell);
+            }
+            return valid_cells;
+        };
+
+        var floodFill = function(map, row, col, origTileID) {
+            updateTile(map, row, col);
+            floodFill(map, row+1, col);
+            floodFill(map, row-1, col);
+            floodFill(map, row, col+1);
+            floodFill(map, row, col-1);
+        };
+
+        return {
+            mousedown: function(map, row, col) {
+                var origTileID = map.get(row, col);
+                visited = [];
+                floodFill(map, row, col, origTileID);
+            },
+            mouseup: function() {},
+            drag: function() {}
+        }
+    })();
 
     var getTool = function() {
         var tool = env.get("CURRENT_TOOL");

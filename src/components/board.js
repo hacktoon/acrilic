@@ -35,42 +35,49 @@ ac.export("board", function(env){
         });
     };
 
-    var mouseDownEvent = function(){
-        self.mouse.down = true;
-        self.tool.click(self.map, self.mouse.row, self.mouse.col);
-    };
-
-    var mouseMoveEvent = function(e){
-        var tsize = self.tileset.tilesize,
-            pos = ac.utils.relativePosition(self.container, tsize, e.pageX, e.pageY);
-        self.mouse.col = pos.col;
-        self.mouse.row = pos.row;
-        if (self.mouse.down && self.mouse.over){  // allow painting while dragging
-            self.tool.drag(self.map, self.mouse.row, self.mouse.col);
-        }
-        updateSelector();
-    };
-
-    var tileSelectionEndEvent = function(){
-        self.mouse.ready = true;
-        updateSelector();
-    };
-
     var registerEvents = function(){
         if(self.initialized) { return; }
         self.initialized = true;
 
         self.overlay
-        .on("mouseenter", function(){ self.mouse.over = true; })
-        .on("mouseleave", function(){ self.mouse.over = false; })
-        .on('mousedown',  function(){ mouseDownEvent(); });
+        .on("mouseenter", function(){
+            self.mouse.over = true;
+        })
+        .on("mouseleave", function(){
+            self.mouse.over = false;
+        })
+        .on('mousedown',  function(){
+            self.mouse.down = true;
+            self.tool.mousedown(self.map, self.mouse.row, self.mouse.col);
+        });
 
         ac.document
-        .on("mouseup",            function(e){ self.mouse.down = false; })
-        .on('mousemove',          function(e){ mouseMoveEvent(e); })
-        .on("tileSelectionStart", function(e){ self.mouse.ready = false; })
-        .on("tileSelectionEnd",   function(e){ tileSelectionEndEvent(); })
-        .on("toolChange",         function(e){ self.tool = ac.tools.getTool(); });
+        .on("mouseup", function(){
+            self.mouse.down = false;
+            if (self.mouse.over){
+                self.tool.mouseup(self.map, self.mouse.row, self.mouse.col);
+            }
+        })
+        .on('mousemove', function(e){
+            var tsize = self.tileset.tilesize,
+                pos = ac.utils.relativePosition(self.container, tsize, e.pageX, e.pageY);
+            self.mouse.col = pos.col;
+            self.mouse.row = pos.row;
+            if (self.mouse.down && self.mouse.over){  // allow painting while dragging
+                self.tool.drag(self.map, self.mouse.row, self.mouse.col);
+            }
+            updateSelector();
+        })
+        .on("tileSelectionStart", function(){
+            self.mouse.ready = false;
+        })
+        .on("tileSelectionEnd", function(){
+            self.mouse.ready = true;
+            updateSelector();
+        })
+        .on("toolChange", function(){
+            self.tool = ac.tools.getTool();
+        });
     };
 
     var loadFile = function(map, tileset){

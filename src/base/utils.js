@@ -12,6 +12,12 @@ ac.export("utils", function(env){
         return arr;
     };
 
+    var copy2DArray = function(array) {
+        return array.map(function(arr) {
+            return arr.slice();
+        });
+    };
+
     var relativePosition = function(container, tsize, mouseX, mouseY) {
         var x_offset = container.offset().left,
             y_offset = container.offset().top,

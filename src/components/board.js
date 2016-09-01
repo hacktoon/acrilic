@@ -5,10 +5,10 @@ ac.export("board", function(env){
     ac.import("utils", "display", "tools");
 
     var self = {
-        document: env.get("DOCUMENT"),
         container: $("#board"),
         overlay: $("#board-overlay"),
         selector: $("#board-selector"),
+        initialized: false,
         tileset: undefined,
         map: undefined,
         tool: undefined,
@@ -18,10 +18,10 @@ ac.export("board", function(env){
             ready: true,
             row: 0,
             col: 0
-        };
+        }
     };
 
-    var updateSelector = function(self.mouse){
+    var updateSelector = function(){
         var selection = env.get("SELECTED_TILES"),
             tsize = self.tileset.tilesize,
             x = tsize * self.mouse.col,
@@ -48,21 +48,24 @@ ac.export("board", function(env){
         if (self.mouse.down && self.mouse.over){  // allow painting while dragging
             self.tool.drag(self.mouse.row, self.mouse.col, self.map);
         }
-        updateSelector(self.mouse);
+        updateSelector();
     };
 
     var tileSelectionEndEvent = function(){
         self.mouse.ready = true;
-        updateSelector(self.mouse);
+        updateSelector();
     };
 
     var registerEvents = function(){
+        if(self.initialized) { return; }
+        self.initialized = true;
+
         self.overlay
         .on("mouseenter", function(){ self.mouse.over = true; })
         .on("mouseleave", function(){ self.mouse.over = false; })
         .on('mousedown',  function(){ mouseDownEvent(); });
 
-        self.document
+        ac.document
         .on("mouseup",            function(e){ self.mouse.down = false; })
         .on('mousemove',          function(e){ mouseMoveEvent(e); })
         .on("tileSelectionStart", function(e){ self.mouse.ready = false; })
@@ -71,25 +74,22 @@ ac.export("board", function(env){
     };
 
     var loadFile = function(map, tileset){
-        var tsize = tileset.tilesize,
-            width = map.cols * tsize,
-            height = map.rows * tsize;
+        var tilesize = tileset.tilesize,
+            width = map.cols * tilesize,
+            height = map.rows * tilesize,
+            display = ac.display.createDisplay(width, height, map, tileset);
 
-        self.selector.css({width: tsize, height: tsize});
-        self.overlay.css({width: width, height: height});
-        self.container.css({width: width, height: height});
-        self.tileset = tileset;
         self.map = map;
-        createLayers(width, height);
-        paintBoard();
-    };
+        self.tileset = tileset;
+        self.tool = ac.tools.getTool();
+        self.selector.css({width: tilesize, height: tilesize});
+        self.overlay.css({width: width, height: height});
+        self.container.html(display).css({width: width, height: height});
 
-    var init = function(){
         registerEvents();
     };
 
     return {
-        init: init,
         loadFile: loadFile
     };
 });

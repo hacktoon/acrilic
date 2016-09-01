@@ -9,7 +9,7 @@ ac.export("dialog", function(env){
                 dialog.close();
             });
 
-            $(document).on('keydown', function(e){
+            ac.document.on('keydown', function(e){
                 if (e.which == ac.keys.ESC){
                     dialog.close();
                 }

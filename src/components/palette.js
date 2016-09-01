@@ -22,7 +22,7 @@ ac.export("palette", function(env){
         for(var row=row0; row<=row1; row++){
             for(var col=col0; col<=col1; col++){
                 var tile = self.tileset.getTileByPosition(row, col);
-                submap[row-row0][col-col0] = tile.id;
+                submap[row-row0][col-col0] = tile;
             }
         }
         env.set("SELECTED_TILES", {
@@ -30,7 +30,7 @@ ac.export("palette", function(env){
             rows: rows,
             cols: cols
         });
-        env.get("DOCUMENT").trigger("tileSelectionEnd");
+        ac.document.trigger("tileSelectionEnd");
     };
 
     var updateSelector = function(points) {
@@ -57,8 +57,7 @@ ac.export("palette", function(env){
     };
 
     var registerEvents = function() {
-        var doc = env.get("DOCUMENT"),
-            mousePos = ac.utils.relativePosition,
+        var mousePos = ac.utils.relativePosition,
             dragging = false,
             col0 = 0,
             row0 = 0;
@@ -72,10 +71,10 @@ ac.export("palette", function(env){
             col0 = pos.col;
             row0 = pos.row;
             dragging = true;
-            doc.trigger("tileSelectionStart");
+            ac.document.trigger("tileSelectionStart");
         });
 
-        doc
+        ac.document
         .on("mousemove", function(event){
             var pos, points, tsize;
             if (! (self.tileset && dragging)){ return; }

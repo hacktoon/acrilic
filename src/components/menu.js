@@ -19,13 +19,14 @@ ac.export("menu", function(env){
     var initToolsMenu = function() {
         registerSwitchButton('.btn-tool', function(value) {
             env.set("CURRENT_TOOL", value);
+            ac.document.trigger("toolChange");
         });
     };
 
     var initLayersMenu = function() {
         registerSwitchButton('.btn-layer', function(value) {
             env.set("CURRENT_LAYER", Number(value));
-            env.get("DOCUMENT").trigger("layerChange");
+            ac.document.trigger("layerChange");
         });
     };
 

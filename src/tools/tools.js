@@ -10,14 +10,19 @@ ac.export("tools", function(env){
         var modifiedCells = [];
         for(var row=0; row<selection.rows; row++){
             for(var col=0; col<selection.cols; col++){
-                var relRow = row + row0,
+                var tile = selection.submap[row][col],
+                    relRow = row + row0,
                     relCol = col + col0,
-                    id = selection.submap[row][col];
-                map.set(relRow, relCol, ac.tilesets.getTileByID(id));
-                modifiedCells.push({row: relRow, col: relCol});
+                    currentTile = map.get(relRow, relCol);
+
+                if (currentTile != tile){
+                    map.set(relRow, relCol, tile);
+                    modifiedCells.push({row: relRow, col: relCol});
+                }
             }
         }
-        return modifiedCells;
+        env.set("MODIFIED_CELLS", modifiedCells);
+        ac.document.trigger("mapChange");
     };
 
     self.pen = (function(){
@@ -54,7 +59,7 @@ ac.export("tools", function(env){
     };
 
     var getTool = function() {
-        var index = env.get("CURRENT_TOOL");
+        var index = env.get("CURRENT_TOOL") || 'pen';
         return self[index];
     };
 

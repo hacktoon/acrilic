@@ -12,9 +12,9 @@ ac.export("maps", function(env){
             this.rows = rows;
             this.cols = cols;
             this.grids = [
-                ac.utils.build2DArray(rows, cols, defaultValue),  // BG Layer
-                ac.utils.build2DArray(rows, cols, defaultValue),  // FG Layer
-                ac.utils.build2DArray(rows, cols, defaultValue)   // Event Layer
+                ac.utils.build2DArray(rows, cols, defaultValue),
+                ac.utils.build2DArray(rows, cols, defaultValue),
+                ac.utils.build2DArray(rows, cols, defaultValue)
             ];
             this.walk = ac.utils.build2DArray(rows, cols, 0);
         },
@@ -26,8 +26,7 @@ ac.export("maps", function(env){
         },
 
         currentGrid: function(){
-            var layer = env.get("CURRENT_LAYER");
-            return this.grids[layer];
+            return this.grids[env.get("CURRENT_LAYER")];
         },
 
         set: function(row, col, tile){

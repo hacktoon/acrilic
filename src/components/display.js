@@ -1,10 +1,12 @@
 ac.export("display", function(env){
     "use strict";
 
-    ac.import("utils", "tileset");
+    ac.import("utils");
 
     var self = {
-        layers: []
+        layers: [],
+        tileset: undefined,
+        map: undefined
     };
 
     var paintCell = function(row, col, layerID) {
@@ -18,14 +20,38 @@ ac.export("display", function(env){
         context.drawImage(tile.canvas, x, y);
     };
 
-    var paintBoard = function(cells) {
-        if (cells){
-            for(var i=0; i<cells.length; i++){
-                paintCell(cells[i].row, cells[i].col, env.get("CURRENT_LAYER"));
-            }
-            return;
+    var showCurrentLayer = function() {
+        var index = env.get("CURRENT_LAYER");
+        $(".layer.active").removeClass("active");
+        $(self.layers[index]).addClass("active");
+    };
+
+    var createLayers = function(width, height) {
+        var layers = [];
+        for(var i=0; i < ac.data.layers.length; i++){
+            var canvas = ac.utils.createCanvas(width, height);
+            $(canvas).addClass("layer");
+            layers.push(canvas);
         }
-        // paint the entire board by default
+        self.layers = layers;
+        showCurrentLayer();
+    };
+
+    var registerEvents = function() {
+        ac.document
+        .on("layerChange", function(){ showCurrentLayer(); })
+        .on("mapChange", function(){ updateDisplay(); });
+    };
+
+    var updateDisplay = function() {
+        var modifiedCells = env.get("MODIFIED_CELLS");
+        for(var i=0; i<modifiedCells.length; i++){
+            var cell = modifiedCells[i];
+            paintCell(cell.row, cell.col, env.get("CURRENT_LAYER"));
+        }
+    };
+
+    var renderDisplay = function() {
         for(var layerID=0; layerID<self.layers.length; layerID++){
             for(var row=0; row<self.map.rows; row++){
                 for(var col=0; col<self.map.cols; col++){
@@ -35,38 +61,18 @@ ac.export("display", function(env){
         }
     };
 
-    env.get("DOCUMENT")
-    .on("layerChange", function(){ showCurrentLayer(); });
-
-    var showCurrentLayer = function() {
-        if ( ! self.layers.length ) { return; }
-        var index = env.get("CURRENT_LAYER");
-        $("#board .layer.active").removeClass("active");
-        $(self.layers[index]).addClass("active");
-    };
-
-    var createLayers = function(width, height) {
-        var layers = [];
-        for(var i=0; i<ac.LAYERS; i++){
-            var layer = ac.utils.createCanvas(width, height);
-            $(layer).addClass("layer");
-            layers.push(layer);
-        }
-        self.layers = layers;
-        self.container.html(layers);
-        showCurrentLayer();
-    };
-
-    var updateDisplay = function() {
-
-    };
-
-    var createDisplay = function() {
-
+    var createDisplay = function(width, height, map, tileset) {
+        self.map = map;
+        self.tileset = tileset;
+        createLayers(width, height);
+        registerEvents();
+        renderDisplay();
+        return self.layers;
     };
 
     return {
         createDisplay: createDisplay,
+        renderDisplay: renderDisplay,
         updateDisplay: updateDisplay
     };
 });

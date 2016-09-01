@@ -13,11 +13,10 @@ ac.export("utils", function(env){
     };
 
     var relativePosition = function(container, tsize, mouseX, mouseY) {
-        var doc = env.get("DOCUMENT"),
-            x_offset = container.offset().left,
+        var x_offset = container.offset().left,
             y_offset = container.offset().top,
-            x_scroll = container.scrollLeft() + doc.scrollLeft(),
-            y_scroll = container.scrollTop() + doc.scrollTop(),
+            x_scroll = container.scrollLeft() + ac.document.scrollLeft(),
+            y_scroll = container.scrollTop() + ac.document.scrollTop(),
             rx = mouseX - x_offset + x_scroll,
             ry = mouseY - y_offset + y_scroll;
         rx = Math.max(rx, 0);

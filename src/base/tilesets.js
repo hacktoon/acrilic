@@ -23,7 +23,7 @@ ac.export("tilesets", function(env){
                 var id = Number(id),
                     tileData = tilemap[id],
                     canvas = ac.utils.cropToCanvas(image, tilesize, tileData.col, tileData.row),
-                    tile = ac.tiles.createTile(id, canvas, tileData.walk || false);
+                    tile = ac.tiles.createTile(id, canvas, tileData.walk || 0);
                 this.tiles[id] = tile;
                 this.tilemap[tileData.row][tileData.col] = tile;
             }

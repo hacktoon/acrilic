@@ -4,10 +4,15 @@ var ac = (function(){
     var modules = {};
 
     var self = {
+        document: $(document),
         log: console.log.bind(console),
         error: console.error.bind(console),
         data: {
-            layers: []
+            layers: [
+                {id: 'bg', name: "Background"},
+                {id: 'fg', name: "Foreground"},
+                {id: 'evt', name: "Events"}
+            ],
             tilesets: []
         },
         keys: {

@@ -5,7 +5,7 @@ ac.export("tools", function(env){
 
     var self = {};
 
-    var updateTile = function(row0, col0, map) {
+    var updateTile = function(map, row0, col0) {
         var selection = env.get("SELECTED_TILES");
         var modifiedCells = [];
         for(var row=0; row<selection.rows; row++){
@@ -27,40 +27,39 @@ ac.export("tools", function(env){
 
     self.pen = (function(){
         return {
-            mousedown: updateTile,
-            drag: updateTile,
-            mouseup: function() {}
+            click: updateTile,
+            drag: updateTile
         };
     })();
 
     self.square = (function(){
         var row0, col0;
         return {
-            mousedown: function(row, col, map) {
+            click: function(map, row, col) {
                 row0 = row;
                 col0 = col;
+                updateTile(map, row, col);
             },
-            drag: function(row1, col1) {
-                updateTile(row1, col1);
-            },
-            mouseup: function() {
-                row0 = undefined;
-                col0 = undefined;
+            drag: function(map, row1, col1) {
+                for(var row=row0; row<=row1; row++){
+                    for(var col=col0; col<=col1; col++){
+                        updateTile(map, row, col);
+                    }
+                }
             }
         };
     })();
 
     self.fill = {
-        mousedown: function(row, col, map) {
+        click: function(map, row, col) {
             return ac.fill.execute(row, col);
         },
-        drag: function() {},
-        mouseup: function() {}
+        drag: function() {}
     };
 
     var getTool = function() {
-        var index = env.get("CURRENT_TOOL") || 'pen';
-        return self[index];
+        var tool = env.get("CURRENT_TOOL");
+        return self[tool] || self.pen;
     };
 
     return {

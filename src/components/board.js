@@ -37,7 +37,7 @@ ac.export("board", function(env){
 
     var mouseDownEvent = function(){
         self.mouse.down = true;
-        self.tool.mousedown(self.mouse.row, self.mouse.col, self.map);
+        self.tool.click(self.map, self.mouse.row, self.mouse.col);
     };
 
     var mouseMoveEvent = function(e){
@@ -46,7 +46,7 @@ ac.export("board", function(env){
         self.mouse.col = pos.col;
         self.mouse.row = pos.row;
         if (self.mouse.down && self.mouse.over){  // allow painting while dragging
-            self.tool.drag(self.mouse.row, self.mouse.col, self.map);
+            self.tool.drag(self.map, self.mouse.row, self.mouse.col);
         }
         updateSelector();
     };

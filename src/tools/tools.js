@@ -41,8 +41,12 @@ ac.export("tools", function(env){
                 updateTile(map, row, col);
             },
             drag: function(map, row1, col1) {
-                for(var row=row0; row<=row1; row++){
-                    for(var col=col0; col<=col1; col++){
+                var rel_row0 = Math.min(row0, row1),
+                    rel_row1 = Math.max(row0, row1),
+                    rel_col0 = Math.min(col0, col1),
+                    rel_col1 = Math.max(col0, col1);
+                for(var row=rel_row0; row<=rel_row1; row++){
+                    for(var col=rel_col0; col<=rel_col1; col++){
                         updateTile(map, row, col);
                     }
                 }

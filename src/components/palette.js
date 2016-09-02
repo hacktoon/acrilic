@@ -25,7 +25,7 @@ ac.export("palette", function(env){
                 submap[row-row0][col-col0] = tile;
             }
         }
-        env.set("SELECTED_TILES", {
+        env.set("TILE_PATTERN", {
             submap: submap,
             rows: rows,
             cols: cols

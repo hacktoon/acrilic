@@ -36,8 +36,7 @@ ac.export("display", function(env){
     };
 
     var renderCell = function(row, col, layerID) {
-        var id = self.map.get(row, col),
-            tile = self.tileset.getTileByID(id),
+        var tile = self.map.get(row, col, layerID),
             tsize = self.tileset.tilesize,
             x = tsize * col,
             y = tsize * row,

@@ -22,7 +22,7 @@ ac.export("board", function(env){
     };
 
     var updateSelector = function(){
-        var selection = env.get("SELECTED_TILES"),
+        var selection = env.get("TILE_PATTERN"),
             tsize = self.tileset.tilesize,
             x = tsize * self.mouse.col,
             y = tsize * self.mouse.row;
@@ -53,9 +53,6 @@ ac.export("board", function(env){
 
         ac.document
         .on("mouseup", function(){
-            if (self.mouse.down && self.mouse.over){
-                self.tool.mouseup(self.map, self.mouse.row, self.mouse.col);
-            }
             self.mouse.down = false;
         })
         .on('mousemove', function(e){

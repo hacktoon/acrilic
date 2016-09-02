@@ -40,12 +40,7 @@ ac.export("menu", function(env){
 
         $('#btn-file-import').on('click', function(){
             ac.dialog.openImportDialog(function(json){
-                try {
-                    var file = ac.editor.createFileFromJSON(json);
-                } catch (err) {
-                    alert("Not a valid JSON!");
-                    return;
-                }
+                var file = ac.editor.createFileFromJSON(json);
                 ac.editor.openFile(file);
             });
         });

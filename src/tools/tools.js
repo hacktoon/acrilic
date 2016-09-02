@@ -7,7 +7,6 @@ ac.export("tools", function(env){
 
     var updateTile = function(map, row0, col0, mask) {
         var selection = env.get("SELECTED_TILES");
-        var modifiedCells = [];
         for(var row=0; row<selection.rows; row++){
             for(var col=0; col<selection.cols; col++){
                 var tile = selection.submap[row][col],
@@ -17,12 +16,9 @@ ac.export("tools", function(env){
 
                 if (currentTile != tile){
                     map.set(relRow, relCol, tile);
-                    modifiedCells.push({row: relRow, col: relCol});
                 }
             }
         }
-        env.set("MODIFIED_CELLS", modifiedCells);
-        ac.document.trigger("mapChange");
     };
 
     self.pen = (function(){
@@ -40,7 +36,7 @@ ac.export("tools", function(env){
             mousedown: function(map, row, col) {
                 row0 = row;
                 col0 = col;
-                map.backup();
+                //map.backup();
             },
             mouseup: function(map, row, col) {
                 var rel_row0 = Math.min(row0, row),
@@ -54,7 +50,7 @@ ac.export("tools", function(env){
                 }
             },
             drag: function(map, row, col) {
-                prevSubmap = ac.utils.build2DArray(row-row0+1, col-col0+1);
+                //prevSubmap = ac.utils.build2DArray(row-row0+1, col-col0+1);
                 this.mouseup(map, row, col);
             }
         };

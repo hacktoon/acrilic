@@ -9,7 +9,33 @@ ac.export("display", function(env){
         map: undefined
     };
 
-    var paintCell = function(row, col, layerID) {
+    var createLayers = function(width, height) {
+        var layers = [];
+        for(var i=0; i < ac.data.layers.length; i++){
+            var canvas = ac.utils.createCanvas(width, height);
+            if(env.get("CURRENT_LAYER") == i){
+                $(canvas).addClass("active");
+            }
+            $(canvas).addClass("layer");
+            layers.push(canvas);
+        }
+        self.layers = layers;
+    };
+
+    var registerEvents = function() {
+        ac.document
+        .on("layerChange", function(){
+            var index = env.get("CURRENT_LAYER");
+            $(".layer.active").removeClass("active");
+            $(self.layers[index]).addClass("active");
+        })
+        .on("mapChange", function(){
+            var cell = env.get("MODIFIED_CELL");
+            renderCell(cell.row, cell.col, env.get("CURRENT_LAYER"));
+        });
+    };
+
+    var renderCell = function(row, col, layerID) {
         var id = self.map.get(row, col),
             tile = self.tileset.getTileByID(id),
             tsize = self.tileset.tilesize,
@@ -20,42 +46,11 @@ ac.export("display", function(env){
         context.drawImage(tile.canvas, x, y);
     };
 
-    var showCurrentLayer = function() {
-        var index = env.get("CURRENT_LAYER");
-        $(".layer.active").removeClass("active");
-        $(self.layers[index]).addClass("active");
-    };
-
-    var createLayers = function(width, height) {
-        var layers = [];
-        for(var i=0; i < ac.data.layers.length; i++){
-            var canvas = ac.utils.createCanvas(width, height);
-            $(canvas).addClass("layer");
-            layers.push(canvas);
-        }
-        self.layers = layers;
-        showCurrentLayer();
-    };
-
-    var registerEvents = function() {
-        ac.document
-        .on("layerChange", function(){ showCurrentLayer(); })
-        .on("mapChange", function(){ updateDisplay(); });
-    };
-
-    var updateDisplay = function() {
-        var modifiedCells = env.get("MODIFIED_CELLS");
-        for(var i=0; i<modifiedCells.length; i++){
-            var cell = modifiedCells[i];
-            paintCell(cell.row, cell.col, env.get("CURRENT_LAYER"));
-        }
-    };
-
     var renderDisplay = function() {
         for(var layerID=0; layerID<self.layers.length; layerID++){
             for(var row=0; row<self.map.rows; row++){
                 for(var col=0; col<self.map.cols; col++){
-                    paintCell(row, col, layerID);
+                    renderCell(row, col, layerID);
                 }
             }
         }
@@ -72,7 +67,6 @@ ac.export("display", function(env){
 
     return {
         createDisplay: createDisplay,
-        renderDisplay: renderDisplay,
-        updateDisplay: updateDisplay
+        renderDisplay: renderDisplay
     };
 });

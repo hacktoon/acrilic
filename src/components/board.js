@@ -53,10 +53,10 @@ ac.export("board", function(env){
 
         ac.document
         .on("mouseup", function(){
-            self.mouse.down = false;
-            if (self.mouse.over){
+            if (self.mouse.down && self.mouse.over){
                 self.tool.mouseup(self.map, self.mouse.row, self.mouse.col);
             }
+            self.mouse.down = false;
         })
         .on('mousemove', function(e){
             var tsize = self.tileset.tilesize,

@@ -1,11 +1,11 @@
 ac.export("tools", function(env){
     "use strict";
 
-    ac.import("fill", "tilesets");
+    ac.import("utils", "fill");
 
     var self = {};
 
-    var updateTile = function(map, row0, col0, mask) {
+    var updateMap = function(map, row0, col0, mask) {
         var selection = env.get("SELECTED_TILES");
         for(var row=0; row<selection.rows; row++){
             for(var col=0; col<selection.cols; col++){
@@ -14,18 +14,16 @@ ac.export("tools", function(env){
                     relCol = col + col0,
                     currentTile = map.get(relRow, relCol);
 
-                if (currentTile != tile){
-                    map.set(relRow, relCol, tile);
-                }
+                map.set(relRow, relCol, tile);
             }
         }
     };
 
     self.pen = (function(){
         return {
-            mousedown: updateTile,
+            mousedown: updateMap,
             mouseup: function() {},
-            drag: updateTile
+            drag: updateMap
         };
     })();
 
@@ -36,22 +34,17 @@ ac.export("tools", function(env){
             mousedown: function(map, row, col) {
                 row0 = row;
                 col0 = col;
-                //map.backup();
+                //map.saveState();
             },
-            mouseup: function(map, row, col) {
-                var rel_row0 = Math.min(row0, row),
-                    rel_row1 = Math.max(row0, row),
-                    rel_col0 = Math.min(col0, col),
-                    rel_col1 = Math.max(col0, col);
-                for(var row=rel_row0; row<=rel_row1; row++){
-                    for(var col=rel_col0; col<=rel_col1; col++){
-                        updateTile(map, row, col);
+            mouseup: function() {},
+            drag: function(map, row, col) {
+                var abs = ac.utils.absCoordinates(row0, col0, row, col);
+                //map.restoreState();
+                for(var row=abs.row0; row<=abs.row1; row++){
+                    for(var col=abs.col0; col<=abs.col1; col++){
+                        updateMap(map, row, col);
                     }
                 }
-            },
-            drag: function(map, row, col) {
-                //prevSubmap = ac.utils.build2DArray(row-row0+1, col-col0+1);
-                this.mouseup(map, row, col);
             }
         };
     })();
@@ -78,7 +71,7 @@ ac.export("tools", function(env){
         };
 
         var floodFill = function(map, row, col, origTileID) {
-            updateTile(map, row, col);
+            updateMap(map, row, col);
             floodFill(map, row+1, col);
             floodFill(map, row-1, col);
             floodFill(map, row, col+1);

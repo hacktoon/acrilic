@@ -44,16 +44,11 @@ ac.export("palette", function(env){
     };
 
     var getNormalizedPoints = function(row0, col0, row1, col1) {
-        // avoid off-limit points and fix inverted coordinates
-        var minCol = Math.min(col0, col1),
-            minRow = Math.min(row0, row1),
-            maxCol = Math.max(col0, col1),
-            maxRow = Math.max(row0, row1);
-
+        var abs = ac.utils.absCoordinates(row0, col0, row1, col1);
         // avoid selecting cells outside the max width/height
-        maxCol = Math.min(maxCol, self.tileset.cols - 1);
-        maxRow = Math.min(maxRow, self.tileset.rows - 1);
-        return {col0: minCol, row0: minRow, col1: maxCol, row1: maxRow};
+        abs.col1 = Math.min(abs.col1, self.tileset.cols - 1);
+        abs.row1 = Math.min(abs.row1, self.tileset.rows - 1);
+        return {col0: abs.col0, row0: abs.row0, col1: abs.col1, row1: abs.row1};
     };
 
     var registerEvents = function() {

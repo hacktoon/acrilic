@@ -42,6 +42,7 @@ ac.export("maps", function(env){
                 return new Grid(rows, cols, defaultValue);
             });
             this.walk = new Grid(rows, cols, 0);
+            this.state = undefined;
         },
 
         set: function(row, col, tile){
@@ -58,6 +59,19 @@ ac.export("maps", function(env){
         get: function(row, col){
             var layerID = env.get("CURRENT_LAYER");
             return this.grids[layerID].get(row, col);
+        },
+
+        saveState: function() {
+            var layerID = env.get("CURRENT_LAYER");
+            this.state = ac.utils.copy2DArray(this.grids[layerID].matrix);
+        },
+
+        restoreState: function() {
+            for(var row=0; row<this.rows; row++){
+                for(var col=0; col<this.cols; col++){
+                    this.set(row, col, this.state[row][col]);
+                }
+            }
         },
 
         toJSON: function(){

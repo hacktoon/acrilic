@@ -30,6 +30,14 @@ ac.export("utils", function(env){
         return {col: Math.floor(rx / tsize), row: Math.floor(ry / tsize)};
     };
 
+    var absCoordinates = function(row0, col0, row1, col1) {
+        var minCol = Math.min(col0, col1),
+            minRow = Math.min(row0, row1),
+            maxCol = Math.max(col0, col1),
+            maxRow = Math.max(row0, row1);
+        return {row0: minRow, col0: minCol, row1: maxRow, col1: maxCol};
+    };
+
     var filter = function(collection, func){
         var filtered = [];
         for(var i=0; i<collection.length; i++){
@@ -59,8 +67,10 @@ ac.export("utils", function(env){
     return {
         relativePosition: relativePosition,
         build2DArray: build2DArray,
+        copy2DArray: copy2DArray,
         createCanvas: createCanvas,
         cropToCanvas: cropToCanvas,
+        absCoordinates: absCoordinates,
         filter: filter,
         map: map
     };

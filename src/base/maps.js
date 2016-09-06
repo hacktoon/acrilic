@@ -26,8 +26,9 @@ ac.export("maps", function(env){
         },
 
         set: function(row, col, tile, layerID){
-            var layerID = layerID || env.get("CURRENT_LAYER");
-            if (this.get(row, col).id == tile.id || ! this.inRange(row, col)){
+            var layerID = layerID || env.get("CURRENT_LAYER"),
+                prevTile = this.get(row, col, layerID);
+            if (prevTile && prevTile.id == tile.id || ! this.inRange(row, col)){
                 return;
             }
             this.grids[layerID][row][col] = tile;

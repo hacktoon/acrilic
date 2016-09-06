@@ -23,18 +23,18 @@ ac.export("tools", function(env){
         var pattern = env.get("TILE_PATTERN"), startRow, startCol, endRow, endCol;
         startRow = origRow - Math.ceil((origRow - toolArea.row0) / pattern.rows) * pattern.rows;
         startCol = origCol - Math.ceil((origCol - toolArea.col0) / pattern.cols) * pattern.cols;
-        endRow = origRow + Math.floor((toolArea.row1 - origRow) / pattern.rows) * pattern.rows;
-        endCol = origCol + Math.floor((toolArea.col1 - origCol) / pattern.cols)  * pattern.cols;
+        endRow = origRow + Math.ceil((toolArea.row1 - origRow) / pattern.rows) * pattern.rows;
+        endCol = origCol + Math.ceil((toolArea.col1 - origCol) / pattern.cols) * pattern.cols;
 
         return {startRow: startRow, startCol: startCol, endRow: endRow, endCol: endCol};
     };
 
-    var applyPatternToArea = function(map, origRow, origCol, toolArea) {
+    var applyPatternToArea = function(map, origRow, origCol, toolArea, whitelist) {
         var pattern = env.get("TILE_PATTERN"),
             guidePoints = getGuidePoints(origRow, origCol, toolArea);
         for(var row=guidePoints.startRow; row<=guidePoints.endRow; row+=pattern.rows){
             for(var col=guidePoints.startCol; col<=guidePoints.endCol; col+=pattern.cols){
-                applyPattern(map, row, col);
+                applyPattern(map, row, col, whitelist);  // basta editar a whitelist agora
             }
         }
     };
@@ -92,11 +92,14 @@ ac.export("tools", function(env){
         };
 
         var floodFill = function(map, row, col, origTileID) {
-            applyPatternToArea(map, row, col);
+            var whitelist, toolArea;
+
             floodFill(map, row+1, col);
             floodFill(map, row-1, col);
             floodFill(map, row, col+1);
             floodFill(map, row, col-1);
+
+            applyPatternToArea(map, row, col, toolArea, whitelist);
         };
 
         return {

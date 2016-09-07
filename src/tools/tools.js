@@ -5,27 +5,31 @@ ac.export("tools", function(env){
 
     var self = {};
 
-    var insideArea = function(row, col, renderPoints) {
-
+    var inWhitelist = function(row, col, whitelist) {
+        if(! whitelist){ return true; }
+        if(whitelist[row + "," + col]){
+            return true;
+        }
+        return false;
     };
 
     var applyPattern = function(map, row0, col0, toolArea, whitelist) {
         var pattern = env.get("TILE_PATTERN");
-        whitelist = whitelist || {};
         for(var row=0; row < pattern.rows; row++){
             for(var col=0; col < pattern.cols; col++){
                 var relRow = row + row0,
-                    relCol = col + col0;
-                if(relRow >= toolArea.row0 && relRow <= toolArea.row1 &&
-                   relCol >= toolArea.col0 && relCol <= toolArea.col1){
+                    relCol = col + col0,
+                    inRows = relRow >= toolArea.row0 && relRow <= toolArea.row1,
+                    inCols = relCol >= toolArea.col0 && relCol <= toolArea.col1;
+                if(inRows && inCols && inWhitelist(relRow, relCol, whitelist)){
                    map.set(relRow, relCol, pattern.submap[row][col]);
-               }
+                }
             }
         }
     };
 
     var getGuidePoints = function(origRow, origCol, toolArea) {
-        // return the start and end points for the pattern rendering
+        // return the start and end points for the pattern application
         var pattern = env.get("TILE_PATTERN"), startRow, startCol, endRow, endCol;
         startRow = origRow - Math.ceil((origRow - toolArea.row0) / pattern.rows) * pattern.rows;
         startCol = origCol - Math.ceil((origCol - toolArea.col0) / pattern.cols) * pattern.cols;
@@ -40,7 +44,7 @@ ac.export("tools", function(env){
             guidePoints = getGuidePoints(origRow, origCol, toolArea);
         for(var row=guidePoints.startRow; row<=guidePoints.endRow; row+=pattern.rows){
             for(var col=guidePoints.startCol; col<=guidePoints.endCol; col+=pattern.cols){
-                applyPattern(map, row, col, toolArea, whitelist);  // basta editar a whitelist agora
+                applyPattern(map, row, col, toolArea, whitelist);
             }
         }
     };
@@ -90,42 +94,40 @@ ac.export("tools", function(env){
     })();
 
     self.fill = (function(){
-        var visited = [];
-        var getAdjacentCells = function(map, row, col) {
-            var valid_cells = [],
-                cells = [
-                    [row+1, col],
-                    [row-1, col],
-                    [row, col+1],
-                    [row, col-1]
-                ];
-
-            for(var i=0; i<cells.length; i++){
-                var cell = cells[i];
-                if(! map.get(cell[0], cell[1])){
-                    continue;
-                }
-                valid_cells.push(cell);
+        var floodFill = function(map, row, col, origTile, visited) {
+            var key = row+","+col;
+            var tile = map.get(row, col);
+            if (!tile || visited[key] || tile.id != origTile.id){
+                return;
             }
-            return valid_cells;
+            visited[key] = true;
+            floodFill(map, row+1, col, origTile, visited);
+            floodFill(map, row-1, col, origTile, visited);
+            floodFill(map, row, col+1, origTile, visited);
+            floodFill(map, row, col-1, origTile, visited);
         };
 
-        var floodFill = function(map, row, col, origTileID) {
-            var whitelist, toolArea;
-
-            floodFill(map, row+1, col);
-            floodFill(map, row-1, col);
-            floodFill(map, row, col+1);
-            floodFill(map, row, col-1);
-
-            applyPatternToArea(map, row, col, toolArea, whitelist);
+        var calcToolArea = function(map, visited) {
+            var row0, col0, row1, col1;
+            for(var key in visited){
+                var point = key.split(",");
+                var row = Number(point[0]),
+                    col = Number(point[1]);
+                row0 = Math.min(row0 || row, row);
+                col0 = Math.min(col0 || col, col);
+                row1 = Math.max(row1 || row, row);
+                col1 = Math.max(col1 || col, col);
+            }
+            return {row0: row0, col0: col0, row1: row1, col1: col1};
         };
 
         return {
             mousedown: function(map, row, col) {
-                var origTile = map.get(row, col);
-                visited = [];
-                floodFill(map, row, col, origTile);
+                var visited = {};
+                var toolArea;
+                floodFill(map, row, col, map.get(row, col), visited);
+                toolArea = calcToolArea(map, visited);
+                applyPatternToArea(map, row, col, toolArea, visited);
             },
             drag: function() {},
             mutableCursor: false

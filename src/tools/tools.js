@@ -110,13 +110,19 @@ ac.export("tools", function(env){
         var calcToolArea = function(map, visited) {
             var row0, col0, row1, col1;
             for(var key in visited){
-                var point = key.split(",");
-                var row = Number(point[0]),
+                var point = key.split(","),
+                    row = Number(point[0]),
                     col = Number(point[1]);
-                row0 = Math.min(row0 || row, row);
-                col0 = Math.min(col0 || col, col);
-                row1 = Math.max(row1 || row, row);
-                col1 = Math.max(col1 || col, col);
+                if(row0 === undefined) {
+                    row0 = row;
+                    col0 = col;
+                    row1 = row;
+                    col1 = col;
+                }
+                row0 = Math.min(row0, row);
+                col0 = Math.min(col0, col);
+                row1 = Math.max(row1, row);
+                col1 = Math.max(col1, col);
             }
             return {row0: row0, col0: col0, row1: row1, col1: col1};
         };

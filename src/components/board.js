@@ -58,8 +58,8 @@ ac.export("board", function(env){
         .on('mousemove', function(e){
             var tsize = self.tileset.tilesize,
                 pos = ac.utils.relativePosition(self.container, tsize, e.pageX, e.pageY);
-            self.mouse.col = pos.col;
             self.mouse.row = pos.row;
+            self.mouse.col = pos.col;
             if (self.mouse.down && self.mouse.over){  // allow painting while dragging
                 self.tool.drag(self.map, self.mouse.row, self.mouse.col);
             }
@@ -77,7 +77,7 @@ ac.export("board", function(env){
         });
     };
 
-    var loadFile = function(map, tileset){
+    var loadMap = function(map, tileset){
         var tilesize = tileset.tilesize,
             width = map.cols * tilesize,
             height = map.rows * tilesize,
@@ -89,11 +89,10 @@ ac.export("board", function(env){
         self.selector.css({width: tilesize, height: tilesize});
         self.overlay.css({width: width, height: height});
         self.container.html(display).css({width: width, height: height});
-
         registerEvents();
     };
 
     return {
-        loadFile: loadFile
+        loadMap: loadMap
     };
 });

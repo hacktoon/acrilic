@@ -38,6 +38,13 @@ ac.export("menu", function(env){
             });
         });
 
+        $('#btn-file-save').on('click', function(){
+            var file = env.get("CURRENT_FILE");
+            if (file){
+                ac.editor.saveFile(file);
+            }
+        });
+
         $('#btn-file-import').on('click', function(){
             ac.dialog.openImportDialog(function(json){
                 var file = ac.editor.createFileFromJSON(json);

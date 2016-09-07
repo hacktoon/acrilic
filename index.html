@@ -10,7 +10,8 @@
 <body>
     <section id="main-menu" class="unselectable">
         <ul id="file-menu">
-            <li><button class="btn-menu btn-file" id="btn-file-new" title="New map">New</button></li>
+            <li><button class="btn-menu btn-file" id="btn-file-new" title="New file">New</button></li>
+            <li><button class="btn-menu btn-file" id="btn-file-save" title="Save">Save</button></li>
             <li><button class="btn-menu btn-file" id="btn-file-import" title="Import map">Import</button></li>
             <li><button class="btn-menu btn-file" id="btn-file-export" title="Export map">Export</button></li>
         </ul>
@@ -35,7 +36,9 @@
                 <div id="palette-selector"></div>
                 <div id="palette-view"></div>
             </div>
-            <div id="project-panel"></div>
+            <div id="filetree-panel">
+                <ul id="filetree-list"></ul>
+            </div>
         </sidebar>
         <div id="board-panel">
             <div id="board"></div>

@@ -9,11 +9,17 @@ ac.export("tools", function(env){
 
     };
 
-    var applyPattern = function(map, row0, col0, whitelist) {
+    var applyPattern = function(map, row0, col0, toolArea, whitelist) {
         var pattern = env.get("TILE_PATTERN");
+        whitelist = whitelist || {};
         for(var row=0; row < pattern.rows; row++){
             for(var col=0; col < pattern.cols; col++){
-                map.set(row + row0, col + col0, pattern.submap[row][col]);
+                var relRow = row + row0,
+                    relCol = col + col0;
+                if(relRow >= toolArea.row0 && relRow <= toolArea.row1 &&
+                   relCol >= toolArea.col0 && relCol <= toolArea.col1){
+                   map.set(relRow, relCol, pattern.submap[row][col]);
+               }
             }
         }
     };
@@ -34,15 +40,27 @@ ac.export("tools", function(env){
             guidePoints = getGuidePoints(origRow, origCol, toolArea);
         for(var row=guidePoints.startRow; row<=guidePoints.endRow; row+=pattern.rows){
             for(var col=guidePoints.startCol; col<=guidePoints.endCol; col+=pattern.cols){
-                applyPattern(map, row, col, whitelist);  // basta editar a whitelist agora
+                applyPattern(map, row, col, toolArea, whitelist);  // basta editar a whitelist agora
             }
         }
     };
 
     self.pen = (function(){
+        var penAction = function functionName(map, row, col) {
+            var pattern = env.get("TILE_PATTERN"),
+                toolArea = {
+                    row0: row,
+                    col0: col,
+                    row1: row+pattern.rows-1,
+                    col1: col+pattern.cols-1
+                };
+            applyPattern(map, row, col, toolArea);
+        };
+
         return {
-            mousedown: applyPattern,
-            drag: applyPattern
+            mousedown: penAction,
+            drag: penAction,
+            mutableCursor: true
         };
     })();
 
@@ -66,7 +84,8 @@ ac.export("tools", function(env){
                 };
                 map.restoreState();
                 applyPatternToArea(map, origRow, origCol, toolArea);
-            }
+            },
+            mutableCursor: false
         };
     })();
 
@@ -108,7 +127,8 @@ ac.export("tools", function(env){
                 visited = [];
                 floodFill(map, row, col, origTile);
             },
-            drag: function() {}
+            drag: function() {},
+            mutableCursor: false
         }
     })();
 

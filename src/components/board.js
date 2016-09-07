@@ -25,12 +25,19 @@ ac.export("board", function(env){
         var selection = env.get("TILE_PATTERN"),
             tsize = self.tileset.tilesize,
             x = tsize * self.mouse.col,
-            y = tsize * self.mouse.row;
+            y = tsize * self.mouse.row,
+            width = tsize,
+            height = tsize;
+
+        if (self.tool.mutableCursor){
+            width *= selection.cols;
+            height *= selection.rows;
+        }
 
         self.selector.css({
             transform: "translate(" + x + "px, " + y + "px)",
-            height: tsize * selection.rows,
-            width: tsize * selection.cols,
+            width: width,
+            height: height,
             display: self.mouse.over && self.mouse.ready ? "block" : "none"
         });
     };

@@ -67,22 +67,39 @@ input {
 }
 
 #main-menu .btn-menu {
-    background: transparent;
+    background-color: transparent;
+    background-position: center center;
+    background-repeat: no-repeat;
     border: none;
+    border-radius: 3px;
     color: #FFF;
     padding: 5px 10px;
     height: 30px;
     font-weight: bold;
+    margin-right: 5px;
 }
 #main-menu .btn-menu:hover {
-    text-decoration: underline;
+    background-color: #333;
+    text-decoration: none;
+}
+#main-menu .btn-menu.active {
+    background-color: #666;
+    color: #FFF;
 }
 
-#main-menu .btn-menu.active {
-    background: #CCC;
-    border-radius: 3px;
-    color: #222;
+#main-menu .btn-tool { width: 40px; }
+#main-menu .btn-tool span { display: none; }
+#main-menu .btn-file {
+    background-position: 5px center;
+    padding-left: 25px
 }
+
+#btn-file-new { background-image: url("data/img/new.png"); }
+#btn-file-import { background-image: url("data/img/import.png"); }
+#btn-file-export { background-image: url("data/img/export.png"); }
+#btn-tool-pen { background-image: url("data/img/pen.png"); }
+#btn-tool-rect { background-image: url("data/img/rect.png"); }
+#btn-tool-fill { background-image: url("data/img/fill.png"); }
 
 #editor-panel {
     background: #DDD;
@@ -171,7 +188,7 @@ input {
 }
 
 #board-panel #board {
-    background: url("data/img/screen_bg.png");
+    background: url("data/img/board.png");
     position: absolute;
 }
 

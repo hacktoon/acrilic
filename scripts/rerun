@@ -1,3 +1,0 @@
-#!/bin/bash
-PATTERN='**/*.{css,js,html,svg}'
-rerun -i build/* --pattern $PATTERN make build

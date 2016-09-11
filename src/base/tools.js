@@ -68,7 +68,7 @@ ac.export("tools", function(env){
         };
     })();
 
-    self.square = (function(){
+    self.rect = (function(){
         var origRow, origCol, toolArea;
         return {
             mousedown: function(map, row, col) {
